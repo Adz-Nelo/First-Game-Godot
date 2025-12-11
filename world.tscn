@@ -1,8 +1,35 @@
-[gd_scene format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=4 format=3 uid="uid://d35eslxq5bm7"]
+
+[ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
+size = Vector2(1152, 192)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f3sb7"]
+size = Vector2(128, 256)
 
 [node name="World" type="Node2D"]
+position = Vector2(0, 256)
 
-[node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Welcome to the Game World 🎮"
+[node name="Player" parent="." instance=ExtResource("1_f3sb7")]
+position = Vector2(456, 128)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(576, 288)
+shape = SubResource("RectangleShape2D_fj7yv")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-64, 128)
+shape = SubResource("RectangleShape2D_f3sb7")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1216, 128)
+shape = SubResource("RectangleShape2D_f3sb7")
+
+[node name="Panel" type="Panel" parent="."]
+offset_top = 192.0
+offset_right = 1152.0
+offset_bottom = 384.0
+metadata/_edit_use_anchors_ = true
