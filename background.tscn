@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://mitjtv2iwvhw"]
+
+[ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="1_i7s6n"]
+[ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_xehqc"]
+[ext_resource type="Texture2D" uid="uid://cktrrmgmwbwm7" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/middle.png" id="2_xehqc"]
+[ext_resource type="Texture2D" uid="uid://7xls47kyda76" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/tree-house.png" id="3_splo0"]
+
+[node name="Background" type="ParallaxBackground"]
+script = ExtResource("1_xehqc")
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2(1152, 0)
+
+[node name="Back" type="Sprite2D" parent="ParallaxLayer"]
+position = Vector2(575.99994, 360)
+scale = Vector2(2.9999998, 3)
+texture = ExtResource("1_i7s6n")
+
+[node name="Houses" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.5, 0.5)
+
+[node name="TreeHouse" type="Sprite2D" parent="Houses"]
+position = Vector2(176, 312)
+texture = ExtResource("3_splo0")
+
+[node name="TreeHouse2" type="Sprite2D" parent="Houses"]
+position = Vector2(528, 312)
+texture = ExtResource("3_splo0")
+
+[node name="TreeHouse3" type="Sprite2D" parent="Houses"]
+position = Vector2(1056, 312)
+texture = ExtResource("3_splo0")
+
+[node name="TreeHouse4" type="Sprite2D" parent="Houses"]
+position = Vector2(1584, 312)
+texture = ExtResource("3_splo0")
+
+[node name="TreeHouse5" type="Sprite2D" parent="Houses"]
+position = Vector2(2112, 312)
+texture = ExtResource("3_splo0")
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.7, 1)
+motion_mirroring = Vector2(1232, 0)
+
+[node name="Middle" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(88, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle2" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(264, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle3" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(440, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle4" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(616, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle5" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(792, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle6" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(968, 464)
+texture = ExtResource("2_xehqc")
+
+[node name="Middle7" type="Sprite2D" parent="ParallaxLayer2"]
+position = Vector2(1144, 464)
+texture = ExtResource("2_xehqc")
