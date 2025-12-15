@@ -15,6 +15,11 @@ run/main_scene="uid://bb3u7mm35n1ae"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Game="*res://Global/game.gd"
+Utilities="*res://Global/utilities.gd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

@@ -162,7 +162,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	text = \"HP: \" + str(get_node(\"../../Player/Player\").health)
+	text = \"HP: \" + str(Game.playerHP)
 "
 
 [node name="World" type="Node2D"]
@@ -201,7 +201,7 @@ position = Vector2(600, 128)
 position = Vector2(120, 144)
 
 [node name="Frog4" parent="Mobs" instance=ExtResource("5_036b0")]
-position = Vector2(120, 144)
+position = Vector2(720, 136)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
