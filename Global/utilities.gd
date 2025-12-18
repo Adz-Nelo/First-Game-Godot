@@ -1,12 +1,12 @@
 extends Node
 
-const save_path = "res://savegame.bin"
+const save_path = "user://savegame.bin"
 
 func saveGame():
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	var data: Dictionary = {
-		"PlayerHP": Game.playerHP,
-		"Gold": Game.gold, 
+		"playerHP": Game.playerHP,
+		"gold": Game.gold, 
 	}
 	
 	var json_str = JSON.stringify(data)
@@ -19,5 +19,5 @@ func loadGame():
 		if not file.eof_reached():
 			var current_line = JSON.parse_string(file.get_line())
 			if current_line:
-				Game.playerHP = current_line["PlayerHP"]
-				Game.gold = current_line["Gold"]
+				Game.playerHP = current_line["playerHP"]
+				Game.gold = current_line["gold"]
