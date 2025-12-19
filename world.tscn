@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="2_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://6bm6gbknfrtd" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/tileset.png" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://dvv0w42p5iqcr" path="res://frog.tscn" id="5_036b0"]
-[ext_resource type="PackedScene" uid="uid://bgxvfsr0iu628" path="res://Collectables/cherry.tscn" id="6_dwbse"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -180,6 +179,22 @@ func _process(delta: float) -> void:
 	text = \"Gold: \" + str(Game.gold)
 "
 
+[sub_resource type="GDScript" id="GDScript_pkg7o"]
+script/source = "extends Node2D
+
+
+var cherry = preload(\"res://Collectables/cherry.tscn\")
+
+
+func _on_timer_timeout() -> void:
+	var cherryTemp = cherry.instantiate()
+	var random = RandomNumberGenerator.new()
+	var randInt = random.randi_range(10, 400)
+	cherryTemp.position = Vector2(randInt, 180)
+	get_node(\"Node2D\").add_child(cherryTemp)
+	
+"
+
 [node name="World" type="Node2D"]
 position = Vector2(0, 256)
 
@@ -241,15 +256,12 @@ text = "HP"
 script = SubResource("GDScript_dwbse")
 
 [node name="Collectables" type="Node2D" parent="."]
+script = SubResource("GDScript_pkg7o")
 
-[node name="Cherry" parent="Collectables" instance=ExtResource("6_dwbse")]
-position = Vector2(280, 120)
+[node name="Timer" type="Timer" parent="Collectables"]
+wait_time = 3.0
+autostart = true
 
-[node name="Cherry2" parent="Collectables" instance=ExtResource("6_dwbse")]
-position = Vector2(336, 120)
+[node name="Node2D" type="Node2D" parent="Collectables"]
 
-[node name="Cherry3" parent="Collectables" instance=ExtResource("6_dwbse")]
-position = Vector2(320, 96)
-
-[node name="Cherry4" parent="Collectables" instance=ExtResource("6_dwbse")]
-position = Vector2(296, 96)
+[connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]
