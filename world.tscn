@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=11 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="2_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://6bm6gbknfrtd" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/tileset.png" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://dvv0w42p5iqcr" path="res://frog.tscn" id="5_036b0"]
+[ext_resource type="PackedScene" uid="uid://bgxvfsr0iu628" path="res://Collectables/cherry.tscn" id="6_dwbse"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -175,7 +176,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(delta: float) -> void: 
 	text = \"Gold: \" + str(Game.gold)
 "
 
@@ -206,16 +207,16 @@ position = Vector2(456, 128)
 [node name="Mobs" type="Node2D" parent="."]
 
 [node name="Frog" parent="Mobs" instance=ExtResource("5_036b0")]
-position = Vector2(256, 120)
+position = Vector2(856, 120)
 
 [node name="Frog2" parent="Mobs" instance=ExtResource("5_036b0")]
-position = Vector2(600, 128)
+position = Vector2(1200, 128)
 
 [node name="Frog3" parent="Mobs" instance=ExtResource("5_036b0")]
-position = Vector2(120, 144)
+position = Vector2(720, 144)
 
 [node name="Frog4" parent="Mobs" instance=ExtResource("5_036b0")]
-position = Vector2(720, 136)
+position = Vector2(1320, 136)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -238,3 +239,17 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "HP"
 script = SubResource("GDScript_dwbse")
+
+[node name="Collectables" type="Node2D" parent="."]
+
+[node name="Cherry" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(280, 120)
+
+[node name="Cherry2" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(336, 120)
+
+[node name="Cherry3" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(320, 96)
+
+[node name="Cherry4" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(296, 96)
