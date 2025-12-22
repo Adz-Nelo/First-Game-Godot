@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://drlp75ii76yoo"]
+
+[ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
+[ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
+
+[sub_resource type="GDScript" id="GDScript_3rbmd"]
+script/source = "# In your AudioController.gd script:
+extends Node
+
+@onready var music = $Music
+@onready var jump_sound = $Jump
+@onready var end_level_sound = $EndLevel
+
+func _ready():
+	play_music()  # Start music when game starts
+
+func play_music():
+	if not music.playing:
+		music.play()
+
+func stop_music():
+	music.stop()
+
+func play_jump():
+	jump_sound.play()
+
+func play_end_level():
+	end_level_sound.play()
+	
+# Optional: Fade music in/out
+func fade_music_out(duration: float = 1.0):
+	# You'd need a tween for this
+	pass
+"
+
+[node name="AudioController" type="Node2D"]
+script = SubResource("GDScript_3rbmd")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_3rbmd")
+autoplay = true
+
+[node name="Jump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_yenca")
+
+[node name="EndLevel" type="AudioStreamPlayer" parent="."]

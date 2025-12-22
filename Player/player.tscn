@@ -17,8 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://djmwpj7mtsi58" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/run/player-run-6.png" id="14_qtqh7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hvfyp"]
-radius = 6.0
-height = 20.0
+height = 24.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_l8h54"]
 animations = [{
@@ -232,12 +231,13 @@ _data = {
 script = ExtResource("1_dkpta")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, -10)
+position = Vector2(2, -12)
 shape = SubResource("CapsuleShape2D_hvfyp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 process_mode = 4
-position = Vector2(0, -16)
+position = Vector2(3.09375, -19)
+scale = Vector2(1.1875, 1.1875)
 sprite_frames = SubResource("SpriteFrames_l8h54")
 animation = &"Idle"
 frame = 1
