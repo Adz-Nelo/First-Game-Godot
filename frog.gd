@@ -38,43 +38,38 @@ func _on_player_detection_body_entered(body: Node2D) -> void:
 
 func _on_player_detection_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
-		chase = false	
+		chase = false
 
+# ========== KEEP THIS - PlayerDeath handles bounce ==========
 func _on_player_death_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
+		print("🎯 PlayerDeath area triggered (top stomp)")
+		body.bounce_after_stomp()
 		death()
 
-# ========== ONE FUNCTION HANDLES BOTH ==========
+# ========== REMOVE BOUNCE FROM HERE ==========
 func _on_player_collision_body_entered(body: Node2D) -> void:
 	if body.name == "Player" and not is_dead:
-		# SIMPLE CHECK: Is player's bottom above frog's top?
-		# The "-30" is a buffer zone - adjust based on your sprite sizes
-		if body.position.y < self.position.y - 30:
-			# Player is stomping from ABOVE - BOUNCE!
-			print("STOMP! Player bounced on frog")
-			
-			# Get player and bounce them
-			var player_node = get_node("../../Player/Player")
-			if player_node:
-				player_node.bounce_after_stomp()
-			
-			# Kill frog (no damage to player)
-			death()
-		else:
-			# Player hit from SIDE/BELOW - take damage
-			print("OUCH! Player hit frog from side")
-			Game.playerHP -= 3
-			death()
-# ==============================================
+		print("💥 PlayerCollision triggered (side/bottom hit)")
+		# NO BOUNCE HERE - just damage
+		Game.playerHP -= 3
+		death()
 		
 func death():
-	if is_dead:
-		return
+	if is_dead:	
+		return 
 		
 	is_dead = true
 	Game.gold += 5
 	Utilities.saveGame()
 	chase = false
+	
+	# Play death animation
 	$AnimatedSprite2D.play("Death")
-	await $AnimatedSprite2D.animation_finished
+	
+	# Wait just long enough to see the death frame
+	# Adjust this number: 0.1 = very fast, 0.5 = slower
+	await get_tree().create_timer(0.6).timeout
+	
+	# Disappear
 	self.queue_free()

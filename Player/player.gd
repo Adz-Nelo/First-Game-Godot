@@ -4,6 +4,15 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
 @onready var animation = get_node("AnimationPlayer")
+@onready var animated_sprite = get_node("AnimatedSprite2D")
+
+# ========== BOUNCE FUNCTION ==========
+func bounce_after_stomp():
+	print("🎯 PLAYER BOUNCED!")
+	velocity.y = -300  # Strong bounce force
+	# Optional: Play bounce sound
+	# AudioController.play("stomp")
+# ======================================
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -17,13 +26,12 @@ func _physics_process(delta: float) -> void:
 		animation.play("Jump")
 
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := Input.get_axis("ui_left", "ui_right")
 	
 	if direction == -1:
-		get_node("AnimatedSprite2D").flip_h = true
+		animated_sprite.flip_h = true
 	elif direction == 1:
-		get_node("AnimatedSprite2D").flip_h = false
+		animated_sprite.flip_h = false
 	
 	if direction:
 		velocity.x = direction * SPEED
@@ -40,6 +48,11 @@ func _physics_process(delta: float) -> void:
 		animation.play("Fall")
 
 	move_and_slide()
+	
+	# DEBUG: Test bounce with a key press
+	if Input.is_action_just_pressed("ui_select"):
+		bounce_after_stomp()
+		print("Manual bounce test. Velocity: ", velocity)
 	
 	if Game.playerHP <= 0:
 		queue_free()
