@@ -1,28 +1,62 @@
-[gd_scene load_steps=3 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=6 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://co103gs1k88g8" path="res://sunny-land/assets/sprites/title-screen.png" id="3_h2yge"]
+[ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_1bvp3"]
+
+[sub_resource type="GDScript" id="GDScript_h2yge"]
+script/source = "extends Node
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Label.modulate = Color.BLACK
+"
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_ig7tw")
 
 [node name="Play" type="Button" parent="."]
-offset_left = 425.0
-offset_top = 110.0
-offset_right = 732.0
-offset_bottom = 290.0
+offset_left = 472.0
+offset_top = 336.0
+offset_right = 656.0
+offset_bottom = 392.0
 text = "Play"
 
 [node name="Quit" type="Button" parent="."]
-offset_left = 427.0
-offset_top = 329.0
-offset_right = 734.0
-offset_bottom = 509.0
+offset_left = 472.0
+offset_top = 416.0
+offset_right = 656.0
+offset_bottom = 475.0
 tooltip_text = "This is a quit button"
 text = "Quit
 "
 
 [node name="Background" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="TitleScreen" type="Sprite2D" parent="."]
+position = Vector2(568, 192)
+scale = Vector2(1.763158, 1.7631578)
+texture = ExtResource("3_h2yge")
+
+[node name="Node" type="Node" parent="."]
+script = SubResource("GDScript_h2yge")
+
+[node name="Label" type="Label" parent="Node"]
+offset_left = 464.0
+offset_top = 280.0
+offset_right = 668.0
+offset_bottom = 303.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+text = "Created By: Nelo Code"
+
+[node name="Label2" type="Label" parent="Node"]
+offset_left = 465.0
+offset_top = 281.0
+offset_right = 669.0
+offset_bottom = 304.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+text = "Created By: Nelo Code"
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
