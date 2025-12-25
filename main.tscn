@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=8 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
+[ext_resource type="Theme" uid="uid://biqa2i8hv6lu8" path="res://default.tres" id="2_7mycd"]
 [ext_resource type="Texture2D" uid="uid://co103gs1k88g8" path="res://sunny-land/assets/sprites/title-screen.png" id="3_h2yge"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bhmxecd6nrbr8" path="res://sunny-land/assets/sprites/credits-text.png" id="5_lquwl"]
 
 [sub_resource type="GDScript" id="GDScript_h2yge"]
 script/source = "extends Node
@@ -21,6 +23,7 @@ offset_left = 472.0
 offset_top = 336.0
 offset_right = 656.0
 offset_bottom = 392.0
+theme = ExtResource("2_7mycd")
 text = "Play"
 
 [node name="Quit" type="Button" parent="."]
@@ -57,6 +60,11 @@ offset_right = 669.0
 offset_bottom = 304.0
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Created By: Nelo Code"
+
+[node name="CreditsText" type="Sprite2D" parent="."]
+position = Vector2(568, 536)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_lquwl")
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
