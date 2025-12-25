@@ -32,6 +32,7 @@ offset_top = 416.0
 offset_right = 656.0
 offset_bottom = 475.0
 tooltip_text = "This is a quit button"
+theme = ExtResource("2_7mycd")
 text = "Quit
 "
 

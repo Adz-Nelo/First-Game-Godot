@@ -885,9 +885,9 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mb6pw"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nixot"]
 texture = ExtResource("1_nixot")
-region_rect = Rect2(166.35611, 32.257683, 0.75131226, 0)
+region_rect = Rect2(57.676514, 12.424746, 214.02405, 53.77777)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqhm0"]
 content_margin_left = 4.0
@@ -924,5 +924,5 @@ Button/fonts/font = SubResource("FontFile_lb50s")
 Button/styles/disabled = SubResource("StyleBoxFlat_ir6w1")
 Button/styles/focus = SubResource("StyleBoxFlat_y7ndg")
 Button/styles/hover = SubResource("StyleBoxFlat_3a8jl")
-Button/styles/normal = SubResource("StyleBoxTexture_mb6pw")
+Button/styles/normal = SubResource("StyleBoxTexture_nixot")
 Button/styles/pressed = SubResource("StyleBoxFlat_dqhm0")
