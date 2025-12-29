@@ -1,8 +1,8 @@
 extends Node2D
 
 func _ready() -> void:
-	var theme = preload("res://RETRO_SPACE/RETRO_SPACE.ttf")
-	get_tree().root.gui_theme = theme
+	#var theme = preload("res://RETRO_SPACE/RETRO_SPACE.ttf")
+	#get_tree().root.gui_theme = theme
 	AudioController.play_music()
 	Utilities.saveGame()
 	Utilities.loadGame()
