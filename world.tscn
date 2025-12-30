@@ -186,12 +186,12 @@ script/source = "extends Node2D
 var cherry = preload(\"res://Collectables/cherry.tscn\")
 
 
-func _on_timer_timeout() -> void:
-	var cherryTemp = cherry.instantiate()
-	var random = RandomNumberGenerator.new()
-	var randInt = random.randi_range(10, 400)
-	cherryTemp.position = Vector2(randInt, 180)
-	get_node(\"Node2D\").add_child(cherryTemp)
+#func _on_timer_timeout() -> void:
+	#var cherryTemp = cherry.instantiate()
+	#var random = RandomNumberGenerator.new()
+	#var randInt = random.randi_range(10, 400)
+	#cherryTemp.position = Vector2(randInt, 180)
+	#get_node(\"Node2D\").add_child(cherryTemp)
 	
 "
 
@@ -217,7 +217,7 @@ layer_0/tile_data = PackedInt32Array(786432, 65536, 1, 851968, 196608, 3, 917504
 [node name="Player" type="Node2D" parent="."]
 
 [node name="Player" parent="Player" instance=ExtResource("1_f3sb7")]
-position = Vector2(456, 128)
+position = Vector2(440, 56)
 
 [node name="Mobs" type="Node2D" parent="."]
 

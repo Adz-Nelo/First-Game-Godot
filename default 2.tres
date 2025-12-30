@@ -1,5 +1,6 @@
-[gd_resource type="Theme" load_steps=11 format=4 uid="uid://ctpy7nw8csxtu"]
+[gd_resource type="Theme" load_steps=12 format=4 uid="uid://ctpy7nw8csxtu"]
 
+[ext_resource type="Texture2D" uid="uid://73d452wf06y1" path="res://buttons/button2-active.png" id="1_30ngw"]
 [ext_resource type="Texture2D" uid="uid://bdm6mxvv7ufwf" path="res://buttons/button2-hover.png" id="1_fnmcd"]
 [ext_resource type="Texture2D" uid="uid://djg24bw8x7swb" path="res://buttons/button2.png" id="1_ftorn"]
 
@@ -843,26 +844,9 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mph24"]
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(1, 1, 1, 0.75)
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jxikh"]
+texture = ExtResource("1_30ngw")
+region_rect = Rect2(2.8756428, 0, 216.95857, 58.952293)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_30ngw"]
 texture = ExtResource("1_fnmcd")
@@ -904,7 +888,7 @@ Button/constants/outline_size = 0
 Button/font_sizes/font_size = 16
 Button/fonts/font = SubResource("FontFile_jxikh")
 Button/styles/disabled = SubResource("StyleBoxFlat_kgwo4")
-Button/styles/focus = SubResource("StyleBoxFlat_mph24")
+Button/styles/focus = SubResource("StyleBoxTexture_jxikh")
 Button/styles/hover = SubResource("StyleBoxTexture_30ngw")
 Button/styles/normal = SubResource("StyleBoxTexture_xl0s3")
 Button/styles/pressed = SubResource("StyleBoxFlat_ucmvm")
