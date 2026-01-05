@@ -40,19 +40,20 @@ func _on_player_detection_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		chase = false
 
-# ========== KEEP THIS - PlayerDeath handles bounce ==========
+# Player stomps frog from top
 func _on_player_death_body_entered(body: Node2D) -> void:
-	if body.name == "Player":
+	if body.name == "Player" and not is_dead:
+		AudioController.play_stomp_enemy()
 		print("🎯 PlayerDeath area triggered (top stomp)")
 		body.bounce_after_stomp()
 		death()
 
-# ========== REMOVE BOUNCE FROM HERE ==========
+# Player collides with frog from side/bottom
 func _on_player_collision_body_entered(body: Node2D) -> void:
 	if body.name == "Player" and not is_dead:
 		print("💥 PlayerCollision triggered (side/bottom hit)")
-		# NO BOUNCE HERE - just damage
-		Game.playerHP -= 3
+		# CHANGED: Call player's take_damage function
+		body.take_damage(3)
 		death()
 		
 func death():
@@ -67,8 +68,7 @@ func death():
 	# Play death animation
 	$AnimatedSprite2D.play("Death")
 	
-	# Wait just long enough to see the death frame
-	# Adjust this number: 0.1 = very fast, 0.5 = slower
+	# Wait for death animation
 	await get_tree().create_timer(0.6).timeout
 	
 	# Disappear
