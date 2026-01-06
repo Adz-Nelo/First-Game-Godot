@@ -1,10 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=13 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="2_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://6bm6gbknfrtd" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/tileset.png" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://dvv0w42p5iqcr" path="res://frog.tscn" id="5_036b0"]
+[ext_resource type="PackedScene" uid="uid://cs04855ow3t40" path="res://coin.tscn" id="6_dwbse"]
+[ext_resource type="Texture2D" uid="uid://b33yydkayxat5" path="res://Coin_Gems/MonedaD.png" id="6_pkg7o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -165,7 +167,7 @@ func _process(delta: float) -> void:
 	text = \"HP: \" + str(Game.playerHP)
 "
 
-[sub_resource type="GDScript" id="GDScript_dwbse"]
+[sub_resource type="GDScript" id="GDScript_gbfbk"]
 script/source = "extends Label
 
 
@@ -176,7 +178,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void: 
-	text = \"Gold: \" + str(Game.gold)
+	text = \": \" + str(Game.gold)
 "
 
 [sub_resource type="GDScript" id="GDScript_pkg7o"]
@@ -245,15 +247,31 @@ theme_override_font_sizes/font_size = 24
 text = "HP"
 script = SubResource("GDScript_036b0")
 
-[node name="Gold" type="Label" parent="UI"]
+[node name="CoinUI" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="UI/CoinUI"]
+layout_mode = 0
 offset_left = 24.0
+offset_top = 48.0
+offset_right = 40.0
+offset_bottom = 64.0
+texture = ExtResource("6_pkg7o")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="UI/CoinUI"]
+layout_mode = 0
+offset_left = 40.0
 offset_top = 40.0
-offset_right = 64.0
+offset_right = 80.0
 offset_bottom = 74.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 24
-text = "HP"
-script = SubResource("GDScript_dwbse")
+theme_override_font_sizes/font_size = 20
+script = SubResource("GDScript_gbfbk")
 
 [node name="Collectables" type="Node2D" parent="."]
 script = SubResource("GDScript_pkg7o")
@@ -263,5 +281,20 @@ wait_time = 3.0
 autostart = true
 
 [node name="Node2D" type="Node2D" parent="Collectables"]
+
+[node name="Coin" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(248, 184)
+
+[node name="Coin2" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(264, 184)
+
+[node name="Coin3" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(280, 184)
+
+[node name="Coin4" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(296, 184)
+
+[node name="Coin5" parent="Collectables" instance=ExtResource("6_dwbse")]
+position = Vector2(312, 184)
 
 [connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]

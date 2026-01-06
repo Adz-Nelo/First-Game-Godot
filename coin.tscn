@@ -1,0 +1,137 @@
+[gd_scene load_steps=15 format=3 uid="uid://cs04855ow3t40"]
+
+[ext_resource type="Texture2D" uid="uid://b8ac2eb8oobs1" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Spritesheets/item-feedback.png" id="1_0t63x"]
+[ext_resource type="Texture2D" uid="uid://b33yydkayxat5" path="res://Coin_Gems/MonedaD.png" id="1_d5gmh"]
+
+[sub_resource type="GDScript" id="GDScript_d5gmh"]
+resource_name = "coin.gd"
+script/source = "extends Node2D
+
+@onready var animated_sprite = $AnimatedSprite2D
+@onready var area = $Area2D
+
+var coin = 1  # How much gold this coin gives
+
+func _ready():
+	# Play coin animation
+	animated_sprite.play(\"Spin\")  # Change to your animation name
+	
+	# Connect the area signal
+	area.body_entered.connect(_on_body_entered)
+
+func _on_body_entered(body):
+	if body.name == \"Player\":
+		collect_coin(body)
+
+func collect_coin(player):
+	print(\"💰 Coin collected! Gold:\", Game.gold, \"→\", Game.gold + coin)
+	
+	# Add gold
+	animated_sprite.play(\"Collect\")
+	Game.gold += coin
+	
+	# Save game
+	Utilities.saveGame()
+	
+	# Play sound effect
+	AudioController.play_coin_collect()
+	
+	# Optional: Play collect animation/effect before disappearing
+	await get_tree().create_timer(0.1).timeout
+	
+	# Remove coin
+	queue_free()
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o4fra"]
+atlas = ExtResource("1_0t63x")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_te2np"]
+atlas = ExtResource("1_0t63x")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1j4n"]
+atlas = ExtResource("1_0t63x")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1mwu"]
+atlas = ExtResource("1_0t63x")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0t63x"]
+atlas = ExtResource("1_d5gmh")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7riw"]
+atlas = ExtResource("1_d5gmh")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdq0q"]
+atlas = ExtResource("1_d5gmh")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w14il"]
+atlas = ExtResource("1_d5gmh")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4etq"]
+atlas = ExtResource("1_d5gmh")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_o4fra"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_o4fra")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_te2np")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1j4n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1mwu")
+}],
+"loop": true,
+"name": &"Collect",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0t63x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v7riw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdq0q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w14il")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h4etq")
+}],
+"loop": true,
+"name": &"Spin",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_te2np"]
+radius = 8.0
+
+[node name="Coin" type="Node2D"]
+script = SubResource("GDScript_d5gmh")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_o4fra")
+animation = &"Collect"
+autoplay = "Spin"
+metadata/_edit_lock_ = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_te2np")
