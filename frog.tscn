@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dvv0w42p5iqcr"]
+[gd_scene load_steps=20 format=3 uid="uid://dvv0w42p5iqcr"]
 
 [ext_resource type="Script" uid="uid://cjwir01nsocc8" path="res://frog.gd" id="1_yakrr"]
 [ext_resource type="Texture2D" uid="uid://dsa6siqhy4sxe" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-1.png" id="2_o353j"]
@@ -98,6 +98,9 @@ size = Vector2(14, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_71pkg"]
 size = Vector2(25, 11)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o353j"]
+size = Vector2(23, 5)
+
 [node name="Frog" type="CharacterBody2D"]
 script = ExtResource("1_yakrr")
 
@@ -127,6 +130,12 @@ shape = SubResource("RectangleShape2D_yakrr")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollision"]
 position = Vector2(0.5, -5.5)
 shape = SubResource("RectangleShape2D_71pkg")
+
+[node name="FrogBody" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FrogBody"]
+position = Vector2(-0.5, -2.5)
+shape = SubResource("RectangleShape2D_o353j")
 
 [connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
