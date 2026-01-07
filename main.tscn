@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=18 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
@@ -7,11 +7,27 @@
 [ext_resource type="Theme" uid="uid://ctpy7nw8csxtu" path="res://default 2.tres" id="3_272bh"]
 [ext_resource type="Texture2D" uid="uid://co103gs1k88g8" path="res://sunny-land/assets/sprites/title-screen.png" id="3_h2yge"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_1bvp3"]
+[ext_resource type="Theme" uid="uid://cllps1k4la74u" path="res://default 3.tres" id="4_dg77c"]
 [ext_resource type="Texture2D" uid="uid://bhmxecd6nrbr8" path="res://sunny-land/assets/sprites/credits-text.png" id="5_lquwl"]
+[ext_resource type="Texture2D" uid="uid://cqqn4jsnud681" path="res://buttons/button3.png" id="5_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://be82kthkdhcji" path="res://buttons/button3-active.png" id="6_w48qg"]
+[ext_resource type="Texture2D" uid="uid://drir4ajfclqqa" path="res://buttons/button3-hover.png" id="7_vivmo"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kek77"]
 texture = ExtResource("3_5vw27")
-region_rect = Rect2(-2.3616886, -3.095829, 218.09421, 58.222527)
+region_rect = Rect2(-2.3616886, -1.9762211, 218.09421, 57.10292)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dg77c"]
+texture = ExtResource("5_ycdy4")
+region_rect = Rect2(4.6058693, 3.5594559, 213.76865, 53.655354)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ycdy4"]
+texture = ExtResource("6_w48qg")
+region_rect = Rect2(3.2319794, 2.4074392, 216.92905, 56.627792)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w48qg"]
+texture = ExtResource("7_vivmo")
+region_rect = Rect2(4.6631947, 3.5992155, 213.56564, 53.58614)
 
 [sub_resource type="GDScript" id="GDScript_h2yge"]
 script/source = "extends Node
@@ -26,19 +42,29 @@ script = ExtResource("1_ig7tw")
 
 [node name="Play" type="Button" parent="."]
 offset_left = 472.0
-offset_top = 336.0
+offset_top = 289.5
 offset_right = 656.0
-offset_bottom = 392.0
+offset_bottom = 345.5
 theme = ExtResource("2_7mycd")
 theme_override_styles/focus = SubResource("StyleBoxTexture_kek77")
 text = "
 "
 
+[node name="Option" type="Button" parent="."]
+offset_left = 472.0
+offset_top = 361.5
+offset_right = 656.0
+offset_bottom = 417.5
+theme = ExtResource("4_dg77c")
+theme_override_styles/normal = SubResource("StyleBoxTexture_dg77c")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ycdy4")
+theme_override_styles/hover = SubResource("StyleBoxTexture_w48qg")
+
 [node name="Quit" type="Button" parent="."]
 offset_left = 472.0
-offset_top = 416.0
+offset_top = 433.5
 offset_right = 656.0
-offset_bottom = 475.0
+offset_bottom = 492.5
 tooltip_text = "This is a quit button"
 theme = ExtResource("3_272bh")
 text = "
@@ -47,7 +73,7 @@ text = "
 [node name="Background" parent="." instance=ExtResource("2_0xm2m")]
 
 [node name="TitleScreen" type="Sprite2D" parent="."]
-position = Vector2(568, 192)
+position = Vector2(568, 145.5)
 scale = Vector2(1.763158, 1.7631578)
 texture = ExtResource("3_h2yge")
 
@@ -56,24 +82,25 @@ script = SubResource("GDScript_h2yge")
 
 [node name="Label" type="Label" parent="Node"]
 offset_left = 464.0
-offset_top = 280.0
+offset_top = 233.5
 offset_right = 668.0
-offset_bottom = 303.0
+offset_bottom = 256.5
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Created By: Nelo Code"
 
 [node name="Label2" type="Label" parent="Node"]
 offset_left = 465.0
-offset_top = 281.0
+offset_top = 234.5
 offset_right = 669.0
-offset_bottom = 304.0
+offset_bottom = 257.5
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Created By: Nelo Code"
 
 [node name="CreditsText" type="Sprite2D" parent="."]
-position = Vector2(568, 536)
+position = Vector2(568, 553.5)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("5_lquwl")
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
