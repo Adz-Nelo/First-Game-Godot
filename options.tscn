@@ -1,8 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://chuebjphy8ych"]
+[gd_scene load_steps=6 format=3 uid="uid://chuebjphy8ych"]
 
 [ext_resource type="Texture2D" uid="uid://bl2i3pgme2xsc" path="res://sunny-land/assets/environment/back.png" id="1_se8ut"]
 [ext_resource type="Texture2D" uid="uid://b3vi0lt8tntfs" path="res://sunny-land/assets/environment/middle.png" id="2_ao2gm"]
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="3_ao2gm"]
+[ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_07a1d"]
+
+[sub_resource type="GDScript" id="GDScript_07a1d"]
+script/source = "extends Node
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Label.modulate = Color.BLACK
+
+func _on_back_btn_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://main.tscn\")
+"
 
 [node name="Node2D" type="Node2D"]
 
@@ -40,6 +52,36 @@ position = Vector2(1144, 464)
 texture = ExtResource("2_ao2gm")
 
 [node name="Options" type="Sprite2D" parent="."]
-position = Vector2(584, 336.00003)
-scale = Vector2(4.761905, 4.7619047)
+position = Vector2(584, 368.00003)
+scale = Vector2(3.7857144, 3.7857137)
 texture = ExtResource("3_ao2gm")
+
+[node name="Node" type="Node" parent="."]
+script = SubResource("GDScript_07a1d")
+
+[node name="Label" type="Label" parent="Node"]
+offset_left = 480.0
+offset_top = 88.0
+offset_right = 664.0
+offset_bottom = 125.0
+theme_override_fonts/font = ExtResource("4_07a1d")
+theme_override_font_sizes/font_size = 45
+text = "Options"
+
+[node name="Label2" type="Label" parent="Node"]
+offset_left = 482.0
+offset_top = 90.0
+offset_right = 666.0
+offset_bottom = 127.0
+theme_override_fonts/font = ExtResource("4_07a1d")
+theme_override_font_sizes/font_size = 45
+text = "Options"
+
+[node name="BackBtn" type="Button" parent="."]
+offset_left = 296.0
+offset_top = 216.0
+offset_right = 336.0
+offset_bottom = 232.0
+text = "Back to Main Menu"
+
+[connection signal="pressed" from="BackBtn" to="Node" method="_on_back_btn_pressed"]
