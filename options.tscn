@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://chuebjphy8ych"]
+[gd_scene load_steps=11 format=3 uid="uid://chuebjphy8ych"]
 
 [ext_resource type="Texture2D" uid="uid://bl2i3pgme2xsc" path="res://sunny-land/assets/environment/back.png" id="1_se8ut"]
 [ext_resource type="Texture2D" uid="uid://b3vi0lt8tntfs" path="res://sunny-land/assets/environment/middle.png" id="2_ao2gm"]
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="3_ao2gm"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_07a1d"]
+[ext_resource type="Theme" uid="uid://de7qgtf8sy4q3" path="res://back-btn.tres" id="5_kls10"]
+[ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="6_0kfld"]
 
 [sub_resource type="GDScript" id="GDScript_07a1d"]
 script/source = "extends Node
@@ -15,6 +17,18 @@ func _ready() -> void:
 func _on_back_btn_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://main.tscn\")
 "
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5qgn"]
+texture = ExtResource("6_0kfld")
+region_rect = Rect2(169.42001, 188.13046, 160.93002, 118.37955)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kls10"]
+texture = ExtResource("6_0kfld")
+region_rect = Rect2(163.42674, 184.74947, 173.45592, 128.92567)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0kfld"]
+texture = ExtResource("6_0kfld")
+region_rect = Rect2(172.64297, 189.2893, 155.85123, 118.67996)
 
 [node name="Node2D" type="Node2D"]
 
@@ -81,7 +95,10 @@ text = "Options"
 offset_left = 296.0
 offset_top = 216.0
 offset_right = 336.0
-offset_bottom = 232.0
-text = "Back to Main Menu"
+offset_bottom = 240.0
+theme = ExtResource("5_kls10")
+theme_override_styles/normal = SubResource("StyleBoxTexture_w5qgn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kls10")
+theme_override_styles/hover = SubResource("StyleBoxTexture_0kfld")
 
 [connection signal="pressed" from="BackBtn" to="Node" method="_on_back_btn_pressed"]

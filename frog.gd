@@ -12,18 +12,23 @@ var hop_cooldown = 1.5
 var hop_force = -300
 var hop_distance = 100
 
+# Track previous velocity
+var previous_velocity_y = 0.0
+
+# Damage cooldown
+var can_damage_player = true
+var damage_cooldown = 1.0
+
 func _ready() -> void:
 	$AnimatedSprite2D.play("Idle")
 	hop_timer = randf_range(0.0, hop_cooldown)
-	
-	# Connect FrogBody collision signal
-	if has_node("FrogBody"):
-		$FrogBody.body_entered.connect(_on_frog_body_body_entered)
-		print("✅ FrogBody connected!")
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
+	
+	# Store velocity before move_and_slide
+	previous_velocity_y = velocity.y
 		
 	# Gravity for frog
 	velocity += get_gravity() * delta
@@ -90,17 +95,6 @@ func hop():
 	
 	$AnimatedSprite2D.play("Jump")
 
-# NEW: When FrogBody (bottom of frog) touches player
-func _on_frog_body_body_entered(body: Node2D) -> void:
-	if body.name == "Player" and not is_dead:
-		print("🐸 FrogBody touched player! Velocity.y:", velocity.y)
-		# Only damage if frog is falling down
-		if velocity.y > 50:  # Falling downward
-			print("🐸💥 Frog landed on player's head!")
-			body.take_damage(2)
-			# Bounce frog back up slightly
-			velocity.y = -150
-
 func _on_player_detection_body_entered(body: Node2D) -> void:
 	if body.name == "Player":
 		chase = true
@@ -119,12 +113,54 @@ func _on_player_death_body_entered(body: Node2D) -> void:
 		body.bounce_after_stomp()
 		death()
 
-# Player collides with frog from side/bottom
+# Player collides with frog from side/bottom OR frog lands on player
 func _on_player_collision_body_entered(body: Node2D) -> void:
-	if body.name == "Player" and not is_dead:
-		print("💥 PlayerCollision triggered (side/bottom hit)")
-		body.take_damage(3)
-		death()
+	if body.name == "Player" and not is_dead and can_damage_player:
+		# Check if frog is ABOVE the player
+		var frog_is_above = position.y < body.position.y - 20
+		# Use PREVIOUS velocity (before it hit the ground)
+		var frog_was_falling = previous_velocity_y > 50
+		
+		print("🔍 Collision! Frog Y:", position.y, " Player Y:", body.position.y)
+		print("🔍 Frog above?", frog_is_above, " Was falling?", frog_was_falling, " prev velocity.y:", previous_velocity_y)
+		
+		if frog_is_above and frog_was_falling:
+			# Frog landed on player from above
+			print("🐸💥 Frog fell onto player's head!")
+			body.take_damage(2)
+			
+			# MUCH stronger bounce
+			velocity.y = -450
+			
+			# Better horizontal push calculation
+			var horizontal_distance = position.x - body.position.x
+			
+			if abs(horizontal_distance) < 5:
+				# Nearly centered - push based on player's facing direction
+				if body.animated_sprite.flip_h:
+					velocity.x = 200  # Player facing left, push right
+				else:
+					velocity.x = -200  # Player facing right, push left
+			else:
+				# Push away from player based on position
+				velocity.x = sign(horizontal_distance) * 200
+			
+			# Start cooldown
+			can_damage_player = false
+			
+			# Disable collision briefly so frog can escape
+			$PlayerCollision.monitoring = false
+			await get_tree().create_timer(0.3).timeout
+			$PlayerCollision.monitoring = true
+			
+			await get_tree().create_timer(damage_cooldown).timeout
+			can_damage_player = true
+			
+		else:
+			# Normal side/bottom collision - frog dies
+			print("💥 PlayerCollision triggered (side/bottom hit)")
+			body.take_damage(3)
+			death()
 
 func death():
 	if is_dead:	
