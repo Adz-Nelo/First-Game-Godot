@@ -105,46 +105,45 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_0kfld")
 [node name="volume-slider" type="Node" parent="."]
 
 [node name="master_label" type="Label" parent="volume-slider"]
-offset_left = 440.0
-offset_top = 264.0
-offset_right = 558.0
-offset_bottom = 287.0
+offset_left = 496.0
+offset_top = 296.0
+offset_right = 614.0
+offset_bottom = 319.0
 text = "Master Volume"
 
 [node name="music_label" type="Label" parent="volume-slider"]
-offset_left = 440.0
-offset_top = 312.0
-offset_right = 558.0
-offset_bottom = 335.0
+offset_left = 496.0
+offset_top = 344.0
+offset_right = 614.0
+offset_bottom = 367.0
 text = "Music Volume"
 
 [node name="sound_effect_label" type="Label" parent="volume-slider"]
-offset_left = 440.0
-offset_top = 360.0
-offset_right = 601.0
-offset_bottom = 383.0
+offset_left = 496.0
+offset_top = 392.0
+offset_right = 657.0
+offset_bottom = 415.0
 text = "Sound Effect Volume"
 
 [node name="Master" parent="volume-slider" instance=ExtResource("7_0kfld")]
-offset_left = 440.0
-offset_top = 288.0
-offset_right = 448.0
-offset_bottom = 304.0
-max_value = 10.0
+offset_left = 496.0
+offset_top = 320.0
+offset_right = 640.0
+offset_bottom = 336.0
 bus_name = "Master"
 
 [node name="Music" parent="volume-slider" instance=ExtResource("7_0kfld")]
-offset_left = 440.0
-offset_top = 336.0
-offset_right = 448.0
-offset_bottom = 352.0
+offset_left = 496.0
+offset_top = 368.0
+offset_right = 640.0
+offset_bottom = 384.0
 bus_name = "Music"
 
-[node name="Sound Effect" parent="volume-slider" instance=ExtResource("7_0kfld")]
-offset_left = 440.0
-offset_top = 384.0
-offset_right = 448.0
-offset_bottom = 400.0
-bus_name = "Sound Effect"
+[node name="Sound-Effect" parent="volume-slider" instance=ExtResource("7_0kfld")]
+offset_left = 496.0
+offset_top = 416.0
+offset_right = 640.0
+offset_bottom = 432.0
+bus_name = "Sound Effects"
 
 [connection signal="pressed" from="BackBtn" to="Node" method="_on_back_btn_pressed"]
