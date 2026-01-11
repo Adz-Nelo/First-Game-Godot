@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://chuebjphy8ych"]
+[gd_scene load_steps=12 format=3 uid="uid://chuebjphy8ych"]
 
 [ext_resource type="Texture2D" uid="uid://bl2i3pgme2xsc" path="res://sunny-land/assets/environment/back.png" id="1_se8ut"]
 [ext_resource type="Texture2D" uid="uid://b3vi0lt8tntfs" path="res://sunny-land/assets/environment/middle.png" id="2_ao2gm"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_07a1d"]
 [ext_resource type="Theme" uid="uid://de7qgtf8sy4q3" path="res://back-btn.tres" id="5_kls10"]
 [ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="6_0kfld"]
+[ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="7_0kfld"]
 
 [sub_resource type="GDScript" id="GDScript_07a1d"]
 script/source = "extends Node
@@ -100,5 +101,50 @@ theme = ExtResource("5_kls10")
 theme_override_styles/normal = SubResource("StyleBoxTexture_w5qgn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_kls10")
 theme_override_styles/hover = SubResource("StyleBoxTexture_0kfld")
+
+[node name="volume-slider" type="Node" parent="."]
+
+[node name="master_label" type="Label" parent="volume-slider"]
+offset_left = 440.0
+offset_top = 264.0
+offset_right = 558.0
+offset_bottom = 287.0
+text = "Master Volume"
+
+[node name="music_label" type="Label" parent="volume-slider"]
+offset_left = 440.0
+offset_top = 312.0
+offset_right = 558.0
+offset_bottom = 335.0
+text = "Music Volume"
+
+[node name="sound_effect_label" type="Label" parent="volume-slider"]
+offset_left = 440.0
+offset_top = 360.0
+offset_right = 601.0
+offset_bottom = 383.0
+text = "Sound Effect Volume"
+
+[node name="Master" parent="volume-slider" instance=ExtResource("7_0kfld")]
+offset_left = 440.0
+offset_top = 288.0
+offset_right = 448.0
+offset_bottom = 304.0
+max_value = 10.0
+bus_name = "Master"
+
+[node name="Music" parent="volume-slider" instance=ExtResource("7_0kfld")]
+offset_left = 440.0
+offset_top = 336.0
+offset_right = 448.0
+offset_bottom = 352.0
+bus_name = "Music"
+
+[node name="Sound Effect" parent="volume-slider" instance=ExtResource("7_0kfld")]
+offset_left = 440.0
+offset_top = 384.0
+offset_right = 448.0
+offset_bottom = 400.0
+bus_name = "Sound Effect"
 
 [connection signal="pressed" from="BackBtn" to="Node" method="_on_back_btn_pressed"]

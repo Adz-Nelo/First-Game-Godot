@@ -63,22 +63,30 @@ script = SubResource("GDScript_3rbmd")
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_3rbmd")
 autoplay = true
+bus = &"Music"
 
 [node name="Jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_yenca")
+bus = &"Sound Effects"
 
 [node name="Stomp" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_yenca")
+bus = &"Sound Effects"
 
 [node name="Hurt" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_5ea0b")
+bus = &"Sound Effects"
 
 [node name="EndLevel" type="AudioStreamPlayer" parent="."]
+bus = &"Sound Effects"
 
 [node name="CoinCollect" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_6lkq8")
+bus = &"Sound Effects"
 
 [node name="Death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_4vemt")
+bus = &"Sound Effects"
 
 [node name="GameOver" type="AudioStreamPlayer" parent="."]
+bus = &"Sound Effects"
