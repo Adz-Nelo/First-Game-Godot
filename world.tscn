@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=14 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dvv0w42p5iqcr" path="res://frog.tscn" id="5_036b0"]
 [ext_resource type="PackedScene" uid="uid://cs04855ow3t40" path="res://coin.tscn" id="6_dwbse"]
 [ext_resource type="Texture2D" uid="uid://b33yydkayxat5" path="res://Coin_Gems/MonedaD.png" id="6_pkg7o"]
+[ext_resource type="PackedScene" uid="uid://dmbbxjelft5mv" path="res://pause_menu.tscn" id="8_gbfbk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -296,5 +297,7 @@ position = Vector2(296, 184)
 
 [node name="Coin5" parent="Collectables" instance=ExtResource("6_dwbse")]
 position = Vector2(312, 184)
+
+[node name="pause-menu" parent="." instance=ExtResource("8_gbfbk")]
 
 [connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]
