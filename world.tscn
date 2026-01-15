@@ -299,5 +299,6 @@ position = Vector2(296, 184)
 position = Vector2(312, 184)
 
 [node name="pause-menu" parent="." instance=ExtResource("8_gbfbk")]
+visible = false
 
 [connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]
