@@ -1,7 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=18 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
+[ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="2_nwcfo"]
+[ext_resource type="Texture2D" uid="uid://dqgqieysrg751" path="res://buttons/resume-btn.png" id="3_mxa3g"]
+[ext_resource type="Texture2D" uid="uid://brpncabsha464" path="res://buttons/resume-btn-active.png" id="4_e8sti"]
+[ext_resource type="Texture2D" uid="uid://jekyox0m62j4" path="res://buttons/resume-btn-hover.png" id="5_q2yj1"]
+[ext_resource type="Theme" uid="uid://cgdj3wcewbaa8" path="res://settings_theme.tres" id="6_e8sti"]
+[ext_resource type="Texture2D" uid="uid://c08dukdtkj6s0" path="res://buttons/settings-btn.png" id="7_q2yj1"]
+[ext_resource type="Texture2D" uid="uid://bcqytidxigmc0" path="res://buttons/settings-btn-active.png" id="8_q2yj1"]
+[ext_resource type="Texture2D" uid="uid://4ymbrx6gjq0k" path="res://buttons/settings-btn-hover.png" id="9_a32ks"]
 
 [sub_resource type="GDScript" id="GDScript_wyi4u"]
 script/source = "extends CanvasLayer
@@ -44,6 +52,30 @@ func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://main.tscn\")
 "
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a32ks"]
+texture = ExtResource("3_mxa3g")
+region_rect = Rect2(3.5938263, 2.461502, 216.03166, 55.760384)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g7dbl"]
+texture = ExtResource("4_e8sti")
+region_rect = Rect2(3.080635, 2.0995874, 217.28546, 57.09662)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lv42l"]
+texture = ExtResource("5_q2yj1")
+region_rect = Rect2(4.11549, 3.036191, 214.60632, 55.000805)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ub45p"]
+texture = ExtResource("7_q2yj1")
+region_rect = Rect2(4.0165405, 3.0406075, 214.7768, 54.621956)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_42xcf"]
+texture = ExtResource("8_q2yj1")
+region_rect = Rect2(3.0267181, 1.9568921, 216.5942, 56.67705)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1meuf"]
+texture = ExtResource("9_a32ks")
+region_rect = Rect2(4.3473816, 3.1657324, 214.25812, 54.677055)
+
 [node name="pause-menu" type="CanvasLayer"]
 process_mode = 3
 script = SubResource("GDScript_wyi4u")
@@ -59,26 +91,31 @@ scale = Vector2(2.8750005, 2.875)
 texture = ExtResource("1_hdmo1")
 
 [node name="Resume" type="Button" parent="."]
-offset_left = 520.0
-offset_top = 225.5
-offset_right = 632.0
-offset_bottom = 273.5
+offset_left = 496.0
+offset_top = 224.0
+offset_right = 648.0
+offset_bottom = 272.0
+theme = ExtResource("2_d3xb4")
 theme_override_font_sizes/font_size = 24
-text = "Resume"
+theme_override_styles/normal = SubResource("StyleBoxTexture_a32ks")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_g7dbl")
+theme_override_styles/hover = SubResource("StyleBoxTexture_lv42l")
 
 [node name="Settings" type="Button" parent="."]
-offset_left = 520.0
+offset_left = 496.0
 offset_top = 289.5
-offset_right = 632.0
+offset_right = 648.0
 offset_bottom = 337.5
+theme = ExtResource("6_e8sti")
 theme_override_font_sizes/font_size = 24
-text = "Settings
-"
+theme_override_styles/normal = SubResource("StyleBoxTexture_ub45p")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_42xcf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1meuf")
 
 [node name="Exit" type="Button" parent="."]
-offset_left = 520.0
+offset_left = 496.0
 offset_top = 353.5
-offset_right = 632.0
+offset_right = 648.0
 offset_bottom = 401.5
 theme_override_font_sizes/font_size = 24
 text = "Exit
