@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=25 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
 [ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
@@ -10,6 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://c08dukdtkj6s0" path="res://buttons/settings-btn.png" id="7_q2yj1"]
 [ext_resource type="Texture2D" uid="uid://bcqytidxigmc0" path="res://buttons/settings-btn-active.png" id="8_q2yj1"]
 [ext_resource type="Texture2D" uid="uid://4ymbrx6gjq0k" path="res://buttons/settings-btn-hover.png" id="9_a32ks"]
+[ext_resource type="Theme" uid="uid://cxqj4gd36eda" path="res://exit_theme.tres" id="10_lv42l"]
+[ext_resource type="Texture2D" uid="uid://c7fhelewlr1v2" path="res://buttons/exit-btn.png" id="11_ub45p"]
+[ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="12_42xcf"]
+[ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="13_1meuf"]
 
 [sub_resource type="GDScript" id="GDScript_wyi4u"]
 script/source = "extends CanvasLayer
@@ -76,6 +80,18 @@ region_rect = Rect2(3.0267181, 1.9568921, 216.5942, 56.67705)
 texture = ExtResource("9_a32ks")
 region_rect = Rect2(4.3473816, 3.1657324, 214.25812, 54.677055)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0q2ao"]
+texture = ExtResource("11_ub45p")
+region_rect = Rect2(4.3774815, 3.2929945, 214.22382, 54.265614)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oasv2"]
+texture = ExtResource("12_42xcf")
+region_rect = Rect2(3.3286667, 2.1727958, 216.25314, 56.83537)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_udgxo"]
+texture = ExtResource("13_1meuf")
+region_rect = Rect2(4.431838, 3.3510516, 214.26942, 54.51883)
+
 [node name="pause-menu" type="CanvasLayer"]
 process_mode = 3
 script = SubResource("GDScript_wyi4u")
@@ -117,8 +133,12 @@ offset_left = 496.0
 offset_top = 353.5
 offset_right = 648.0
 offset_bottom = 401.5
+theme = ExtResource("10_lv42l")
 theme_override_font_sizes/font_size = 24
-text = "Exit
+theme_override_styles/normal = SubResource("StyleBoxTexture_0q2ao")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_oasv2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_udgxo")
+text = "
 "
 
 [node name="Label" type="Label" parent="."]
