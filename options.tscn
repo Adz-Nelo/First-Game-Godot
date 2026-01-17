@@ -16,6 +16,7 @@ func _ready() -> void:
 	$Label.modulate = Color.BLACK
 
 func _on_back_btn_pressed() -> void:
+	AudioController.select_sound()
 	get_tree().change_scene_to_file(\"res://main.tscn\")
 "
 
@@ -426,7 +427,7 @@ offset_right = 224.0
 offset_bottom = 96.0
 bus_name = "Music"
 
-[node name="Sound-Effect" parent="Volume-Slider" instance=ExtResource("7_0kfld")]
+[node name="Sound_Effect" parent="Volume-Slider" instance=ExtResource("7_0kfld")]
 layout_mode = 0
 offset_left = -64.0
 offset_top = 144.0

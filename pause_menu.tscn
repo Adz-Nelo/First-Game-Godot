@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=31 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
 [ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
@@ -14,46 +14,217 @@
 [ext_resource type="Texture2D" uid="uid://c7fhelewlr1v2" path="res://buttons/exit-btn.png" id="11_ub45p"]
 [ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="12_42xcf"]
 [ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="13_1meuf"]
+[ext_resource type="Theme" uid="uid://de7qgtf8sy4q3" path="res://back-btn.tres" id="15_oasv2"]
+[ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="16_udgxo"]
+[ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="17_fijrc"]
 
 [sub_resource type="GDScript" id="GDScript_wyi4u"]
 script/source = "extends CanvasLayer
+
+@onready var main_buttons = $ColorRect  # Your main menu panel
+@onready var settings_panel = $SettingsPanel  # Settings panel
+
+# Main menu buttons to hide when settings opens
+@onready var resume_button = $Resume
+@onready var settings_button = $Settings
+@onready var exit_button = $Exit
+@onready var label1 = $Label
+@onready var label2 = $Label2
 
 func _ready() -> void:
 	visible = false
 	get_tree().paused = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	$Label.modulate = Color.BLACK
-
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed(\"ui_cancel\"):
-		if get_tree().paused:
-			# Unpause
-			visible = false
-			get_tree().paused = false
-		else:
-			# Pause
-			visible = true
-			get_tree().paused = true
-			# Keep music playing even when paused
-			unpause_audio()
+	
+	if has_node(\"Label\"):
+		$Label.modulate = Color.BLACK
+	
+	# Hide settings panel initially
+	if settings_panel:
+		settings_panel.visible = false
+	
+	# Setup audio to work when paused
+	unpause_audio()
+	
+	# Apply retro theme to settings sliders
+	if settings_panel:
+		apply_retro_theme()
 
 func unpause_audio():
-	# Make sure audio nodes keep running
 	if has_node(\"/root/AudioController\"):
 		var audio = get_node(\"/root/AudioController\")
 		audio.process_mode = Node.PROCESS_MODE_ALWAYS
 
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		if get_tree().paused:
+			# If settings is open, close it
+			if settings_panel and settings_panel.visible:
+				close_settings()
+				AudioController.select_sound()
+			else:
+				# Unpause game
+				visible = false
+				get_tree().paused = false
+				AudioController.select_sound()
+		else:
+			# Pause game
+			visible = true
+			get_tree().paused = true
+			# Show main menu, hide settings
+			show_main_menu()
+			AudioController.select_sound()
+
+# === MAIN MENU BUTTONS ===
 func _on_button_pressed() -> void:
+	# Resume button
 	visible = false
 	get_tree().paused = false
+	AudioController.select_sound()
 
 func _on_settings_pressed() -> void:
-	get_tree().paused = false
-	get_tree().change_scene_to_file(\"res://pause_settings.tscn\")
+	# Hide main menu buttons/labels
+	hide_main_menu()
+	
+	# Show settings panel
+	if settings_panel:
+		settings_panel.visible = true
+	
+	AudioController.select_sound()
 
 func _on_exit_pressed() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file(\"res://main.tscn\")
+	AudioController.select_sound()
+
+# === SETTINGS PANEL ===
+func _on_back_button_pressed() -> void:
+	close_settings()
+	AudioController.select_sound()
+
+func close_settings():
+	# Hide settings panel
+	if settings_panel:
+		settings_panel.visible = false
+	
+	# Show main menu buttons/labels again
+	show_main_menu()
+
+# === SHOW/HIDE FUNCTIONS ===
+func hide_main_menu():
+	# Hide all main menu elements
+	if main_buttons:
+		main_buttons.visible = true
+	if resume_button:
+		resume_button.visible = false
+	if settings_button:
+		settings_button.visible = false
+	if exit_button:
+		exit_button.visible = false
+	if label1:
+		label1.visible = false
+	if label2:
+		label2.visible = false
+
+func show_main_menu():
+	# Show all main menu elements
+	if main_buttons:
+		main_buttons.visible = true
+	if resume_button:
+		resume_button.visible = true
+	if settings_button:
+		settings_button.visible = true
+	if exit_button:
+		exit_button.visible = true
+	if label1:
+		label1.visible = true
+	if label2:
+		label2.visible = true
+
+# === RETRO THEME ===
+func apply_retro_theme():
+	var retro_colors = {
+		\"Master\": Color(\"#FF6B35\"),
+		\"Music\": Color(\"#F7B801\"),
+		\"Sound-Effect\": Color(\"#07A0C3\")
+	}
+	
+	for child in settings_panel.get_children():
+		if child is HSlider:
+			var slider = child as HSlider
+			var bus_color = retro_colors.get(slider.name, Color.WHITE)
+			create_retro_slider_style(slider, bus_color)
+			
+			# Style label
+			var label = settings_panel.get_node_or_null(slider.name.replace(\"-\", \"_\") + \"_label\")
+			if label is Label:
+				style_retro_label(label, bus_color)
+
+func create_retro_slider_style(slider: HSlider, color: Color):
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(\"#1A1A2E\")
+	bg_style.corner_radius_top_left = 8
+	bg_style.corner_radius_top_right = 8
+	bg_style.corner_radius_bottom_left = 8
+	bg_style.corner_radius_bottom_right = 8
+	bg_style.border_color = color.darkened(0.5)
+	bg_style.border_width_left = 3
+	bg_style.border_width_right = 3
+	bg_style.border_width_top = 3
+	bg_style.border_width_bottom = 3
+	bg_style.shadow_color = Color(0, 0, 0, 0.6)
+	bg_style.shadow_size = 2
+	
+	var fill_style = StyleBoxFlat.new()
+	fill_style.bg_color = color
+	fill_style.corner_radius_top_left = 6
+	fill_style.corner_radius_bottom_left = 6
+	fill_style.border_width_top = 2
+	fill_style.border_color = color.lightened(0.3)
+	
+	var handle_style = StyleBoxFlat.new()
+	handle_style.bg_color = Color(\"#FFE66D\")
+	handle_style.corner_radius_top_left = 999
+	handle_style.corner_radius_top_right = 999
+	handle_style.corner_radius_bottom_left = 999
+	handle_style.corner_radius_bottom_right = 999
+	handle_style.border_color = Color(\"#FF6B35\")
+	handle_style.border_width_left = 2
+	handle_style.border_width_right = 2
+	handle_style.border_width_top = 2
+	handle_style.border_width_bottom = 2
+	handle_style.shadow_color = color.lightened(0.2)
+	handle_style.shadow_size = 8
+	
+	var handle_highlight = StyleBoxFlat.new()
+	handle_highlight.bg_color = Color(\"#FFF9DB\")
+	handle_highlight.corner_radius_top_left = 999
+	handle_highlight.corner_radius_top_right = 999
+	handle_highlight.corner_radius_bottom_left = 999
+	handle_highlight.corner_radius_bottom_right = 999
+	handle_highlight.border_color = color
+	handle_highlight.border_width_left = 4
+	handle_highlight.border_width_right = 4
+	handle_highlight.border_width_top = 4
+	handle_highlight.border_width_bottom = 4
+	handle_highlight.shadow_color = color
+	handle_highlight.shadow_size = 20
+	
+	slider.add_theme_stylebox_override(\"slider\", bg_style)
+	slider.add_theme_stylebox_override(\"grabber_area\", bg_style)
+	slider.add_theme_stylebox_override(\"grabber_area_highlight\", fill_style)
+	slider.add_theme_stylebox_override(\"grabber\", handle_style)
+	slider.add_theme_stylebox_override(\"grabber_highlight\", handle_highlight)
+
+func style_retro_label(label: Label, color: Color):
+	label.add_theme_color_override(\"font_color\", Color.WHITE)
+	label.add_theme_font_size_override(\"font_size\", 22)
+	label.add_theme_constant_override(\"outline_size\", 3)
+	label.add_theme_color_override(\"font_outline_color\", color.darkened(0.4))
+	label.add_theme_constant_override(\"shadow_offset_x\", 2)
+	label.add_theme_constant_override(\"shadow_offset_y\", 2)
+	label.add_theme_color_override(\"font_shadow_color\", Color(0, 0, 0, 0.7))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a32ks"]
@@ -91,6 +262,18 @@ region_rect = Rect2(3.3286667, 2.1727958, 216.25314, 56.83537)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_udgxo"]
 texture = ExtResource("13_1meuf")
 region_rect = Rect2(4.431838, 3.3510516, 214.26942, 54.51883)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7qvy3"]
+texture = ExtResource("16_udgxo")
+region_rect = Rect2(169.42001, 188.13046, 160.93002, 118.37955)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gxrhd"]
+texture = ExtResource("16_udgxo")
+region_rect = Rect2(163.42674, 184.74947, 173.45592, 128.92567)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y0te6"]
+texture = ExtResource("16_udgxo")
+region_rect = Rect2(172.64297, 189.2893, 155.85123, 118.67996)
 
 [node name="pause-menu" type="CanvasLayer"]
 process_mode = 3
@@ -158,6 +341,77 @@ offset_bottom = 140.5
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Paused"
+
+[node name="SettingsPanel" type="Panel" parent="."]
+offset_left = 24.0
+offset_top = 48.0
+offset_right = 64.0
+offset_bottom = 88.0
+
+[node name="BackBtn" type="Button" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 216.0
+offset_right = 336.0
+offset_bottom = 240.0
+theme = ExtResource("15_oasv2")
+theme_override_styles/normal = SubResource("StyleBoxTexture_7qvy3")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_gxrhd")
+theme_override_styles/hover = SubResource("StyleBoxTexture_y0te6")
+
+[node name="master_label" type="Label" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 32.0
+offset_right = 280.0
+offset_bottom = 55.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 20
+text = "Master Volume"
+
+[node name="music_label" type="Label" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 96.0
+offset_right = 271.0
+offset_bottom = 119.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 20
+text = "Music Volume"
+
+[node name="sound_effect_label" type="Label" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 160.0
+offset_right = 319.0
+offset_bottom = 183.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 20
+text = "Sound Effect Volume"
+
+[node name="Master" parent="SettingsPanel" instance=ExtResource("17_fijrc")]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 64.0
+offset_right = 336.0
+offset_bottom = 80.0
+bus_name = "Master"
+
+[node name="Music" parent="SettingsPanel" instance=ExtResource("17_fijrc")]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 128.0
+offset_right = 336.0
+offset_bottom = 144.0
+bus_name = "Music"
+
+[node name="Sound_Effect" parent="SettingsPanel" instance=ExtResource("17_fijrc")]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 192.0
+offset_right = 336.0
+offset_bottom = 208.0
+bus_name = "Sound Effects"
 
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
