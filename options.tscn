@@ -338,8 +338,8 @@ position = Vector2(1144, 464)
 texture = ExtResource("2_ao2gm")
 
 [node name="Options" type="Sprite2D" parent="."]
-position = Vector2(584, 368.00003)
-scale = Vector2(3.7857144, 3.7857137)
+position = Vector2(584, 368)
+scale = Vector2(2.9880953, 2.9880948)
 texture = ExtResource("3_ao2gm")
 
 [node name="Node" type="Node" parent="."]
@@ -347,27 +347,27 @@ script = SubResource("GDScript_07a1d")
 
 [node name="Label" type="Label" parent="Node"]
 offset_left = 480.0
-offset_top = 88.0
-offset_right = 664.0
-offset_bottom = 125.0
+offset_top = 152.0
+offset_right = 677.0
+offset_bottom = 192.0
 theme_override_fonts/font = ExtResource("4_07a1d")
 theme_override_font_sizes/font_size = 45
 text = "Options"
 
 [node name="Label2" type="Label" parent="Node"]
 offset_left = 482.0
-offset_top = 90.0
-offset_right = 666.0
-offset_bottom = 127.0
+offset_top = 154.0
+offset_right = 679.0
+offset_bottom = 194.0
 theme_override_fonts/font = ExtResource("4_07a1d")
 theme_override_font_sizes/font_size = 45
 text = "Options"
 
 [node name="BackBtn" type="Button" parent="."]
-offset_left = 296.0
-offset_top = 216.0
-offset_right = 336.0
-offset_bottom = 240.0
+offset_left = 360.0
+offset_top = 256.0
+offset_right = 400.0
+offset_bottom = 280.0
 theme = ExtResource("5_kls10")
 theme_override_styles/normal = SubResource("StyleBoxTexture_w5qgn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_kls10")
