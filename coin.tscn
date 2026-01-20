@@ -129,7 +129,6 @@ script = SubResource("GDScript_d5gmh")
 sprite_frames = SubResource("SpriteFrames_o4fra")
 animation = &"Collect"
 autoplay = "Spin"
-metadata/_edit_lock_ = true
 
 [node name="Area2D" type="Area2D" parent="."]
 

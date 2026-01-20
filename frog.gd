@@ -159,7 +159,7 @@ func _on_player_collision_body_entered(body: Node2D) -> void:
 		else:
 			# Normal side/bottom collision - frog dies
 			print("💥 PlayerCollision triggered (side/bottom hit)")
-			body.take_damage(3)
+			body.take_damage(1)
 			death()
 
 func death():
