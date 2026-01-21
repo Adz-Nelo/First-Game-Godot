@@ -111,22 +111,22 @@ texture = ExtResource("5_lquwl")
 [node name="Creature" type="Node" parent="."]
 
 [node name="Bird" parent="Creature" instance=ExtResource("13_ycdy4")]
-position = Vector2(120, 137)
+position = Vector2(120, 155)
 
 [node name="Bird2" parent="Creature" instance=ExtResource("13_ycdy4")]
 position = Vector2(498, 216)
 
 [node name="Bird3" parent="Creature" instance=ExtResource("13_ycdy4")]
-position = Vector2(784, 43)
+position = Vector2(780, 58)
 
 [node name="Bird4" parent="Creature" instance=ExtResource("13_ycdy4")]
 position = Vector2(890, 321)
 
 [node name="Bird5" parent="Creature" instance=ExtResource("13_ycdy4")]
-position = Vector2(1152, 94)
+position = Vector2(1104, 145)
 
 [node name="Bird6" parent="Creature" instance=ExtResource("13_ycdy4")]
-position = Vector2(17, 474)
+position = Vector2(148, 274)
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]

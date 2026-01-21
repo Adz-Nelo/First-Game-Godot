@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=17 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://b33yydkayxat5" path="res://Coin_Gems/MonedaD.png" id="6_pkg7o"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="7_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dmbbxjelft5mv" path="res://pause_menu.tscn" id="8_gbfbk"]
+[ext_resource type="PackedScene" uid="uid://djpe7kex3sduk" path="res://bird.tscn" id="10_wse8f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -161,13 +162,19 @@ script/source = "extends Control
 # Heart settings
 @export var max_hearts = 3  # Total number of hearts to display
 @export var heart_spacing = 25  # Space between hearts
+@export var shake_intensity = 10.0  # How much the heart shakes
+@export var shake_duration = 0.3  # Duration of shake animation
+@export var flash_duration = 0.3  # Duration of flash effect
+@export var damage_color = Color(2.0, 0.3, 0.3, 1.0)  # Bright red flash color on damage
 
 # Heart scenes (you can use TextureRect or AnimatedSprite2D)
 var heart_scene = preload(\"res://health.tscn\")  # Your heart scene
 var hearts = []
+var previous_hp = 0
 
 func _ready() -> void:
 	create_hearts()
+	previous_hp = Game.playerHP
 
 func _process(delta: float) -> void:
 	update_hearts()
@@ -190,7 +197,16 @@ func create_hearts():
 
 func update_hearts():
 	var current_hp = Game.playerHP
-	var hearts_to_show = int(ceil(current_hp / 1.0))  #  1 HP per heart
+	var hearts_to_show = int(ceil(current_hp / 1.0))  # 1 HP per heart
+	
+	# Check if player took damage
+	if current_hp < previous_hp:
+		var lost_heart_index = hearts_to_show  # The heart that just became empty
+		if lost_heart_index < hearts.size():
+			animate_heart_loss(hearts[lost_heart_index])
+		shake_all_hearts()
+	
+	previous_hp = current_hp
 	
 	for i in range(hearts.size()):
 		var heart = hearts[i]
@@ -203,18 +219,97 @@ func update_hearts():
 			# Empty heart
 			if heart.has_node(\"AnimatedSprite2D\"):
 				heart.get_node(\"AnimatedSprite2D\").play(\"Empty Heart\")
+
+func animate_heart_loss(heart: Node):
+	# Flash effect with color distortion
+	var sprite = heart.get_node(\"AnimatedSprite2D\") if heart.has_node(\"AnimatedSprite2D\") else null
+	if sprite:
+		print(\"Animating heart loss - applying color!\")  # Debug
+		
+		# Color distortion sequence: Red -> Yellow -> Red -> White -> Normal
+		var color_tween = create_tween()
+		color_tween.tween_property(sprite, \"modulate\", Color(2.5, 0.2, 0.2, 1.0), 0.08)  # Bright red
+		color_tween.tween_property(sprite, \"modulate\", Color(2.5, 2.5, 0.2, 1.0), 0.08)  # Yellow flash
+		color_tween.tween_property(sprite, \"modulate\", Color(2.5, 0.3, 2.5, 1.0), 0.08)  # Magenta
+		color_tween.tween_property(sprite, \"modulate\", Color(0.2, 2.5, 2.5, 1.0), 0.08)  # Cyan glitch
+		color_tween.tween_property(sprite, \"modulate\", Color(2.0, 2.0, 2.0, 1.0), 0.06)  # White
+		color_tween.tween_property(sprite, \"modulate\", Color(1, 1, 1, 1), 0.12)  # Back to normal
+		
+		# Scale pulse effect with rotation distortion
+		var transform_tween = create_tween()
+		transform_tween.set_parallel(true)
+		transform_tween.tween_property(heart, \"scale\", Vector2(1.6, 1.6), 0.1)
+		transform_tween.tween_property(heart, \"rotation\", deg_to_rad(15), 0.1)
+		transform_tween.chain().set_parallel(true)
+		transform_tween.tween_property(heart, \"scale\", Vector2(0.9, 0.9), 0.15)
+		transform_tween.tween_property(heart, \"rotation\", deg_to_rad(-10), 0.15)
+		transform_tween.chain().set_parallel(true)
+		transform_tween.tween_property(heart, \"scale\", Vector2(1.0, 1.0), 0.2)
+		transform_tween.tween_property(heart, \"rotation\", 0, 0.2)
+
+func shake_all_hearts():
+	for heart in hearts:
+		shake_heart(heart)
+		flash_heart_color(heart)
+
+func shake_heart(heart: Node):
+	var original_pos = heart.position
+	var tween = create_tween()
+	
+	# Create random shake offsets
+	var shake_count = 6
+	for i in range(shake_count):
+		var offset = Vector2(
+			randf_range(-shake_intensity, shake_intensity),
+			randf_range(-shake_intensity, shake_intensity)
+		)
+		tween.tween_property(heart, \"position\", original_pos + offset, shake_duration / shake_count)
+	
+	# Return to original position
+	tween.tween_property(heart, \"position\", original_pos, shake_duration / shake_count)
+
+func flash_heart_color(heart: Node):
+	# Add a distorted color flash to all hearts on damage
+	var sprite = heart.get_node(\"AnimatedSprite2D\") if heart.has_node(\"AnimatedSprite2D\") else null
+	if sprite:
+		print(\"Flashing heart color!\")  # Debug
+		var color_tween = create_tween()
+		# Rapid color distortion with stronger colors
+		color_tween.tween_property(sprite, \"modulate\", Color(3.0, 0.2, 0.2, 1.0), 0.05)  # Intense Red
+		color_tween.tween_property(sprite, \"modulate\", Color(0.2, 3.0, 3.0, 1.0), 0.05)  # Cyan glitch
+		color_tween.tween_property(sprite, \"modulate\", Color(3.0, 3.0, 0.2, 1.0), 0.05)  # Yellow
+		color_tween.tween_property(sprite, \"modulate\", Color(3.0, 0.2, 3.0, 1.0), 0.05)  # Magenta
+		color_tween.tween_property(sprite, \"modulate\", Color(1, 1, 1, 1), 0.2)  # Back to normal
+		
+		# Add slight rotation wobble to all hearts
+		var wobble_tween = create_tween()
+		wobble_tween.tween_property(heart, \"rotation\", deg_to_rad(5), 0.08)
+		wobble_tween.tween_property(heart, \"rotation\", deg_to_rad(-5), 0.08)
+		wobble_tween.tween_property(heart, \"rotation\", 0, 0.1)
 "
 
 [sub_resource type="GDScript" id="GDScript_ioo17"]
 script/source = "extends Control
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Label2.modulate = Color.BLACK
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	# Quick outline - 4 directions
+	var offsets = [
+		Vector2(1, 0),   # Right
+		Vector2(-1, 0),  # Left
+		Vector2(0, 1),   # Down
+		Vector2(0, -1)   # Up
+	]
+	
+	for offset in offsets:
+		var outline = $Label.duplicate()
+		outline.modulate = Color.BLACK
+		outline.position += offset * 1  # 2 pixel outline
+		outline.z_index = $Label.z_index - 1
+		add_child(outline)
+	
+	# Set main label color
+	$Label.modulate = Color.WHITE  # Your text color
+	$Label.z_index = 100  # Bring to front
 "
 
 [sub_resource type="GDScript" id="GDScript_gbfbk"]
@@ -226,8 +321,10 @@ func _ready() -> void:
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void: 
-	text = \": \" + str(Game.gold)
+func _process(delta: float) -> void:
+	# Convert gold to whole number before displaying
+	var whole_gold = int(Game.gold)  # or ceil(), floor(), round()
+	text = \" \" + str(whole_gold)
 "
 
 [sub_resource type="GDScript" id="GDScript_pkg7o"]
@@ -326,19 +423,6 @@ theme_override_fonts/font = ExtResource("7_ioo17")
 theme_override_font_sizes/font_size = 20
 script = SubResource("GDScript_gbfbk")
 
-[node name="Label2" type="Label" parent="UI/CoinUI"]
-layout_mode = 0
-offset_left = 39.0
-offset_top = 50.0
-offset_right = 79.0
-offset_bottom = 84.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("7_ioo17")
-theme_override_font_sizes/font_size = 20
-script = SubResource("GDScript_gbfbk")
-
 [node name="Collectables" type="Node2D" parent="."]
 script = SubResource("GDScript_pkg7o")
 
@@ -365,5 +449,13 @@ position = Vector2(312, 184)
 
 [node name="pause-menu" parent="." instance=ExtResource("8_gbfbk")]
 visible = false
+
+[node name="Bird" parent="." instance=ExtResource("10_wse8f")]
+z_index = -1
+position = Vector2(172, -110)
+
+[node name="Bird2" parent="." instance=ExtResource("10_wse8f")]
+z_index = -1
+position = Vector2(737, -38)
 
 [connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]
