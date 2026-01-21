@@ -1,11 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://drlp75ii76yoo"]
+[gd_scene load_steps=10 format=3 uid="uid://drlp75ii76yoo"]
 
 [ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
 [ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
 [ext_resource type="AudioStream" uid="uid://usclgxd0oly5" path="res://Audio/pop-enemy.wav" id="3_yenca"]
 [ext_resource type="AudioStream" uid="uid://c750cubih78g0" path="res://Audio/player-hurt.wav" id="4_5ea0b"]
 [ext_resource type="AudioStream" uid="uid://beokemclkrdfj" path="res://Audio/coin.mp3" id="5_6lkq8"]
-[ext_resource type="AudioStream" uid="uid://b1w3r2hb50sh7" path="res://Audio/death.wav" id="6_4vemt"]
+[ext_resource type="AudioStream" uid="uid://cfwkw217dqj3b" path="res://Audio/player-die.mp3" id="6_62og8"]
+[ext_resource type="AudioStream" uid="uid://by5jk6g2lfikn" path="res://Audio/game over.wav" id="7_32dgq"]
 [ext_resource type="AudioStream" uid="uid://gkwn3yqx1pvk" path="res://Audio/select-sound.wav" id="7_mslhv"]
 
 [sub_resource type="GDScript" id="GDScript_3rbmd"]
@@ -90,11 +91,12 @@ stream = ExtResource("5_6lkq8")
 bus = &"Sound Effects"
 
 [node name="Death" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_4vemt")
+stream = ExtResource("6_62og8")
 bus = &"Sound Effects"
 
 [node name="GameOver" type="AudioStreamPlayer" parent="."]
-bus = &"Sound Effects"
+stream = ExtResource("7_32dgq")
+bus = &"Music"
 
 [node name="Select" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_mslhv")
