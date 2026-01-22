@@ -1,3 +1,205 @@
-[gd_scene format=3 uid="uid://cgavw7cg17s5c"]
+[gd_scene load_steps=23 format=3 uid="uid://cgavw7cg17s5c"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://cve6mrvr780d5" path="res://Sunny Land Collection Files/Assets/Environments/Forest of Illusion/Forest of Illusion Expansion Pack/Previews/Illusion-forest-a.png" id="1_8u835"]
+[ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="2_ftari"]
+[ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="3_28vn7"]
+[ext_resource type="Theme" uid="uid://lb08hy50gpwy" path="res://restart_theme.tres" id="4_dd2jf"]
+[ext_resource type="Theme" uid="uid://cxqj4gd36eda" path="res://exit_theme.tres" id="4_fkf4o"]
+[ext_resource type="Texture2D" uid="uid://c7fhelewlr1v2" path="res://buttons/exit-btn.png" id="4_k2vha"]
+[ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="5_fkf4o"]
+[ext_resource type="Texture2D" uid="uid://6ekusvccckt8" path="res://buttons/restart-btn.png" id="5_ku74v"]
+[ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="6_3u7xm"]
+[ext_resource type="Texture2D" uid="uid://brpncabsha464" path="res://buttons/resume-btn-active.png" id="6_nm4t2"]
+[ext_resource type="Texture2D" uid="uid://b7gtjviw0yqs1" path="res://buttons/restart-btn-hover.png" id="7_dd2jf"]
+[ext_resource type="Texture2D" uid="uid://r00oyrctaei7" path="res://Death NPC/grim-death.png" id="12_nm4t2"]
+[ext_resource type="Texture2D" uid="uid://dl50lacq241r7" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Hurt2/hurt-2.png" id="13_745m4"]
+[ext_resource type="Texture2D" uid="uid://dshdpk0g48grd" path="res://Death NPC/skull.png" id="14_745m4"]
+
+[sub_resource type="GDScript" id="GDScript_woa3c"]
+script/source = "extends CanvasLayer
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	AudioController.play_game_over()
+	AudioController.stop_music()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"ui_accept\"):
+		get_tree().change_scene_to_file(\"res://world.tscn\")
+		AudioController.select_sound()
+		AudioController.stop_game_over()
+		AudioController.play_music()
+
+func _on_exit_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://main.tscn\")
+	AudioController.select_sound()
+	AudioController.stop_game_over()
+
+func _on_restart_pressed() -> void:
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		get_tree().change_scene_to_file(\"res://world.tscn\")
+		AudioController.stop_game_over()
+		AudioController.play_music()
+"
+
+[sub_resource type="GDScript" id="GDScript_3u7xm"]
+script/source = "extends Node
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Label.modulate = Color.BLACK
+	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kjrwi"]
+texture = ExtResource("5_ku74v")
+region_rect = Rect2(4.0263443, 3.1057625, 214.58414, 54.82077)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_olga5"]
+texture = ExtResource("6_nm4t2")
+region_rect = Rect2(3.0254402, 1.6189489, 217.09938, 57.770622)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_13ri0"]
+texture = ExtResource("7_dd2jf")
+region_rect = Rect2(4.259079, 3.327711, 214.37852, 54.407204)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dd2jf"]
+texture = ExtResource("4_k2vha")
+region_rect = Rect2(4.3774815, 3.2929945, 214.22382, 54.265614)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ku74v"]
+texture = ExtResource("5_fkf4o")
+region_rect = Rect2(3.3286667, 2.1727958, 216.25314, 56.83537)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nm4t2"]
+texture = ExtResource("6_3u7xm")
+region_rect = Rect2(4.431838, 3.3510516, 214.26942, 54.51883)
+
+[node name="game-over" type="CanvasLayer"]
+script = SubResource("GDScript_woa3c")
+
+[node name="IllusionForestA" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+scale = Vector2(2.0191994, 2.3823528)
+texture = ExtResource("1_8u835")
+
+[node name="Options" type="Sprite2D" parent="."]
+position = Vector2(544, 344)
+scale = Vector2(2.1021128, 2.3809526)
+texture = ExtResource("2_ftari")
+
+[node name="Labels" type="Node" parent="."]
+script = SubResource("GDScript_3u7xm")
+
+[node name="Label" type="Label" parent="Labels"]
+offset_left = 440.0
+offset_top = 160.0
+offset_right = 643.0
+offset_bottom = 192.0
+theme_override_fonts/font = ExtResource("3_28vn7")
+theme_override_font_sizes/font_size = 36
+text = "Game Over"
+metadata/_edit_use_anchors_ = true
+
+[node name="Label2" type="Label" parent="Labels"]
+offset_left = 442.0
+offset_top = 162.0
+offset_right = 645.0
+offset_bottom = 194.0
+theme_override_fonts/font = ExtResource("3_28vn7")
+theme_override_font_sizes/font_size = 36
+text = "Game Over"
+
+[node name="Restart" type="Button" parent="."]
+offset_left = 464.0
+offset_top = 296.0
+offset_right = 615.6667
+offset_bottom = 344.0
+theme = ExtResource("4_dd2jf")
+theme_override_styles/normal = SubResource("StyleBoxTexture_kjrwi")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_olga5")
+theme_override_styles/hover = SubResource("StyleBoxTexture_13ri0")
+
+[node name="Exit" type="Button" parent="."]
+offset_left = 464.0
+offset_top = 360.0
+offset_right = 616.0
+offset_bottom = 408.0
+theme = ExtResource("4_fkf4o")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_dd2jf")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ku74v")
+theme_override_styles/hover = SubResource("StyleBoxTexture_nm4t2")
+text = "
+"
+
+[node name="GrimDeath" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.7137255)
+position = Vector2(184, 200.00002)
+scale = Vector2(1.6625001, 1.6625001)
+texture = ExtResource("12_nm4t2")
+
+[node name="Hurt2" type="Sprite2D" parent="."]
+position = Vector2(880.00006, 472.00003)
+scale = Vector2(3.4928703, 3.4928703)
+texture = ExtResource("13_745m4")
+
+[node name="Skull" type="Sprite2D" parent="."]
+position = Vector2(994, 508)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull2" type="Sprite2D" parent="."]
+position = Vector2(948, 506)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull3" type="Sprite2D" parent="."]
+position = Vector2(955.00006, 485)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull4" type="Sprite2D" parent="."]
+position = Vector2(987, 483)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull5" type="Sprite2D" parent="."]
+position = Vector2(970, 507)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull6" type="Sprite2D" parent="."]
+position = Vector2(965, 468)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull7" type="Sprite2D" parent="."]
+position = Vector2(1006.00006, 486.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull8" type="Sprite2D" parent="."]
+position = Vector2(992.00006, 465)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull9" type="Sprite2D" parent="."]
+position = Vector2(1011, 508)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull10" type="Sprite2D" parent="."]
+position = Vector2(976.00006, 447)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]

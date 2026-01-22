@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=38 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
 [ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
@@ -10,9 +10,13 @@
 [ext_resource type="Texture2D" uid="uid://c08dukdtkj6s0" path="res://buttons/settings-btn.png" id="7_q2yj1"]
 [ext_resource type="Texture2D" uid="uid://bcqytidxigmc0" path="res://buttons/settings-btn-active.png" id="8_q2yj1"]
 [ext_resource type="Texture2D" uid="uid://4ymbrx6gjq0k" path="res://buttons/settings-btn-hover.png" id="9_a32ks"]
+[ext_resource type="Theme" uid="uid://lb08hy50gpwy" path="res://restart_theme.tres" id="10_7qvy3"]
 [ext_resource type="Theme" uid="uid://cxqj4gd36eda" path="res://exit_theme.tres" id="10_lv42l"]
+[ext_resource type="Texture2D" uid="uid://6ekusvccckt8" path="res://buttons/restart-btn.png" id="11_gxrhd"]
 [ext_resource type="Texture2D" uid="uid://c7fhelewlr1v2" path="res://buttons/exit-btn.png" id="11_ub45p"]
 [ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="12_42xcf"]
+[ext_resource type="Texture2D" uid="uid://df1s074hxyxj8" path="res://buttons/restart-btn-active.png" id="12_gxrhd"]
+[ext_resource type="Texture2D" uid="uid://b7gtjviw0yqs1" path="res://buttons/restart-btn-hover.png" id="12_y0te6"]
 [ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="13_1meuf"]
 [ext_resource type="Theme" uid="uid://ciafrx7736guy" path="res://back_btn.tres" id="16_oasv2"]
 [ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="16_udgxo"]
@@ -27,6 +31,7 @@ script/source = "extends CanvasLayer
 # Main menu buttons to hide when settings opens
 @onready var resume_button = $Resume
 @onready var settings_button = $Settings
+@onready var restart_button = $Restart
 @onready var exit_button = $Exit
 @onready var label1 = $Label
 @onready var label2 = $Label2
@@ -74,6 +79,13 @@ func _input(event: InputEvent) -> void:
 			# Show main menu, hide settings
 			show_main_menu()
 			AudioController.select_sound()
+	
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		# Resume game if paused and settings are not open
+		if get_tree().paused and visible and not (settings_panel and settings_panel.visible):
+			AudioController.select_sound()
+			visible = false
+			get_tree().paused = false
 
 # === MAIN MENU BUTTONS ===
 func _on_button_pressed() -> void:
@@ -119,6 +131,8 @@ func hide_main_menu():
 		resume_button.visible = false
 	if settings_button:
 		settings_button.visible = false
+	if restart_button:
+		restart_button.visible = false
 	if exit_button:
 		exit_button.visible = false
 	if label1:
@@ -134,6 +148,8 @@ func show_main_menu():
 		resume_button.visible = true
 	if settings_button:
 		settings_button.visible = true
+	if restart_button:
+		restart_button.visible = true
 	if exit_button:
 		exit_button.visible = true
 	if label1:
@@ -231,6 +247,21 @@ func _on_back_btn_pressed() -> void:
 	settings_panel.visible = false
 	show_main_menu()
 	AudioController.select_sound()
+
+func _on_restart_pressed() -> void:
+	# Reset player HP back to max
+	Game.playerHP = 3
+	
+	# Reset gold to what we had at level start (lose coins collected this level)
+	if \"level_start_coins\" in Game:
+		Game.gold = Game.level_start_coins
+	
+	# Restart the level
+	get_tree().change_scene_to_file(\"res://world.tscn\")
+	
+	# Restart music
+	AudioController.stop_music()
+	AudioController.play_music()
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a32ks"]
@@ -256,6 +287,18 @@ region_rect = Rect2(3.0267181, 1.9568921, 216.5942, 56.67705)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1meuf"]
 texture = ExtResource("9_a32ks")
 region_rect = Rect2(4.3473816, 3.1657324, 214.25812, 54.677055)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oawai"]
+texture = ExtResource("11_gxrhd")
+region_rect = Rect2(4.0263443, 3.1057625, 214.58414, 54.82077)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wumbf"]
+texture = ExtResource("12_gxrhd")
+region_rect = Rect2(3.0254402, 1.6189489, 217.09938, 57.770622)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_do3q5"]
+texture = ExtResource("12_y0te6")
+region_rect = Rect2(4.259079, 3.327711, 214.37852, 54.407204)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0q2ao"]
 texture = ExtResource("11_ub45p")
@@ -291,16 +334,15 @@ offset_bottom = 648.0
 color = Color(0, 0, 0, 0.15686275)
 
 [node name="Options" type="Sprite2D" parent="."]
-position = Vector2(584, 313.5)
-scale = Vector2(2.8750005, 2.875)
+position = Vector2(576, 316)
+scale = Vector2(2.476191, 2.3333333)
 texture = ExtResource("1_hdmo1")
 
 [node name="Resume" type="Button" parent="."]
-visible = false
-offset_left = 496.0
-offset_top = 224.0
-offset_right = 648.0
-offset_bottom = 272.0
+offset_left = 416.0
+offset_top = 264.0
+offset_right = 568.0
+offset_bottom = 312.0
 theme = ExtResource("2_d3xb4")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_a32ks")
@@ -308,23 +350,31 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_g7dbl")
 theme_override_styles/hover = SubResource("StyleBoxTexture_lv42l")
 
 [node name="Settings" type="Button" parent="."]
-visible = false
-offset_left = 496.0
-offset_top = 289.5
-offset_right = 648.0
-offset_bottom = 337.5
+offset_left = 584.0
+offset_top = 264.0
+offset_right = 736.0
+offset_bottom = 312.0
 theme = ExtResource("6_e8sti")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_ub45p")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_42xcf")
 theme_override_styles/hover = SubResource("StyleBoxTexture_1meuf")
 
+[node name="Restart" type="Button" parent="."]
+offset_left = 416.0
+offset_top = 328.0
+offset_right = 567.6667
+offset_bottom = 376.0
+theme = ExtResource("10_7qvy3")
+theme_override_styles/normal = SubResource("StyleBoxTexture_oawai")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wumbf")
+theme_override_styles/hover = SubResource("StyleBoxTexture_do3q5")
+
 [node name="Exit" type="Button" parent="."]
-visible = false
-offset_left = 496.0
-offset_top = 353.5
-offset_right = 648.0
-offset_bottom = 401.5
+offset_left = 584.0
+offset_top = 328.0
+offset_right = 736.0
+offset_bottom = 376.0
 theme = ExtResource("10_lv42l")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_0q2ao")
@@ -334,26 +384,25 @@ text = "
 "
 
 [node name="Label" type="Label" parent="."]
-visible = false
-offset_left = 502.0
-offset_top = 104.5
-offset_right = 652.0
-offset_bottom = 139.5
+offset_left = 496.0
+offset_top = 160.0
+offset_right = 646.0
+offset_bottom = 195.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Paused"
 
 [node name="Label2" type="Label" parent="."]
-visible = false
-offset_left = 504.0
-offset_top = 105.5
-offset_right = 654.0
-offset_bottom = 140.5
+offset_left = 498.0
+offset_top = 161.0
+offset_right = 648.0
+offset_bottom = 196.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Paused"
 
 [node name="SettingsPanel" type="Panel" parent="."]
+visible = false
 self_modulate = Color(1, 1, 1, 0)
 offset_left = 384.0
 offset_top = 192.0
@@ -416,10 +465,9 @@ bus_name = "Sound Effects"
 
 [node name="BackBtn" type="Button" parent="SettingsPanel"]
 layout_mode = 0
-offset_left = -16.0
-offset_top = 8.0
-offset_right = 24.0
-offset_bottom = 32.0
+offset_top = 32.0
+offset_right = 40.0
+offset_bottom = 56.0
 theme = ExtResource("16_oasv2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_fijrc")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_7qvy3")
@@ -427,9 +475,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_gxrhd")
 
 [node name="Label" type="Label" parent="SettingsPanel"]
 layout_mode = 0
-offset_left = 96.0
+offset_left = 88.0
 offset_top = -80.0
-offset_right = 296.0
+offset_right = 288.0
 offset_bottom = -45.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_nwcfo")
@@ -438,9 +486,9 @@ text = "settings"
 
 [node name="Label2" type="Label" parent="SettingsPanel"]
 layout_mode = 0
-offset_left = 98.0
+offset_left = 90.0
 offset_top = -79.0
-offset_right = 298.0
+offset_right = 290.0
 offset_bottom = -44.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
@@ -448,5 +496,6 @@ text = "Settings"
 
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="SettingsPanel/BackBtn" to="." method="_on_back_btn_pressed"]

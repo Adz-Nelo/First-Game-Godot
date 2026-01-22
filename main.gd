@@ -1,11 +1,15 @@
 extends Node2D
 
 func _ready() -> void:
-	#var theme = preload("res://RETRO_SPACE/RETRO_SPACE.ttf")
-	#get_tree().root.gui_theme = theme
 	AudioController.play_music()
 	Utilities.saveGame()
 	Utilities.loadGame()
+
+func _input(event: InputEvent) -> void:
+	# Check for Enter/Return key press
+	if event.is_action_pressed("ui_accept"):
+		AudioController.select_sound()
+		get_tree().change_scene_to_file("res://world.tscn")
 
 func _on_quit_pressed() -> void:
 	AudioController.select_sound()

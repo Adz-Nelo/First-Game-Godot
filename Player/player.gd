@@ -125,4 +125,4 @@ func player_die():
 	
 	# Go back to main menu
 	queue_free()
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_file("res://game_over.tscn")

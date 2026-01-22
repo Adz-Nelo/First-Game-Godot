@@ -32,6 +32,9 @@ func play_music():
 
 func stop_music():
 	music.stop()
+	
+func stop_game_over():
+	game_over.stop()
 
 func play_jump():
 	jump_sound.play()
@@ -96,6 +99,7 @@ bus = &"Sound Effects"
 
 [node name="GameOver" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_32dgq")
+volume_db = 10.238
 bus = &"Music"
 
 [node name="Select" type="AudioStreamPlayer" parent="."]
