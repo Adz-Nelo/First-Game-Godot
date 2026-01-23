@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=20 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://be82kthkdhcji" path="res://buttons/button3-active.png" id="6_w48qg"]
 [ext_resource type="Texture2D" uid="uid://drir4ajfclqqa" path="res://buttons/button3-hover.png" id="7_vivmo"]
 [ext_resource type="PackedScene" uid="uid://djpe7kex3sduk" path="res://bird.tscn" id="13_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="14_w48qg"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kek77"]
 texture = ExtResource("3_5vw27")
@@ -129,6 +130,15 @@ position = Vector2(1104, 145)
 
 [node name="Bird6" parent="Creature" instance=ExtResource("13_ycdy4")]
 position = Vector2(148, 274)
+
+[node name="Opossum" parent="Creature" instance=ExtResource("14_w48qg")]
+position = Vector2(310, 507)
+
+[node name="Opossum2" parent="Creature" instance=ExtResource("14_w48qg")]
+position = Vector2(708, 508)
+
+[node name="Opossum3" parent="Creature" instance=ExtResource("14_w48qg")]
+position = Vector2(1121, 510)
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]

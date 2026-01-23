@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="5_fkf4o"]
 [ext_resource type="Texture2D" uid="uid://6ekusvccckt8" path="res://buttons/restart-btn.png" id="5_ku74v"]
 [ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="6_3u7xm"]
-[ext_resource type="Texture2D" uid="uid://brpncabsha464" path="res://buttons/resume-btn-active.png" id="6_nm4t2"]
+[ext_resource type="Texture2D" uid="uid://df1s074hxyxj8" path="res://buttons/restart-btn-active.png" id="6_745m4"]
 [ext_resource type="Texture2D" uid="uid://b7gtjviw0yqs1" path="res://buttons/restart-btn-hover.png" id="7_dd2jf"]
 [ext_resource type="Texture2D" uid="uid://r00oyrctaei7" path="res://Death NPC/grim-death.png" id="12_nm4t2"]
 [ext_resource type="Texture2D" uid="uid://dl50lacq241r7" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Hurt2/hurt-2.png" id="13_745m4"]
@@ -40,10 +40,9 @@ func _on_exit_pressed() -> void:
 	AudioController.stop_game_over()
 
 func _on_restart_pressed() -> void:
-	if Input.is_action_just_pressed(\"ui_accept\"):
-		get_tree().change_scene_to_file(\"res://world.tscn\")
-		AudioController.stop_game_over()
-		AudioController.play_music()
+	get_tree().change_scene_to_file(\"res://world.tscn\")
+	AudioController.stop_game_over()
+	AudioController.play_music()
 "
 
 [sub_resource type="GDScript" id="GDScript_3u7xm"]
@@ -63,7 +62,7 @@ texture = ExtResource("5_ku74v")
 region_rect = Rect2(4.0263443, 3.1057625, 214.58414, 54.82077)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_olga5"]
-texture = ExtResource("6_nm4t2")
+texture = ExtResource("6_745m4")
 region_rect = Rect2(3.0254402, 1.6189489, 217.09938, 57.770622)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_13ri0"]
@@ -91,7 +90,7 @@ scale = Vector2(2.0191994, 2.3823528)
 texture = ExtResource("1_8u835")
 
 [node name="Options" type="Sprite2D" parent="."]
-position = Vector2(544, 344)
+position = Vector2(552.5, 344)
 scale = Vector2(2.1021128, 2.3809526)
 texture = ExtResource("2_ftari")
 
@@ -106,7 +105,6 @@ offset_bottom = 192.0
 theme_override_fonts/font = ExtResource("3_28vn7")
 theme_override_font_sizes/font_size = 36
 text = "Game Over"
-metadata/_edit_use_anchors_ = true
 
 [node name="Label2" type="Label" parent="Labels"]
 offset_left = 442.0
@@ -118,9 +116,9 @@ theme_override_font_sizes/font_size = 36
 text = "Game Over"
 
 [node name="Restart" type="Button" parent="."]
-offset_left = 464.0
+offset_left = 472.5
 offset_top = 296.0
-offset_right = 615.6667
+offset_right = 624.1667
 offset_bottom = 344.0
 theme = ExtResource("4_dd2jf")
 theme_override_styles/normal = SubResource("StyleBoxTexture_kjrwi")
@@ -128,9 +126,9 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_olga5")
 theme_override_styles/hover = SubResource("StyleBoxTexture_13ri0")
 
 [node name="Exit" type="Button" parent="."]
-offset_left = 464.0
+offset_left = 472.5
 offset_top = 360.0
-offset_right = 616.0
+offset_right = 624.5
 offset_bottom = 408.0
 theme = ExtResource("4_fkf4o")
 theme_override_font_sizes/font_size = 24
@@ -147,57 +145,309 @@ scale = Vector2(1.6625001, 1.6625001)
 texture = ExtResource("12_nm4t2")
 
 [node name="Hurt2" type="Sprite2D" parent="."]
-position = Vector2(880.00006, 472.00003)
+position = Vector2(864.00006, 467.00003)
 scale = Vector2(3.4928703, 3.4928703)
 texture = ExtResource("13_745m4")
 
-[node name="Skull" type="Sprite2D" parent="."]
-position = Vector2(994, 508)
+[node name="Skulls" type="Node" parent="."]
+
+[node name="Skull" type="Sprite2D" parent="Skulls"]
+position = Vector2(989, 508.00003)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull2" type="Sprite2D" parent="."]
-position = Vector2(948, 506)
+[node name="Skull2" type="Sprite2D" parent="Skulls"]
+position = Vector2(941, 505)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull3" type="Sprite2D" parent="."]
+[node name="Skull3" type="Sprite2D" parent="Skulls"]
 position = Vector2(955.00006, 485)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull4" type="Sprite2D" parent="."]
-position = Vector2(987, 483)
+[node name="Skull4" type="Sprite2D" parent="Skulls"]
+position = Vector2(981, 481)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull5" type="Sprite2D" parent="."]
-position = Vector2(970, 507)
+[node name="Skull5" type="Sprite2D" parent="Skulls"]
+position = Vector2(967.00006, 507)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull6" type="Sprite2D" parent="."]
-position = Vector2(965, 468)
+[node name="Skull6" type="Sprite2D" parent="Skulls"]
+position = Vector2(962, 473)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull7" type="Sprite2D" parent="."]
-position = Vector2(1006.00006, 486.00003)
+[node name="Skull7" type="Sprite2D" parent="Skulls"]
+position = Vector2(1003, 486)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull8" type="Sprite2D" parent="."]
-position = Vector2(992.00006, 465)
+[node name="Skull8" type="Sprite2D" parent="Skulls"]
+position = Vector2(998, 465)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull9" type="Sprite2D" parent="."]
-position = Vector2(1011, 508)
+[node name="Skull9" type="Sprite2D" parent="Skulls"]
+position = Vector2(1009.00006, 509.00003)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
-[node name="Skull10" type="Sprite2D" parent="."]
-position = Vector2(976.00006, 447)
+[node name="Skull10" type="Sprite2D" parent="Skulls"]
+position = Vector2(975, 457)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull11" type="Sprite2D" parent="Skulls"]
+position = Vector2(268, 535)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull12" type="Sprite2D" parent="Skulls"]
+position = Vector2(247, 537)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull13" type="Sprite2D" parent="Skulls"]
+position = Vector2(989, 508.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull14" type="Sprite2D" parent="Skulls"]
+position = Vector2(1015, 443)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull15" type="Sprite2D" parent="Skulls"]
+position = Vector2(955.00006, 485)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull16" type="Sprite2D" parent="Skulls"]
+position = Vector2(981, 481)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull17" type="Sprite2D" parent="Skulls"]
+position = Vector2(956, 504)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull18" type="Sprite2D" parent="Skulls"]
+position = Vector2(962, 473)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull19" type="Sprite2D" parent="Skulls"]
+position = Vector2(1003, 486)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull20" type="Sprite2D" parent="Skulls"]
+position = Vector2(272, 479.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull21" type="Sprite2D" parent="Skulls"]
+position = Vector2(1009.00006, 509.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull22" type="Sprite2D" parent="Skulls"]
+position = Vector2(959.00006, 440)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull23" type="Sprite2D" parent="Skulls"]
+position = Vector2(268, 535)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull24" type="Sprite2D" parent="Skulls"]
+position = Vector2(227, 529)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull25" type="Sprite2D" parent="Skulls"]
+position = Vector2(987.5, 481.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull26" type="Sprite2D" parent="Skulls"]
+position = Vector2(945.5, 478.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull27" type="Sprite2D" parent="Skulls"]
+position = Vector2(953.50006, 458.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull28" type="Sprite2D" parent="Skulls"]
+position = Vector2(253, 474.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull29" type="Sprite2D" parent="Skulls"]
+position = Vector2(965.50006, 480.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull30" type="Sprite2D" parent="Skulls"]
+position = Vector2(999, 463)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull31" type="Sprite2D" parent="Skulls"]
+position = Vector2(240.5, 483.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull32" type="Sprite2D" parent="Skulls"]
+position = Vector2(998.00006, 437)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull33" type="Sprite2D" parent="Skulls"]
+position = Vector2(1007.50006, 482.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull34" type="Sprite2D" parent="Skulls"]
+position = Vector2(980.00006, 432)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull35" type="Sprite2D" parent="Skulls"]
+position = Vector2(266.5, 508.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull36" type="Sprite2D" parent="Skulls"]
+position = Vector2(230, 506)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull37" type="Sprite2D" parent="Skulls"]
+position = Vector2(1020.5, 503.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull38" type="Sprite2D" parent="Skulls"]
+position = Vector2(978.5, 500.50003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull39" type="Sprite2D" parent="Skulls"]
+position = Vector2(986.50006, 480.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull40" type="Sprite2D" parent="Skulls"]
+position = Vector2(1012.5, 476.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull41" type="Sprite2D" parent="Skulls"]
+position = Vector2(998.50006, 502.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull42" type="Sprite2D" parent="Skulls"]
+position = Vector2(944, 485)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull43" type="Sprite2D" parent="Skulls"]
+position = Vector2(1034, 482)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull44" type="Sprite2D" parent="Skulls"]
+position = Vector2(1030, 457)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull45" type="Sprite2D" parent="Skulls"]
+position = Vector2(1042, 500)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull46" type="Sprite2D" parent="Skulls"]
+position = Vector2(225, 488)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull47" type="Sprite2D" parent="Skulls"]
+position = Vector2(317, 504)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull48" type="Sprite2D" parent="Skulls"]
+position = Vector2(278.5, 532.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull49" type="Sprite2D" parent="Skulls"]
+position = Vector2(278.5, 532.5)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull50" type="Sprite2D" parent="Skulls"]
+position = Vector2(289, 482.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull51" type="Sprite2D" parent="Skulls"]
+position = Vector2(247, 509)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull52" type="Sprite2D" parent="Skulls"]
+position = Vector2(207, 524)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull53" type="Sprite2D" parent="Skulls"]
+position = Vector2(208, 498)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull54" type="Sprite2D" parent="Skulls"]
+position = Vector2(301, 509)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull55" type="Sprite2D" parent="Skulls"]
+position = Vector2(321, 527)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull56" type="Sprite2D" parent="Skulls"]
+position = Vector2(300, 533)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull57" type="Sprite2D" parent="Skulls"]
+position = Vector2(189, 511)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull58" type="Sprite2D" parent="Skulls"]
+position = Vector2(257, 483.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull59" type="Sprite2D" parent="Skulls"]
+position = Vector2(286, 509.00003)
+scale = Vector2(0.082, 0.082)
+texture = ExtResource("14_745m4")
+
+[node name="Skull60" type="Sprite2D" parent="Skulls"]
+position = Vector2(310, 487)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
