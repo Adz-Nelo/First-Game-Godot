@@ -140,6 +140,12 @@ position = Vector2(708, 508)
 [node name="Opossum3" parent="Creature" instance=ExtResource("14_w48qg")]
 position = Vector2(1121, 510)
 
+[node name="Opossum4" parent="Creature" instance=ExtResource("14_w48qg")]
+position = Vector2(952, 506)
+
+[node name="Opossum5" parent="Creature" instance=ExtResource("14_w48qg")]
+position = Vector2(1457, 512)
+
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
