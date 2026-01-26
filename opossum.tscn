@@ -15,11 +15,9 @@
 
 [sub_resource type="GDScript" id="GDScript_wjnk1"]
 script/source = "extends CharacterBody2D
-
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var ray_cast_right = $RayCastRight
 @onready var ray_cast_left = $RayCastLeft
-@onready var area_detector = $AreaDetector  # MAKE SURE THIS NODE EXISTS!
 
 # Movement settings
 @export var walk_speed = 50.0
@@ -30,6 +28,7 @@ var direction = 1  # 1 = right, -1 = left
 var walk_timer = 0.0
 var idle_timer = 0.0
 var is_idle = false
+var collision_cooldown = 0.0  # NEW: Prevents rapid direction changes
 
 func _ready() -> void:
 	# Add to enemies group for easy identification
@@ -54,6 +53,10 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += get_gravity().y * delta
 	
+	# Decrease collision cooldown
+	if collision_cooldown > 0:
+		collision_cooldown -= delta
+	
 	if random_walk:
 		random_walking(delta)
 	else:
@@ -75,9 +78,15 @@ func patrol_walking():
 	var should_turn = false
 	
 	if direction == 1 and ray_cast_right and ray_cast_right.is_colliding():
-		should_turn = true
+		var collider = ray_cast_right.get_collider()
+		# Only turn for walls, not other enemies
+		if collider and not collider.is_in_group(\"enemies\"):
+			should_turn = true
 	elif direction == -1 and ray_cast_left and ray_cast_left.is_colliding():
-		should_turn = true
+		var collider = ray_cast_left.get_collider()
+		# Only turn for walls, not other enemies
+		if collider and not collider.is_in_group(\"enemies\"):
+			should_turn = true
 	
 	# Turn around if needed
 	if should_turn:
@@ -110,19 +119,27 @@ func random_walking(delta: float):
 			if animated_sprite:
 				animated_sprite.play(\"Idle\")
 	
-	# Still check for walls
+	# Still check for walls (but not other enemies)
 	if ray_cast_right and direction == 1 and ray_cast_right.is_colliding():
-		direction *= -1
+		var collider = ray_cast_right.get_collider()
+		if collider and not collider.is_in_group(\"enemies\"):
+			direction *= -1
 	elif ray_cast_left and direction == -1 and ray_cast_left.is_colliding():
-		direction *= -1
+		var collider = ray_cast_left.get_collider()
+		if collider and not collider.is_in_group(\"enemies\"):
+			direction *= -1
 
 func update_sprite_direction():
 	if animated_sprite:
 		# If your sprite FACES LEFT by default
 		animated_sprite.flip_h = (direction == 1)  # Flip when moving right
 
-# NEW FUNCTION: Check for enemy collisions
+# FIXED FUNCTION: Check for enemy collisions
 func check_enemy_collisions():
+	# Only process if cooldown has expired
+	if collision_cooldown > 0:
+		return
+	
 	# Get number of collisions from last move_and_slide()
 	for i in get_slide_collision_count():
 		var collision = get_slide_collision(i)
@@ -130,14 +147,19 @@ func check_enemy_collisions():
 		
 		# Check if it's another enemy
 		if body and body != self and body.is_in_group(\"enemies\"):
-			# Calculate push direction
+			# Calculate push direction away from other enemy
 			var push_direction = sign(global_position.x - body.global_position.x)
+			
+			# If exactly on top of each other, pick random direction
 			if push_direction == 0:
 				push_direction = 1 if randf() > 0.5 else -1
 			
+			# Change direction
 			direction = push_direction
-			velocity.x = direction * walk_speed
-			update_sprite_direction()
+			
+			# Set cooldown to prevent immediate re-collision
+			collision_cooldown = 0.5
+			
 			break
 "
 

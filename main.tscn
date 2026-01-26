@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=23 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://drir4ajfclqqa" path="res://buttons/button3-hover.png" id="7_vivmo"]
 [ext_resource type="PackedScene" uid="uid://djpe7kex3sduk" path="res://bird.tscn" id="13_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="14_w48qg"]
+[ext_resource type="PackedScene" uid="uid://bhsjyjh4n4ewt" path="res://fox.tscn" id="15_vivmo"]
+[ext_resource type="Texture2D" uid="uid://cdujkqh34n5cr" path="res://sunny-land/assets/sprites/press-enter-text.png" id="16_2cqfq"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kek77"]
 texture = ExtResource("3_5vw27")
@@ -37,6 +39,34 @@ script/source = "extends Node
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Label.modulate = Color.BLACK
+"
+
+[sub_resource type="GDScript" id="GDScript_2cqfq"]
+script/source = "extends Sprite2D
+
+@export var blink_speed = 2.0  # How fast it blinks
+@export var min_alpha = 0.3  # Minimum transparency (0 = invisible, 1 = solid)
+@export var max_alpha = 1.0  # Maximum transparency
+@export var distort_amount = 5.0  # How much it moves up/down
+@export var enable_distortion = true  # Toggle wave effect on/off
+
+var time_passed = 0.0
+var original_position: Vector2
+
+func _ready() -> void:
+	original_position = position
+
+func _process(delta: float) -> void:
+	time_passed += delta
+	
+	# Blinking effect (fade in and out)
+	var alpha = lerp(min_alpha, max_alpha, (sin(time_passed * blink_speed) + 1.0) / 2.0)
+	modulate.a = alpha
+	
+	# Optional: Distortion/wave effect
+	if enable_distortion:
+		var offset_y = sin(time_passed * blink_speed * 1.5) * distort_amount
+		position.y = original_position.y + offset_y
 "
 
 [node name="main" type="Node2D"]
@@ -81,7 +111,7 @@ text = "
 
 [node name="TitleScreen" type="Sprite2D" parent="."]
 z_index = 1
-position = Vector2(568, 145.5)
+position = Vector2(568, 118)
 scale = Vector2(1.763158, 1.7631578)
 texture = ExtResource("3_h2yge")
 
@@ -90,20 +120,22 @@ script = SubResource("GDScript_h2yge")
 
 [node name="Label" type="Label" parent="Labels"]
 offset_left = 464.0
-offset_top = 233.5
+offset_top = 176.0
 offset_right = 668.0
-offset_bottom = 256.5
+offset_bottom = 199.0
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Created By: Nelo Code"
+metadata/_edit_use_anchors_ = true
 
 [node name="Label2" type="Label" parent="Labels"]
 z_index = 1
 offset_left = 465.0
-offset_top = 234.5
+offset_top = 177.0
 offset_right = 669.0
-offset_bottom = 257.5
+offset_bottom = 200.0
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Created By: Nelo Code"
+metadata/_edit_use_anchors_ = true
 
 [node name="CreditsText" type="Sprite2D" parent="."]
 z_index = 1
@@ -145,6 +177,18 @@ position = Vector2(952, 506)
 
 [node name="Opossum5" parent="Creature" instance=ExtResource("14_w48qg")]
 position = Vector2(1457, 512)
+
+[node name="Fox" parent="Creature" instance=ExtResource("15_vivmo")]
+position = Vector2(124, 494)
+
+[node name="Fox3" parent="Creature" instance=ExtResource("15_vivmo")]
+position = Vector2(834, 494)
+
+[node name="PressEnterText" type="Sprite2D" parent="Creature"]
+position = Vector2(568, 240)
+scale = Vector2(2.0416646, 2.0416644)
+texture = ExtResource("16_2cqfq")
+script = SubResource("GDScript_2cqfq")
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
