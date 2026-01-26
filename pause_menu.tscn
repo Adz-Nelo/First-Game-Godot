@@ -171,10 +171,16 @@ func apply_retro_theme():
 			var bus_color = retro_colors.get(slider.name, Color.WHITE)
 			create_retro_slider_style(slider, bus_color)
 			
+			# Add percentage display
+			add_percentage_display(slider, bus_color)
+			
 			# Style label
 			var label = settings_panel.get_node_or_null(slider.name.replace(\"-\", \"_\") + \"_label\")
 			if label is Label:
 				style_retro_label(label, bus_color)
+			
+			# Connect slider signals
+			slider.value_changed.connect(func(value): update_slider_percentage(slider, value))
 
 func create_retro_slider_style(slider: HSlider, color: Color):
 	var bg_style = StyleBoxFlat.new()
@@ -231,15 +237,125 @@ func create_retro_slider_style(slider: HSlider, color: Color):
 	slider.add_theme_stylebox_override(\"grabber_area_highlight\", fill_style)
 	slider.add_theme_stylebox_override(\"grabber\", handle_style)
 	slider.add_theme_stylebox_override(\"grabber_highlight\", handle_highlight)
+	
+	# Make slider taller for better handle visibility
+	slider.custom_minimum_size.y = 30
+
+func add_percentage_display(slider: HSlider, color: Color):
+	# Create container for percentage (will be positioned above the handle)
+	var percentage_container = Control.new()
+	percentage_container.name = \"PercentageContainer\"
+	percentage_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slider.add_child(percentage_container)
+	
+	# Create percentage label
+	var percentage_label = Label.new()
+	percentage_label.name = \"PercentageLabel\"
+	percentage_label.text = str(int(slider.value * 100)) + \"%\"
+	percentage_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	percentage_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	percentage_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Retro styling for percentage
+	percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))  # Dark brown
+	percentage_label.add_theme_font_size_override(\"font_size\", 12)
+	percentage_label.add_theme_constant_override(\"outline_size\", 1)
+	percentage_label.add_theme_color_override(\"font_outline_color\", Color.WHITE)
+	
+	# Make it bold and pixelated
+	percentage_label.add_theme_constant_override(\"shadow_offset_x\", 1)
+	percentage_label.add_theme_constant_override(\"shadow_offset_y\", 1)
+	percentage_label.add_theme_color_override(\"font_shadow_color\", Color(1, 1, 1, 0.5))
+	
+	percentage_container.add_child(percentage_label)
+	
+	# Store references
+	slider.set_meta(\"percentage_container\", percentage_container)
+	slider.set_meta(\"percentage_label\", percentage_label)
+	
+	# Set initial position
+	update_percentage_position(slider, slider.value)
+	
+	# Connect mouse events for highlighting
+	slider.mouse_entered.connect(func(): highlight_percentage(slider))
+	slider.mouse_exited.connect(func(): unhighlight_percentage(slider))
+
+func update_percentage_position(slider: HSlider, value: float):
+	var percentage_container = slider.get_meta(\"percentage_container\", null)
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	
+	if percentage_container and percentage_label:
+		# Calculate position on slider (moves with handle)
+		var slider_width = slider.size.x
+		if slider_width == 0:  # If slider hasn't been sized yet
+			slider_width = 200  # Default width
+		
+		# Calculate handle position (0-1 range)
+		var ratio = (value - slider.min_value) / (slider.max_value - slider.min_value)
+		var handle_position = ratio * (slider_width - 30)  # Account for handle width
+		
+		# Position above the handle
+		percentage_container.position = Vector2(handle_position - 15, -15)
+		percentage_label.text = str(int(value * 100)) + \"%\"
+		
+		# Change color based on volume level
+		if value < 0.1:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#666666\"))
+		elif value < 0.5:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))
+		else:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#FF6B35\"))
+
+func update_slider_percentage(slider: HSlider, value: float):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		percentage_label.text = str(int(value * 100)) + \"%\"
+		update_percentage_position(slider, value)
+		
+		# Pulse animation when changing
+		var tween = create_tween()
+		tween.tween_property(percentage_label, \"scale\", Vector2(1.2, 1.2), 0.1)
+		tween.tween_property(percentage_label, \"scale\", Vector2(1.0, 1.0), 0.1)
+
+func highlight_percentage(slider: HSlider):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		percentage_label.add_theme_color_override(\"font_color\", Color.WHITE)
+		percentage_label.add_theme_color_override(\"font_outline_color\", Color(\"#FF6B35\"))
+		
+		# Add shine effect
+		var tween = create_tween()
+		tween.tween_property(percentage_label, \"modulate\", Color(1, 1, 1, 1), 0.2)
+
+func unhighlight_percentage(slider: HSlider):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		# Reset to original colors based on volume
+		var value = slider.value
+		if value < 0.1:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#666666\"))
+		elif value < 0.5:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))
+		else:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#FF6B35\"))
+		
+		percentage_label.add_theme_color_override(\"font_outline_color\", Color.WHITE)
 
 func style_retro_label(label: Label, color: Color):
+	# Retro text styling
 	label.add_theme_color_override(\"font_color\", Color.WHITE)
 	label.add_theme_font_size_override(\"font_size\", 22)
+	
+	# Thick retro outline matching slider color
 	label.add_theme_constant_override(\"outline_size\", 3)
 	label.add_theme_color_override(\"font_outline_color\", color.darkened(0.4))
+	
+	# Drop shadow for depth
 	label.add_theme_constant_override(\"shadow_offset_x\", 2)
 	label.add_theme_constant_override(\"shadow_offset_y\", 2)
 	label.add_theme_color_override(\"font_shadow_color\", Color(0, 0, 0, 0.7))
+	
+	# Center align
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 func _on_back_btn_pressed() -> void:
