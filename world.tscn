@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=18 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://b33yydkayxat5" path="res://Coin_Gems/MonedaD.png" id="6_pkg7o"]
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="7_ioo17"]
 [ext_resource type="PackedScene" uid="uid://dmbbxjelft5mv" path="res://pause_menu.tscn" id="8_gbfbk"]
+[ext_resource type="PackedScene" uid="uid://dixds6jcu0rew" path="res://health.tscn" id="9_ic0uy"]
 [ext_resource type="PackedScene" uid="uid://djpe7kex3sduk" path="res://bird.tscn" id="10_wse8f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
@@ -160,23 +161,30 @@ sources/0 = SubResource("TileSetAtlasSource_036b0")
 script/source = "extends Control
 
 # Heart settings
-@export var max_hearts = 3  # Total number of hearts to display
+@export var initial_max_hearts = 3  # Starting number of hearts to display
 @export var heart_spacing = 25  # Space between hearts
 @export var shake_intensity = 10.0  # How much the heart shakes
 @export var shake_duration = 0.3  # Duration of shake animation
 @export var flash_duration = 0.3  # Duration of flash effect
 @export var damage_color = Color(2.0, 0.3, 0.3, 1.0)  # Bright red flash color on damage
+@export var heal_color = Color(0.3, 2.5, 0.3, 1.0)  # Bright green flash color on heal
 
 # Heart scenes (you can use TextureRect or AnimatedSprite2D)
 var heart_scene = preload(\"res://health.tscn\")  # Your heart scene
 var hearts = []
 var previous_hp = 0
+var max_hearts = 3  # Current max hearts displayed
 
 func _ready() -> void:
+	max_hearts = initial_max_hearts
 	create_hearts()
 	previous_hp = Game.playerHP
 
 func _process(delta: float) -> void:
+	# Check if we need more hearts
+	if Game.playerHP > max_hearts:
+		add_more_hearts(Game.playerHP - max_hearts)
+	
 	update_hearts()
 
 func create_hearts():
@@ -195,6 +203,21 @@ func create_hearts():
 		
 		hearts.append(heart)
 
+func add_more_hearts(count: int):
+	# Add additional hearts dynamically
+	for i in range(count):
+		var heart = heart_scene.instantiate()
+		add_child(heart)
+		
+		# Position new heart
+		var index = max_hearts + i
+		heart.position = Vector2(index * heart_spacing, 0)
+		
+		hearts.append(heart)
+	
+	max_hearts += count
+	print(\"💚 Added\", count, \"more hearts! Total:\", max_hearts)
+
 func update_hearts():
 	var current_hp = Game.playerHP
 	var hearts_to_show = int(ceil(current_hp / 1.0))  # 1 HP per heart
@@ -205,6 +228,12 @@ func update_hearts():
 		if lost_heart_index < hearts.size():
 			animate_heart_loss(hearts[lost_heart_index])
 		shake_all_hearts()
+	
+	# Check if player healed
+	if current_hp > previous_hp:
+		var healed_heart_index = hearts_to_show - 1  # The heart that just became full
+		if healed_heart_index >= 0 and healed_heart_index < hearts.size():
+			animate_heart_gain(hearts[healed_heart_index])
 	
 	previous_hp = current_hp
 	
@@ -219,6 +248,27 @@ func update_hearts():
 			# Empty heart
 			if heart.has_node(\"AnimatedSprite2D\"):
 				heart.get_node(\"AnimatedSprite2D\").play(\"Empty Heart\")
+
+func animate_heart_gain(heart: Node):
+	# Flash effect when gaining a heart
+	var sprite = heart.get_node(\"AnimatedSprite2D\") if heart.has_node(\"AnimatedSprite2D\") else null
+	if sprite:
+		print(\"💚 Healing heart!\")  # Debug
+		
+		# Green healing flash
+		var color_tween = create_tween()
+		color_tween.tween_property(sprite, \"modulate\", heal_color, 0.1)  # Bright green
+		color_tween.tween_property(sprite, \"modulate\", Color(2.0, 2.5, 2.0, 1.0), 0.1)  # Light green
+		color_tween.tween_property(sprite, \"modulate\", Color(1, 1, 1, 1), 0.2)  # Back to normal
+		
+		# Scale pulse effect
+		var transform_tween = create_tween()
+		transform_tween.set_parallel(true)
+		transform_tween.tween_property(heart, \"scale\", Vector2(1.4, 1.4), 0.15)
+		transform_tween.tween_property(heart, \"rotation\", deg_to_rad(10), 0.15)
+		transform_tween.chain().set_parallel(true)
+		transform_tween.tween_property(heart, \"scale\", Vector2(1.0, 1.0), 0.2)
+		transform_tween.tween_property(heart, \"rotation\", 0, 0.2)
 
 func animate_heart_loss(heart: Node):
 	# Flash effect with color distortion
@@ -446,6 +496,9 @@ position = Vector2(296, 184)
 
 [node name="Coin5" parent="Collectables" instance=ExtResource("6_dwbse")]
 position = Vector2(312, 184)
+
+[node name="Health" parent="Collectables" instance=ExtResource("9_ic0uy")]
+position = Vector2(562, 179)
 
 [node name="pause-menu" parent="." instance=ExtResource("8_gbfbk")]
 visible = false

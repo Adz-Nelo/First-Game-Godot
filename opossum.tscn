@@ -23,20 +23,37 @@ script/source = "extends CharacterBody2D
 @export var walk_speed = 50.0
 @export var random_walk = false  # Set to true for random movement
 @export var push_force = 100.0  # Force when colliding with other enemies
+@export var randomize_speed = true  # Randomize speed on spawn
+@export var min_speed_multiplier = 0.6  # Slowest (60% of base speed)
+@export var max_speed_multiplier = 1.5  # Fastest (150% of base speed)
 
 var direction = 1  # 1 = right, -1 = left
 var walk_timer = 0.0
 var idle_timer = 0.0
 var is_idle = false
-var collision_cooldown = 0.0  # NEW: Prevents rapid direction changes
+var collision_cooldown = 0.0  # Prevents rapid direction changes
+var actual_speed = 50.0  # The actual speed this opossum will use
 
 func _ready() -> void:
 	# Add to enemies group for easy identification
 	add_to_group(\"enemies\")
 	
+	# Prevent culling when off-screen
+	set_process_mode(Node.PROCESS_MODE_ALWAYS)
+	
+	# Randomize speed if enabled
+	if randomize_speed:
+		var speed_multiplier = randf_range(min_speed_multiplier, max_speed_multiplier)
+		actual_speed = walk_speed * speed_multiplier
+		print(\"🦝 Opossum spawned with speed:\", actual_speed, \"(\", int(speed_multiplier * 100), \"%)\")
+	else:
+		actual_speed = walk_speed
+	
 	# Start walking animation
 	if animated_sprite:
 		animated_sprite.play(\"Walk\")
+		# Adjust animation speed based on movement speed
+		animated_sprite.speed_scale = actual_speed / walk_speed
 	
 	# Randomize starting direction
 	if randf() > 0.5:
@@ -71,8 +88,8 @@ func _physics_process(delta: float) -> void:
 	update_sprite_direction()
 
 func patrol_walking():
-	# Simple back and forth patrol
-	velocity.x = direction * walk_speed
+	# Simple back and forth patrol with randomized speed
+	velocity.x = direction * actual_speed
 	
 	# Check if there's a wall ahead
 	var should_turn = false
@@ -109,7 +126,7 @@ func random_walking(delta: float):
 			if animated_sprite:
 				animated_sprite.play(\"Walk\")
 	else:
-		velocity.x = direction * walk_speed
+		velocity.x = direction * actual_speed
 		walk_timer -= delta
 		
 		if walk_timer <= 0:
@@ -134,7 +151,6 @@ func update_sprite_direction():
 		# If your sprite FACES LEFT by default
 		animated_sprite.flip_h = (direction == 1)  # Flip when moving right
 
-# FIXED FUNCTION: Check for enemy collisions
 func check_enemy_collisions():
 	# Only process if cooldown has expired
 	if collision_cooldown > 0:
