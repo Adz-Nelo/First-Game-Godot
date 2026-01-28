@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://mitjtv2iwvhw"]
+[gd_scene load_steps=17 format=3 uid="uid://mitjtv2iwvhw"]
 
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="1_i7s6n"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_xehqc"]
@@ -14,8 +14,6 @@
 [ext_resource type="Texture2D" uid="uid://bo1qb1mnd7rh" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/pine.png" id="12_v7pi8"]
 [ext_resource type="Texture2D" uid="uid://bmk3yadkg48a0" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/wooden-house.png" id="13_bho85"]
 [ext_resource type="Texture2D" uid="uid://b3bc0at5yhs1i" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/rock.png" id="14_8umsc"]
-[ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="15_livpj"]
-[ext_resource type="PackedScene" uid="uid://bhsjyjh4n4ewt" path="res://fox.tscn" id="16_v7pi8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bpugw"]
 texture = ExtResource("5_eq6nc")
@@ -296,24 +294,3 @@ position = Vector2(1432, 505)
 rotation = -3.1415927
 scale = Vector2(1, -1)
 texture = ExtResource("14_8umsc")
-
-[node name="ParallaxLayer5" type="ParallaxLayer" parent="."]
-motion_mirroring = Vector2(1152, 0)
-
-[node name="Opossum" parent="ParallaxLayer5" instance=ExtResource("15_livpj")]
-position = Vector2(528, 504)
-
-[node name="Opossum2" parent="ParallaxLayer5" instance=ExtResource("15_livpj")]
-position = Vector2(834, 504)
-
-[node name="Opossum3" parent="ParallaxLayer5" instance=ExtResource("15_livpj")]
-position = Vector2(1006, 504)
-
-[node name="Fox" parent="ParallaxLayer5" instance=ExtResource("16_v7pi8")]
-position = Vector2(313, 490)
-
-[node name="Fox2" parent="ParallaxLayer5" instance=ExtResource("16_v7pi8")]
-position = Vector2(683, 490)
-
-[node name="Fox3" parent="ParallaxLayer5" instance=ExtResource("16_v7pi8")]
-position = Vector2(117, 490)

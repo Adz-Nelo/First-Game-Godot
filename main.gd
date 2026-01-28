@@ -22,3 +22,13 @@ func _on_play_pressed() -> void:
 func _on_option_pressed() -> void:
 	AudioController.select_sound()
 	get_tree().change_scene_to_file("res://options.tscn")
+
+func _on_play_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_option_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_quit_mouse_entered() -> void:
+	AudioController.hover_button()
+	

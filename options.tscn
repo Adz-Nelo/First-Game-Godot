@@ -18,6 +18,9 @@ func _ready() -> void:
 func _on_back_btn_pressed() -> void:
 	AudioController.select_sound()
 	get_tree().change_scene_to_file(\"res://main.tscn\")
+
+func _on_back_btn_mouse_entered() -> void:
+	AudioController.hover_button()
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5qgn"]
@@ -440,4 +443,5 @@ offset_right = 224.0
 offset_bottom = 160.0
 bus_name = "Sound Effects"
 
+[connection signal="mouse_entered" from="BackBtn" to="Node" method="_on_back_btn_mouse_entered"]
 [connection signal="pressed" from="BackBtn" to="Node" method="_on_back_btn_pressed"]

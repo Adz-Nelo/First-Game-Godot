@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=23 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://be82kthkdhcji" path="res://buttons/button3-active.png" id="6_w48qg"]
 [ext_resource type="Texture2D" uid="uid://drir4ajfclqqa" path="res://buttons/button3-hover.png" id="7_vivmo"]
 [ext_resource type="PackedScene" uid="uid://djpe7kex3sduk" path="res://bird.tscn" id="13_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="14_vivmo"]
+[ext_resource type="PackedScene" uid="uid://bhsjyjh4n4ewt" path="res://fox.tscn" id="15_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://cdujkqh34n5cr" path="res://sunny-land/assets/sprites/press-enter-text.png" id="16_2cqfq"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kek77"]
@@ -161,12 +163,34 @@ position = Vector2(1104, 145)
 [node name="Bird6" parent="Creature" instance=ExtResource("13_ycdy4")]
 position = Vector2(148, 274)
 
-[node name="PressEnterText" type="Sprite2D" parent="Creature"]
-position = Vector2(568, 240)
+[node name="Opossum" parent="Creature" instance=ExtResource("14_vivmo")]
+position = Vector2(288, 504)
+
+[node name="Opossum2" parent="Creature" instance=ExtResource("14_vivmo")]
+position = Vector2(736, 504)
+
+[node name="Opossum3" parent="Creature" instance=ExtResource("14_vivmo")]
+position = Vector2(1120, 504)
+
+[node name="Fox" parent="Creature" instance=ExtResource("15_2cqfq")]
+position = Vector2(872, 488)
+
+[node name="Fox2" parent="Creature" instance=ExtResource("15_2cqfq")]
+position = Vector2(384, 488)
+
+[node name="Fox3" parent="Creature" instance=ExtResource("15_2cqfq")]
+position = Vector2(120, 488)
+
+[node name="PressEnterText" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(564, 249.99997)
 scale = Vector2(2.0416646, 2.0416644)
 texture = ExtResource("16_2cqfq")
 script = SubResource("GDScript_2cqfq")
 
+[connection signal="mouse_entered" from="Play" to="." method="_on_play_mouse_entered"]
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
+[connection signal="mouse_entered" from="Option" to="." method="_on_option_mouse_entered"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
+[connection signal="mouse_entered" from="Quit" to="." method="_on_quit_mouse_entered"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]

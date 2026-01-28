@@ -21,18 +21,17 @@ script/source = "extends CharacterBody2D
 
 # Movement settings
 @export var walk_speed = 50.0
-@export var random_walk = false  # Set to true for random movement
-@export var push_force = 100.0  # Force when colliding with other enemies
 @export var randomize_speed = true  # Randomize speed on spawn
 @export var min_speed_multiplier = 0.6  # Slowest (60% of base speed)
 @export var max_speed_multiplier = 1.5  # Fastest (150% of base speed)
 
 var direction = 1  # 1 = right, -1 = left
-var walk_timer = 0.0
-var idle_timer = 0.0
-var is_idle = false
 var collision_cooldown = 0.0  # Prevents rapid direction changes
 var actual_speed = 50.0  # The actual speed this opossum will use
+
+# Screen bounds for looping
+var spawn_x = -50.0
+var despawn_x = 0.0
 
 func _ready() -> void:
 	# Add to enemies group for easy identification
@@ -40,6 +39,9 @@ func _ready() -> void:
 	
 	# Prevent culling when off-screen
 	set_process_mode(Node.PROCESS_MODE_ALWAYS)
+	
+	# Get screen width
+	despawn_x = get_viewport_rect().size.x + 50
 	
 	# Randomize speed if enabled
 	if randomize_speed:
@@ -60,10 +62,6 @@ func _ready() -> void:
 		direction = -1
 	
 	update_sprite_direction()
-	
-	# Initialize timers
-	if random_walk:
-		walk_timer = randf_range(2.0, 5.0)
 
 func _physics_process(delta: float) -> void:
 	# Add gravity
@@ -74,77 +72,63 @@ func _physics_process(delta: float) -> void:
 	if collision_cooldown > 0:
 		collision_cooldown -= delta
 	
-	if random_walk:
-		random_walking(delta)
-	else:
-		patrol_walking()
+	# Always walk in current direction
+	velocity.x = direction * actual_speed
+	
+	# Check if there's a wall ahead
+	if direction == 1 and ray_cast_right and ray_cast_right.is_colliding():
+		direction *= -1
+	elif direction == -1 and ray_cast_left and ray_cast_left.is_colliding():
+		direction *= -1
 	
 	move_and_slide()
 	
-	# Check for collisions with other enemies AFTER moving
+	# Check for collisions with other enemies/mobs AFTER moving
 	check_enemy_collisions()
+	
+	# Handle screen looping based on camera position
+	handle_screen_loop()
 	
 	# Always sync sprite with movement direction
 	update_sprite_direction()
 
-func patrol_walking():
-	# Simple back and forth patrol with randomized speed
-	velocity.x = direction * actual_speed
+func handle_screen_loop():
+	# Get camera position if it exists
+	var camera = get_viewport().get_camera_2d()
+	if camera:
+		var camera_x = camera.global_position.x
+		var screen_width = get_viewport_rect().size.x
+		
+		# Update despawn based on camera position
+		despawn_x = camera_x + screen_width + 50
+		
+		# Update spawn to be behind camera
+		spawn_x = camera_x - 100
 	
-	# Check if there's a wall ahead
-	var should_turn = false
+	# Respawn when off-screen (right side)
+	if global_position.x > despawn_x:
+		reset_opossum()
 	
-	if direction == 1 and ray_cast_right and ray_cast_right.is_colliding():
-		var collider = ray_cast_right.get_collider()
-		# Only turn for walls, not other enemies
-		if collider and not collider.is_in_group(\"enemies\"):
-			should_turn = true
-	elif direction == -1 and ray_cast_left and ray_cast_left.is_colliding():
-		var collider = ray_cast_left.get_collider()
-		# Only turn for walls, not other enemies
-		if collider and not collider.is_in_group(\"enemies\"):
-			should_turn = true
-	
-	# Turn around if needed
-	if should_turn:
-		direction *= -1
+	# Also respawn if opossum gets too far behind camera (left side)
+	if camera and global_position.x < camera.global_position.x - 200:
+		reset_opossum()
 
-func random_walking(delta: float):
-	# Random walking with occasional stops
-	if is_idle:
-		velocity.x = 0
-		idle_timer -= delta
-		
-		if idle_timer <= 0:
-			is_idle = false
-			walk_timer = randf_range(2.0, 5.0)
-			
-			# Random chance to change direction
-			if randf() > 0.5:
-				direction *= -1
-			
-			if animated_sprite:
-				animated_sprite.play(\"Walk\")
-	else:
-		velocity.x = direction * actual_speed
-		walk_timer -= delta
-		
-		if walk_timer <= 0:
-			is_idle = true
-			idle_timer = randf_range(1.0, 3.0)
-			
-			if animated_sprite:
-				animated_sprite.play(\"Idle\")
+func reset_opossum():
+	# Respawn on left side
+	global_position.x = spawn_x
 	
-	# Still check for walls (but not other enemies)
-	if ray_cast_right and direction == 1 and ray_cast_right.is_colliding():
-		var collider = ray_cast_right.get_collider()
-		if collider and not collider.is_in_group(\"enemies\"):
-			direction *= -1
-	elif ray_cast_left and direction == -1 and ray_cast_left.is_colliding():
-		var collider = ray_cast_left.get_collider()
-		if collider and not collider.is_in_group(\"enemies\"):
-			direction *= -1
+	# Randomize speed again
+	if randomize_speed:
+		var speed_multiplier = randf_range(min_speed_multiplier, max_speed_multiplier)
+		actual_speed = walk_speed * speed_multiplier
+		
+		# Update animation speed
+		if animated_sprite:
+			animated_sprite.speed_scale = actual_speed / walk_speed
+	
+	# Random direction
+	direction = 1 if randf() > 0.5 else -1
+	update_sprite_direction()
 
 func update_sprite_direction():
 	if animated_sprite:
@@ -161,7 +145,7 @@ func check_enemy_collisions():
 		var collision = get_slide_collision(i)
 		var body = collision.get_collider()
 		
-		# Check if it's another enemy
+		# Check if it's another enemy/mob
 		if body and body != self and body.is_in_group(\"enemies\"):
 			# Calculate push direction away from other enemy
 			var push_direction = sign(global_position.x - body.global_position.x)

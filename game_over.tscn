@@ -43,6 +43,12 @@ func _on_restart_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://world.tscn\")
 	AudioController.stop_game_over()
 	AudioController.play_music()
+
+func _on_restart_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_exit_mouse_entered() -> void:
+	AudioController.hover_button()
 "
 
 [sub_resource type="GDScript" id="GDScript_3u7xm"]
@@ -451,5 +457,7 @@ position = Vector2(310, 487)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
+[connection signal="mouse_entered" from="Restart" to="." method="_on_restart_mouse_entered"]
 [connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
+[connection signal="mouse_entered" from="Exit" to="." method="_on_exit_mouse_entered"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]

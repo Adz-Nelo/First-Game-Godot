@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://drlp75ii76yoo"]
+[gd_scene load_steps=11 format=3 uid="uid://drlp75ii76yoo"]
 
 [ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
 [ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://cfwkw217dqj3b" path="res://Audio/player-die.mp3" id="6_62og8"]
 [ext_resource type="AudioStream" uid="uid://by5jk6g2lfikn" path="res://Audio/game over.wav" id="7_32dgq"]
 [ext_resource type="AudioStream" uid="uid://gkwn3yqx1pvk" path="res://Audio/select-sound.wav" id="7_mslhv"]
+[ext_resource type="AudioStream" uid="uid://dy31reabbsnv3" path="res://Audio/hover-button.mp3" id="9_32dgq"]
 
 [sub_resource type="GDScript" id="GDScript_3rbmd"]
 script/source = "# In your AudioController.gd script:
@@ -22,6 +23,7 @@ extends Node
 @onready var player_death = $Death
 @onready var game_over = $GameOver
 @onready var select = $Select
+@onready var hover_btn = $HoverButton
 
 func _ready():
 	play_music()  # Start music when game starts
@@ -59,6 +61,9 @@ func play_game_over():
 	
 func select_sound():
 	select.play()
+	
+func hover_button():
+	hover_btn.play()
 	
 # Optional: Fade music in/out
 func fade_music_out(duration: float = 1.0):
@@ -104,4 +109,9 @@ bus = &"Music"
 
 [node name="Select" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_mslhv")
+bus = &"Sound Effects"
+
+[node name="HoverButton" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_32dgq")
+volume_db = 8.0
 bus = &"Sound Effects"

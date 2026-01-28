@@ -377,6 +377,21 @@ func _on_restart_pressed() -> void:
 	# Restart music
 	AudioController.stop_music()
 	AudioController.play_music()
+
+func _on_resume_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_settings_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_restart_mouse_entered() -> void:
+	AudioController.hover_button()
+	
+func _on_exit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_back_btn_mouse_entered() -> void:
+	AudioController.hover_button()
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a32ks"]
@@ -609,8 +624,13 @@ theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Settings"
 
+[connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]
+[connection signal="mouse_entered" from="Settings" to="." method="_on_settings_mouse_entered"]
 [connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
+[connection signal="mouse_entered" from="Restart" to="." method="_on_restart_mouse_entered"]
 [connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
+[connection signal="mouse_entered" from="Exit" to="." method="_on_exit_mouse_entered"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="mouse_entered" from="SettingsPanel/BackBtn" to="." method="_on_back_btn_mouse_entered"]
 [connection signal="pressed" from="SettingsPanel/BackBtn" to="." method="_on_back_btn_pressed"]
