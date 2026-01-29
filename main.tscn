@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bb3u7mm35n1ae"]
+[gd_scene load_steps=33 format=3 uid="uid://bb3u7mm35n1ae"]
 
 [ext_resource type="Script" uid="uid://dkh12cs40jdgw" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://mitjtv2iwvhw" path="res://background.tscn" id="2_0xm2m"]
@@ -16,6 +16,12 @@
 [ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="14_vivmo"]
 [ext_resource type="PackedScene" uid="uid://bhsjyjh4n4ewt" path="res://fox.tscn" id="15_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://cdujkqh34n5cr" path="res://sunny-land/assets/sprites/press-enter-text.png" id="16_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="17_82xsv"]
+[ext_resource type="Theme" uid="uid://de7qgtf8sy4q3" path="res://back-btn.tres" id="18_getpj"]
+[ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="19_ryguw"]
+[ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="20_d13ii"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2cqfq"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kek77"]
 texture = ExtResource("3_5vw27")
@@ -69,6 +75,308 @@ func _process(delta: float) -> void:
 		position.y = original_position.y + offset_y
 "
 
+[sub_resource type="GDScript" id="GDScript_ryguw"]
+script/source = "extends Node
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$option_label.modulate = Color.BLACK
+
+func _on_back_btn_pressed() -> void:
+	AudioController.select_sound()
+	get_tree().change_scene_to_file(\"res://main.tscn\")
+
+func _on_back_btn_mouse_entered() -> void:
+	AudioController.hover_button()
+"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d13ii"]
+texture = ExtResource("19_ryguw")
+region_rect = Rect2(169.42001, 188.13046, 160.93002, 118.37955)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1u8w0"]
+texture = ExtResource("19_ryguw")
+region_rect = Rect2(163.42674, 184.74947, 173.45592, 128.92567)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0odxb"]
+texture = ExtResource("19_ryguw")
+region_rect = Rect2(172.64297, 189.2893, 155.85123, 118.67996)
+
+[sub_resource type="GDScript" id="GDScript_lswn8"]
+script/source = "extends Control
+
+func _ready():
+	apply_retro_sunny_theme()
+	
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		get_tree().change_scene_to_file(\"res://main.tscn\")
+		AudioController.select_sound()
+
+func apply_retro_sunny_theme():
+	# Retro sunny color palette
+	var retro_colors = {
+		\"Master\": Color(\"#FF6B35\"),      # Hot orange-red
+		\"Music\": Color(\"#F7B801\"),       # Golden yellow
+		\"Sound-Effect\": Color(\"#07A0C3\") # Cyan blue
+	}
+	
+	# Apply to all HSliders
+	for child in get_children():
+		if child is HSlider:
+			var slider = child as HSlider
+			var bus_color = retro_colors.get(slider.bus_name, Color.WHITE)
+			
+			# Create retro slider style
+			create_retro_slider_style(slider, bus_color)
+			
+			# Add volume percentage display
+			add_volume_percentage(slider, bus_color)
+			
+			# Apply retro label styling (the text above each slider)
+			var label = get_node_or_null(slider.bus_name.replace(\"-\", \"_\") + \"_label\")
+			if label is Label:
+				style_retro_label(label, bus_color)
+
+func create_retro_slider_style(slider: HSlider, color: Color):
+	# 1. Background bar (track)
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(\"#1A1A2E\")  # Dark retro navy
+	bg_style.corner_radius_top_left = 8
+	bg_style.corner_radius_top_right = 8
+	bg_style.corner_radius_bottom_left = 8
+	bg_style.corner_radius_bottom_right = 8
+	# Retro thick border
+	bg_style.border_color = color.darkened(0.5)
+	bg_style.border_width_left = 3
+	bg_style.border_width_right = 3
+	bg_style.border_width_top = 3
+	bg_style.border_width_bottom = 3
+	# Inner shadow
+	bg_style.shadow_color = Color(0, 0, 0, 0.6)
+	bg_style.shadow_size = 2
+	
+	# 2. Fill (progress bar) - Retro gradient effect
+	var fill_style = StyleBoxFlat.new()
+	fill_style.bg_color = color
+	fill_style.corner_radius_top_left = 6
+	fill_style.corner_radius_bottom_left = 6
+	# Top highlight for 3D effect
+	fill_style.border_width_top = 2
+	fill_style.border_color = color.lightened(0.3)
+	
+	# 3. Grabber (handle) - RETRO CIRCULAR BUTTON STYLE
+	var handle_style = StyleBoxFlat.new()
+	handle_style.bg_color = Color(\"#FFE66D\")  # Bright sunny yellow
+	
+	# Make it circular - perfect circle
+	handle_style.corner_radius_top_left = 999  # Large value for perfect circle
+	handle_style.corner_radius_top_right = 999
+	handle_style.corner_radius_bottom_left = 999
+	handle_style.corner_radius_bottom_right = 999
+	
+	# Retro concentric circles effect
+	handle_style.border_color = Color(\"#FF6B35\")  # Orange inner border
+	handle_style.border_width_left = 2
+	handle_style.border_width_right = 2
+	handle_style.border_width_top = 2
+	handle_style.border_width_bottom = 2
+	
+	# Outer black border for retro look
+	handle_style.set_content_margin(SIDE_LEFT, 3)
+	handle_style.set_content_margin(SIDE_RIGHT, 3)
+	handle_style.set_content_margin(SIDE_TOP, 3)
+	handle_style.set_content_margin(SIDE_BOTTOM, 3)
+	
+	# Radial gradient effect (simulated with shadow)
+	handle_style.shadow_color = color.lightened(0.2)
+	handle_style.shadow_size = 8
+	handle_style.shadow_offset = Vector2(0, 0)
+	
+	# 4. Handle when highlighted (being dragged) - CIRCULAR WITH GLOW
+	var handle_highlight = StyleBoxFlat.new()
+	handle_highlight.bg_color = Color(\"#FFF9DB\")  # Lighter yellow
+	
+	# Circular shape
+	handle_highlight.corner_radius_top_left = 999
+	handle_highlight.corner_radius_top_right = 999
+	handle_highlight.corner_radius_bottom_left = 999
+	handle_highlight.corner_radius_bottom_right = 999
+	
+	# Thick colored border when active
+	handle_highlight.border_color = color
+	handle_highlight.border_width_left = 4
+	handle_highlight.border_width_right = 4
+	handle_highlight.border_width_top = 4
+	handle_highlight.border_width_bottom = 4
+	
+	# Pulsing glow effect
+	handle_highlight.shadow_color = color
+	handle_highlight.shadow_size = 20
+	handle_highlight.shadow_offset = Vector2(0, 0)
+	
+	# Apply all styles
+	slider.add_theme_stylebox_override(\"slider\", bg_style)
+	slider.add_theme_stylebox_override(\"grabber_area\", bg_style)
+	slider.add_theme_stylebox_override(\"grabber_area_highlight\", fill_style)
+	slider.add_theme_stylebox_override(\"grabber\", handle_style)
+	slider.add_theme_stylebox_override(\"grabber_highlight\", handle_highlight)
+	
+	# Set slider grabber size for circular handle (makes it actually circular)
+	slider.custom_minimum_size.y = 30  # Taller track for circular handle
+	
+	# Connect to show value change
+	slider.value_changed.connect(func(value): update_volume_display(slider, value))
+	slider.mouse_entered.connect(func(): highlight_volume_display(slider))
+	slider.mouse_exited.connect(func(): unhighlight_volume_display(slider))
+
+func add_volume_percentage(slider: HSlider, color: Color):
+	# Create retro percentage display inside the circular handle
+	
+	# Container for the percentage (will be positioned on the handle)
+	var percentage_container = Control.new()
+	percentage_container.name = \"PercentageContainer\"
+	percentage_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slider.add_child(percentage_container)
+	
+	# Retro percentage label
+	var percentage_label = Label.new()
+	percentage_label.name = \"PercentageLabel\"
+	percentage_label.text = \"0%\"
+	percentage_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	percentage_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	percentage_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Retro styling for percentage
+	percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))  # Dark brown
+	percentage_label.add_theme_font_size_override(\"font_size\", 15)
+	percentage_label.add_theme_constant_override(\"outline_size\", 1)
+	percentage_label.add_theme_color_override(\"font_outline_color\", Color.WHITE)
+	
+	# Make it bold and pixelated
+	percentage_label.add_theme_constant_override(\"shadow_offset_x\", 1)
+	percentage_label.add_theme_constant_override(\"shadow_offset_y\", 1)
+	percentage_label.add_theme_color_override(\"font_shadow_color\", Color(1, 1, 1, 0.5))
+	
+	percentage_container.add_child(percentage_label)
+	
+	# Store reference to update position
+	slider.set_meta(\"percentage_container\", percentage_container)
+	slider.set_meta(\"percentage_label\", percentage_label)
+	
+	# Set initial position and size
+	update_percentage_position(slider, slider.value)
+
+func update_percentage_position(slider: HSlider, value: float):
+	var percentage_container = slider.get_meta(\"percentage_container\", null)
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	
+	if percentage_container and percentage_label:
+		# Calculate position on slider (moves with handle)
+		var slider_width = slider.size.x
+		var handle_position = value * (slider_width - 30)  # Account for handle width
+		
+		# Center the percentage display on the handle
+		percentage_container.position = Vector2(handle_position - 15, -15)  # Above the handle
+		percentage_label.text = str(int(value * 100)) + \"%\"
+		
+		# Change color based on volume level
+		if value < 0.1:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#666666\"))
+		elif value < 0.5:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))
+		else:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#FF6B35\"))
+
+func update_volume_display(slider: HSlider, value: float):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		percentage_label.text = str(int(value * 100)) + \"%\"
+		update_percentage_position(slider, value)
+		
+		# Pulse animation when changing
+		var tween = create_tween()
+		tween.tween_property(percentage_label, \"scale\", Vector2(1.2, 1.2), 0.1)
+		tween.tween_property(percentage_label, \"scale\", Vector2(1.0, 1.0), 0.1)
+
+func highlight_volume_display(slider: HSlider):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		percentage_label.add_theme_color_override(\"font_color\", Color.WHITE)
+		percentage_label.add_theme_color_override(\"font_outline_color\", Color(\"#FF6B35\"))
+		
+		# Add shine effect
+		var tween = create_tween()
+		tween.tween_property(percentage_label, \"modulate\", Color(1, 1, 1, 1), 0.2)
+
+func unhighlight_volume_display(slider: HSlider):
+	var percentage_label = slider.get_meta(\"percentage_label\", null)
+	if percentage_label:
+		# Reset to original colors based on volume
+		var value = slider.value
+		if value < 0.1:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#666666\"))
+		elif value < 0.5:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#2D1B00\"))
+		else:
+			percentage_label.add_theme_color_override(\"font_color\", Color(\"#FF6B35\"))
+		
+		percentage_label.add_theme_color_override(\"font_outline_color\", Color.WHITE)
+
+func style_retro_label(label: Label, color: Color):
+	# Retro text styling
+	label.add_theme_color_override(\"font_color\", Color.WHITE)
+	label.add_theme_font_size_override(\"font_size\", 22)
+	
+	# Thick retro outline matching slider color
+	label.add_theme_constant_override(\"outline_size\", 3)
+	label.add_theme_color_override(\"font_outline_color\", color.darkened(0.4))
+	
+	# Drop shadow for depth
+	label.add_theme_constant_override(\"shadow_offset_x\", 2)
+	label.add_theme_constant_override(\"shadow_offset_y\", 2)
+	label.add_theme_color_override(\"font_shadow_color\", Color(0, 0, 0, 0.7))
+	
+	# Center align
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	# Optional: Add small sun icon next to label
+	add_label_icon(label, color)
+
+func add_label_icon(label: Label, color: Color):
+	# Add a tiny retro sun icon next to the label
+	var icon = TextureRect.new()
+	
+	# Create a simple retro sun (8x8 pixel style)
+	var image = Image.create(12, 12, false, Image.FORMAT_RGBA8)
+	image.fill(Color.TRANSPARENT)
+	
+	# Draw pixel sun
+	for x in 12:
+		for y in 12:
+			var dist = Vector2(x, y).distance_to(Vector2(6, 6))
+			if dist < 3:
+				image.set_pixel(x, y, color)  # Sun center
+			elif dist > 4 and dist < 5:
+				# Draw cardinal direction rays
+				if x == 6 or y == 6 or abs(x - 6) == abs(y - 6):
+					image.set_pixel(x, y, color.lightened(0.3))
+	
+	var texture = ImageTexture.create_from_image(image)
+	icon.texture = texture
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.size = Vector2(16, 16)
+	icon.position = Vector2(label.position.x - 10, label.position.y + 4)
+	
+	# Add to label's parent
+	label.get_parent().add_child(icon)
+	
+	# Add subtle animation
+	var tween = create_tween()
+	tween.set_loops()
+	tween.tween_property(icon, \"rotation\", TAU, 10.0)  # Slow rotation
+"
+
 [node name="main" type="Node2D"]
 script = ExtResource("1_ig7tw")
 
@@ -80,9 +388,11 @@ offset_right = 656.0
 offset_bottom = 345.5
 tooltip_text = "This is a play button"
 theme = ExtResource("2_7mycd")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2cqfq")
 theme_override_styles/focus = SubResource("StyleBoxTexture_kek77")
 text = "
 "
+metadata/_edit_use_anchors_ = true
 
 [node name="Option" type="Button" parent="."]
 z_index = 1
@@ -95,6 +405,7 @@ theme = ExtResource("4_dg77c")
 theme_override_styles/normal = SubResource("StyleBoxTexture_dg77c")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ycdy4")
 theme_override_styles/hover = SubResource("StyleBoxTexture_w48qg")
+metadata/_edit_use_anchors_ = true
 
 [node name="Quit" type="Button" parent="."]
 z_index = 1
@@ -106,6 +417,7 @@ tooltip_text = "This is a quit button"
 theme = ExtResource("3_272bh")
 text = "
 "
+metadata/_edit_use_anchors_ = true
 
 [node name="Background" parent="." instance=ExtResource("2_0xm2m")]
 
@@ -188,9 +500,111 @@ scale = Vector2(2.0416646, 2.0416644)
 texture = ExtResource("16_2cqfq")
 script = SubResource("GDScript_2cqfq")
 
+[node name="Option2" type="Node" parent="."]
+script = SubResource("GDScript_ryguw")
+
+[node name="option_label" type="Label" parent="Option2"]
+offset_left = 464.0
+offset_top = 152.0
+offset_right = 661.0
+offset_bottom = 192.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 45
+text = "Options"
+
+[node name="option_label2" type="Label" parent="Option2"]
+offset_left = 466.0
+offset_top = 154.0
+offset_right = 663.0
+offset_bottom = 194.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 45
+text = "Options"
+
+[node name="BackBtn" type="Button" parent="."]
+z_index = 2
+offset_left = 384.0
+offset_top = 240.0
+offset_right = 410.66666
+offset_bottom = 256.0
+theme = ExtResource("18_getpj")
+theme_override_styles/normal = SubResource("StyleBoxTexture_d13ii")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1u8w0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_0odxb")
+
+[node name="VolumeSlider" type="Control" parent="."]
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = 480.0
+offset_top = 256.0
+offset_right = 520.0
+offset_bottom = 296.0
+script = SubResource("GDScript_lswn8")
+
+[node name="Options" type="Sprite2D" parent="VolumeSlider"]
+position = Vector2(91, 73.999985)
+scale = Vector2(2.5690813, 2.5148811)
+texture = ExtResource("17_82xsv")
+
+[node name="master_label" type="Label" parent="VolumeSlider"]
+layout_mode = 0
+offset_top = -16.0
+offset_right = 168.0
+offset_bottom = 7.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 20
+text = "Master Volume"
+
+[node name="music_label" type="Label" parent="VolumeSlider"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 48.0
+offset_right = 159.0
+offset_bottom = 71.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 20
+text = "Music Volume"
+
+[node name="sound_effect_label" type="Label" parent="VolumeSlider"]
+layout_mode = 0
+offset_left = -32.0
+offset_top = 112.0
+offset_right = 207.0
+offset_bottom = 135.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 20
+text = "Sound Effect Volume"
+
+[node name="Master" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+layout_mode = 0
+offset_left = -64.0
+offset_top = 16.0
+offset_right = 224.0
+offset_bottom = 32.0
+bus_name = "Master"
+
+[node name="Music" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+layout_mode = 0
+offset_left = -64.0
+offset_top = 80.0
+offset_right = 224.0
+offset_bottom = 96.0
+bus_name = "Music"
+
+[node name="Sound_Effect" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+layout_mode = 0
+offset_left = -64.0
+offset_top = 144.0
+offset_right = 224.0
+offset_bottom = 160.0
+bus_name = "Sound Effects"
+
 [connection signal="mouse_entered" from="Play" to="." method="_on_play_mouse_entered"]
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="mouse_entered" from="Option" to="." method="_on_option_mouse_entered"]
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
 [connection signal="mouse_entered" from="Quit" to="." method="_on_quit_mouse_entered"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
+[connection signal="mouse_entered" from="BackBtn" to="." method="_on_back_btn_mouse_entered"]
+[connection signal="pressed" from="BackBtn" to="." method="_on_back_btn_pressed"]

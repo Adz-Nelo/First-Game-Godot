@@ -26,6 +26,7 @@ var actual_speed = 50.0  # The actual speed this fox will use
 # Screen bounds for looping
 var spawn_x = -50.0
 var despawn_x = 0.0
+var ground_y = 0.0  # Store the ground level
 
 func _ready() -> void:
 	# Add to enemies group for easy identification
@@ -36,6 +37,9 @@ func _ready() -> void:
 	
 	# Get screen width
 	despawn_x = get_viewport_rect().size.x + 50
+	
+	# Store initial ground position
+	ground_y = global_position.y
 	
 	# Randomize speed if enabled
 	if randomize_speed:
@@ -61,6 +65,9 @@ func _physics_process(delta: float) -> void:
 	# Add gravity
 	if not is_on_floor():
 		velocity.y += get_gravity().y * delta
+	else:
+		# Update ground level when on floor
+		ground_y = global_position.y
 	
 	# Decrease collision cooldown
 	if collision_cooldown > 0:
@@ -108,8 +115,12 @@ func handle_screen_loop():
 		reset_fox()
 
 func reset_fox():
-	# Respawn on left side
+	# Respawn on left side at ground level
 	global_position.x = spawn_x
+	global_position.y = ground_y
+	
+	# Reset velocity
+	velocity = Vector2.ZERO
 	
 	# Randomize speed again
 	if randomize_speed:
