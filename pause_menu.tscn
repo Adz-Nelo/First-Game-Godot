@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=52 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
 [ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
@@ -21,6 +21,14 @@
 [ext_resource type="Theme" uid="uid://ciafrx7736guy" path="res://back_btn.tres" id="16_oasv2"]
 [ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="16_udgxo"]
 [ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="17_fijrc"]
+[ext_resource type="Theme" uid="uid://3wkx2utq7po7" path="res://yes_theme.tres" id="22_jpy7o"]
+[ext_resource type="Texture2D" uid="uid://kgmwmjf8o0ei" path="res://buttons/yes-btn.png" id="23_dhsdr"]
+[ext_resource type="Texture2D" uid="uid://cmp7dls5vkei2" path="res://buttons/yes-btn-active.png" id="24_wpuol"]
+[ext_resource type="Texture2D" uid="uid://bq7w7gpx1x52g" path="res://buttons/yes-btn-hover.png" id="25_g8p0d"]
+[ext_resource type="Theme" uid="uid://c7btqxpkckav0" path="res://no_theme.tres" id="26_fgo16"]
+[ext_resource type="Texture2D" uid="uid://biywm346a7t47" path="res://buttons/no-btn.png" id="27_gb0yf"]
+[ext_resource type="Texture2D" uid="uid://b7jw5sl7o41m7" path="res://buttons/no-btn-active.png" id="28_cyhcl"]
+[ext_resource type="Texture2D" uid="uid://dhjx0ikn6vb0r" path="res://buttons/no-btn-hover.png" id="29_2aoyq"]
 
 [sub_resource type="GDScript" id="GDScript_wyi4u"]
 script/source = "extends CanvasLayer
@@ -35,6 +43,8 @@ script/source = "extends CanvasLayer
 @onready var exit_button = $Exit
 @onready var label1 = $Label
 @onready var label2 = $Label2
+
+@onready var confirm_buttons = $ConfirmOption
 
 func _ready() -> void:
 	visible = false
@@ -139,6 +149,8 @@ func hide_main_menu():
 		label1.visible = false
 	if label2:
 		label2.visible = false
+	if confirm_buttons:
+		confirm_buttons.visible = false
 
 func show_main_menu():
 	# Show all main menu elements
@@ -156,6 +168,26 @@ func show_main_menu():
 		label1.visible = true
 	if label2:
 		label2.visible = true
+	if confirm_buttons:
+		confirm_buttons.visible = false
+
+func show_confirm_menu():
+	if main_buttons:
+		main_buttons.visible = true
+	if resume_button:
+		resume_button.visible = false
+	if settings_button:
+		settings_button.visible = false
+	if restart_button:
+		restart_button.visible = false
+	if exit_button:
+		exit_button.visible = false
+	if label1:
+		label1.visible = true
+	if label2:
+		label2.visible = true
+	if confirm_buttons:
+		confirm_buttons.visible = true		
 
 # === RETRO THEME ===
 func apply_retro_theme():
@@ -372,11 +404,8 @@ func _on_restart_pressed() -> void:
 		Game.gold = Game.level_start_coins
 	
 	# Restart the level
-	get_tree().change_scene_to_file(\"res://world.tscn\")
-	
-	# Restart music
-	AudioController.stop_music()
-	AudioController.play_music()
+	show_confirm_menu()
+	AudioController.select_sound()
 
 func _on_resume_mouse_entered() -> void:
 	AudioController.hover_button()
@@ -392,6 +421,25 @@ func _on_exit_mouse_entered() -> void:
 
 func _on_back_btn_mouse_entered() -> void:
 	AudioController.hover_button()
+
+func _on_yes_btn_pressed() -> void:
+	if Input.is_action_pressed(\"ui_accept\") or not Input.is_action_pressed(\"ui_accept\"):
+		# Works with both mouse click AND Enter when button is focused
+		get_tree().change_scene_to_file(\"res://world.tscn\")
+		AudioController.select_sound()
+		AudioController.stop_music()
+		AudioController.play_music()
+
+func _on_yes_btn_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_no_btn_pressed() -> void:
+	show_main_menu()
+	AudioController.select_sound()
+
+func _on_no_btn_mouse_entered() -> void:
+	AudioController.hover_button()
+	
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a32ks"]
@@ -454,6 +502,30 @@ region_rect = Rect2(166.1088, 185.2651, 168.86801, 126.84378)
 texture = ExtResource("16_udgxo")
 region_rect = Rect2(172.55453, 192.57846, 154.98843, 114.50638)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nwqid"]
+texture = ExtResource("23_dhsdr")
+region_rect = Rect2(4.5866175, 2.9176464, 214.29033, 54.83024)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0uddq"]
+texture = ExtResource("24_wpuol")
+region_rect = Rect2(3.0665073, 1.9453669, 217.2809, 57.32886)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ddjkl"]
+texture = ExtResource("25_g8p0d")
+region_rect = Rect2(4.715027, 3.3478775, 214.24695, 54.581818)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a1nvj"]
+texture = ExtResource("27_gb0yf")
+region_rect = Rect2(4.8293743, 3.7307272, 213.36581, 53.427628)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0n6sc"]
+texture = ExtResource("28_cyhcl")
+region_rect = Rect2(3.3874798, 2.328823, 215.99551, 56.103596)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hrs7h"]
+texture = ExtResource("29_2aoyq")
+region_rect = Rect2(4.989751, 3.6213021, 213.29526, 53.682148)
+
 [node name="pause-menu" type="CanvasLayer"]
 process_mode = 3
 script = SubResource("GDScript_wyi4u")
@@ -469,6 +541,7 @@ scale = Vector2(2.476191, 2.3333333)
 texture = ExtResource("1_hdmo1")
 
 [node name="Resume" type="Button" parent="."]
+visible = false
 offset_left = 416.0
 offset_top = 264.0
 offset_right = 568.0
@@ -480,6 +553,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_g7dbl")
 theme_override_styles/hover = SubResource("StyleBoxTexture_lv42l")
 
 [node name="Settings" type="Button" parent="."]
+visible = false
 offset_left = 584.0
 offset_top = 264.0
 offset_right = 736.0
@@ -491,6 +565,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_42xcf")
 theme_override_styles/hover = SubResource("StyleBoxTexture_1meuf")
 
 [node name="Restart" type="Button" parent="."]
+visible = false
 offset_left = 416.0
 offset_top = 328.0
 offset_right = 567.6667
@@ -501,6 +576,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_wumbf")
 theme_override_styles/hover = SubResource("StyleBoxTexture_do3q5")
 
 [node name="Exit" type="Button" parent="."]
+visible = false
 offset_left = 584.0
 offset_top = 328.0
 offset_right = 736.0
@@ -624,6 +700,46 @@ theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Settings"
 
+[node name="ConfirmOption" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="YesBtn" type="Button" parent="ConfirmOption"]
+layout_mode = 0
+offset_left = 408.0
+offset_top = 336.0
+offset_right = 552.0
+offset_bottom = 376.0
+theme = ExtResource("22_jpy7o")
+theme_override_styles/normal = SubResource("StyleBoxTexture_nwqid")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0uddq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ddjkl")
+
+[node name="NoBtn" type="Button" parent="ConfirmOption"]
+layout_mode = 0
+offset_left = 592.0
+offset_top = 336.0
+offset_right = 736.0
+offset_bottom = 376.0
+theme = ExtResource("26_fgo16")
+theme_override_styles/normal = SubResource("StyleBoxTexture_a1nvj")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0n6sc")
+theme_override_styles/hover = SubResource("StyleBoxTexture_hrs7h")
+
+[node name="Label" type="Label" parent="ConfirmOption"]
+layout_mode = 0
+offset_left = 408.0
+offset_top = 248.0
+offset_right = 738.0
+offset_bottom = 297.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 16
+text = "Are you sure you want to restart 
+the game? You will lose all your 
+progress in this level"
+
 [connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]
 [connection signal="mouse_entered" from="Settings" to="." method="_on_settings_mouse_entered"]
@@ -634,3 +750,7 @@ text = "Settings"
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="mouse_entered" from="SettingsPanel/BackBtn" to="." method="_on_back_btn_mouse_entered"]
 [connection signal="pressed" from="SettingsPanel/BackBtn" to="." method="_on_back_btn_pressed"]
+[connection signal="mouse_entered" from="ConfirmOption/YesBtn" to="." method="_on_yes_btn_mouse_entered"]
+[connection signal="pressed" from="ConfirmOption/YesBtn" to="." method="_on_yes_btn_pressed"]
+[connection signal="mouse_entered" from="ConfirmOption/NoBtn" to="." method="_on_no_btn_mouse_entered"]
+[connection signal="pressed" from="ConfirmOption/NoBtn" to="." method="_on_no_btn_pressed"]
