@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://dmbbxjelft5mv"]
+[gd_scene load_steps=58 format=3 uid="uid://dmbbxjelft5mv"]
 
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="1_hdmo1"]
 [ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="2_d3xb4"]
@@ -36,7 +36,7 @@ script/source = "extends CanvasLayer
 @onready var main_buttons = $ColorRect  # Your main menu panel
 @onready var settings_panel = $SettingsPanel  # Settings panel
 
-# Main menu buttons to hide when settings opens
+# Main buttons to hide when settings opens
 @onready var resume_button = $Resume
 @onready var settings_button = $Settings
 @onready var restart_button = $Restart
@@ -44,7 +44,11 @@ script/source = "extends CanvasLayer
 @onready var label1 = $Label
 @onready var label2 = $Label2
 
+# Confirm Buttons
 @onready var confirm_buttons = $ConfirmOption
+
+# Exit Confirm Buttons
+@onready var confirm_exit_buttons = $ExitConfirm
 
 func _ready() -> void:
 	visible = false
@@ -75,7 +79,18 @@ func _input(event: InputEvent) -> void:
 		if get_tree().paused:
 			# If settings is open, close it
 			if settings_panel and settings_panel.visible:
-				close_settings()
+				settings_panel.visible = false
+				show_main_menu()
+				AudioController.select_sound()
+			# If confirm menu is open, close it
+			elif confirm_buttons and confirm_buttons.visible:
+				hide_confirm_menu()
+				show_main_menu()
+				AudioController.select_sound()
+			# If exit confirmation is open, close it
+			elif confirm_exit_buttons and confirm_exit_buttons.visible:
+				show_main_menu()
+				hide_exit_confirm()
 				AudioController.select_sound()
 			else:
 				# Unpause game
@@ -91,11 +106,18 @@ func _input(event: InputEvent) -> void:
 			AudioController.select_sound()
 	
 	if Input.is_action_just_pressed(\"ui_accept\"):
-		# Resume game if paused and settings are not open
-		if get_tree().paused and visible and not (settings_panel and settings_panel.visible):
-			AudioController.select_sound()
-			visible = false
-			get_tree().paused = false
+		if get_tree().paused:
+			# PRIORITY 1: Check if confirm buttons are visible (restart confirmation)
+			if confirm_buttons and confirm_buttons.visible:
+				_on_yes_btn_pressed()
+			# PRIORITY 1: Check if exit confirm buttons are visible (exit confirmation)
+			elif confirm_exit_buttons and confirm_exit_buttons.visible:
+				_on_confirm_exit_pressed()
+			# PRIORITY 3: Check if settings panel is NOT open, then resume
+			elif visible and not (settings_panel and settings_panel.visible):
+				AudioController.select_sound()
+				visible = false
+				get_tree().paused = false
 
 # === MAIN MENU BUTTONS ===
 func _on_button_pressed() -> void:
@@ -115,8 +137,8 @@ func _on_settings_pressed() -> void:
 	AudioController.select_sound()
 
 func _on_exit_pressed() -> void:
-	get_tree().paused = false
-	get_tree().change_scene_to_file(\"res://main.tscn\")
+	hide_main_menu()
+	show_exit_confirm()
 	AudioController.select_sound()
 
 # === SETTINGS PANEL ===
@@ -135,59 +157,49 @@ func close_settings():
 # === SHOW/HIDE FUNCTIONS ===
 func hide_main_menu():
 	# Hide all main menu elements
-	if main_buttons:
-		main_buttons.visible = true
-	if resume_button:
-		resume_button.visible = false
-	if settings_button:
-		settings_button.visible = false
-	if restart_button:
-		restart_button.visible = false
-	if exit_button:
-		exit_button.visible = false
-	if label1:
-		label1.visible = false
-	if label2:
-		label2.visible = false
-	if confirm_buttons:
-		confirm_buttons.visible = false
+	main_buttons.visible = true
+	resume_button.visible = false
+	settings_button.visible = false
+	restart_button.visible = false
+	exit_button.visible = false
+	label1.visible = false
+	label2.visible = false
+	confirm_buttons.visible = false
 
 func show_main_menu():
 	# Show all main menu elements
-	if main_buttons:
-		main_buttons.visible = true
-	if resume_button:
-		resume_button.visible = true
-	if settings_button:
-		settings_button.visible = true
-	if restart_button:
-		restart_button.visible = true
-	if exit_button:
-		exit_button.visible = true
-	if label1:
-		label1.visible = true
-	if label2:
-		label2.visible = true
-	if confirm_buttons:
-		confirm_buttons.visible = false
+	main_buttons.visible = true
+	resume_button.visible = true
+	settings_button.visible = true
+	restart_button.visible = true
+	exit_button.visible = true
+	label1.visible = true
+	label2.visible = true
+	confirm_buttons.visible = false
+	confirm_exit_buttons.visible = false
 
 func show_confirm_menu():
-	if main_buttons:
-		main_buttons.visible = true
-	if resume_button:
-		resume_button.visible = false
-	if settings_button:
-		settings_button.visible = false
-	if restart_button:
-		restart_button.visible = false
-	if exit_button:
-		exit_button.visible = false
-	if label1:
-		label1.visible = true
-	if label2:
-		label2.visible = true
-	if confirm_buttons:
-		confirm_buttons.visible = true		
+	main_buttons.visible = true
+	resume_button.visible = false
+	settings_button.visible = false
+	restart_button.visible = false
+	exit_button.visible = false
+	label1.visible = true
+	label2.visible = true
+	confirm_buttons.visible = true		
+
+func hide_confirm_menu():
+	main_buttons.visible = true
+	label1.visible = false
+	label2.visible = false
+	confirm_buttons.visible = false		
+	
+func show_exit_confirm():
+	main_buttons.visible = true
+	confirm_exit_buttons.visible = true
+	
+func hide_exit_confirm():
+	confirm_exit_buttons.visible = false
 
 # === RETRO THEME ===
 func apply_retro_theme():
@@ -423,12 +435,10 @@ func _on_back_btn_mouse_entered() -> void:
 	AudioController.hover_button()
 
 func _on_yes_btn_pressed() -> void:
-	if Input.is_action_pressed(\"ui_accept\") or not Input.is_action_pressed(\"ui_accept\"):
-		# Works with both mouse click AND Enter when button is focused
-		get_tree().change_scene_to_file(\"res://world.tscn\")
-		AudioController.select_sound()
-		AudioController.stop_music()
-		AudioController.play_music()
+	get_tree().change_scene_to_file(\"res://world.tscn\")
+	AudioController.select_sound()
+	AudioController.stop_music()
+	AudioController.play_music()
 
 func _on_yes_btn_mouse_entered() -> void:
 	AudioController.hover_button()
@@ -438,6 +448,21 @@ func _on_no_btn_pressed() -> void:
 	AudioController.select_sound()
 
 func _on_no_btn_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_confirm_exit_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(\"res://main.tscn\")
+	AudioController.select_sound()
+	
+func _on_confirm_exit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_cancel_exit_pressed() -> void:
+	show_main_menu()
+	AudioController.select_sound()
+
+func _on_cancel_exit_mouse_entered() -> void:
 	AudioController.hover_button()
 	
 "
@@ -525,6 +550,30 @@ region_rect = Rect2(3.3874798, 2.328823, 215.99551, 56.103596)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hrs7h"]
 texture = ExtResource("29_2aoyq")
 region_rect = Rect2(4.989751, 3.6213021, 213.29526, 53.682148)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jpy7o"]
+texture = ExtResource("23_dhsdr")
+region_rect = Rect2(4.8088818, 3.8108392, 213.54526, 53.415497)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dhsdr"]
+texture = ExtResource("24_wpuol")
+region_rect = Rect2(3.9774818, 2.844101, 215.21976, 55.104874)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wpuol"]
+texture = ExtResource("25_g8p0d")
+region_rect = Rect2(4.6399765, 3.7390976, 213.8612, 53.56527)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g8p0d"]
+texture = ExtResource("27_gb0yf")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fgo16"]
+texture = ExtResource("28_cyhcl")
+region_rect = Rect2(3.835886, 2.7336693, 215.58238, 55.698776)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gb0yf"]
+texture = ExtResource("29_2aoyq")
+region_rect = Rect2(5, 4, 213, 53)
 
 [node name="pause-menu" type="CanvasLayer"]
 process_mode = 3
@@ -701,6 +750,7 @@ theme_override_font_sizes/font_size = 40
 text = "Settings"
 
 [node name="ConfirmOption" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -740,6 +790,45 @@ text = "Are you sure you want to restart
 the game? You will lose all your 
 progress in this level"
 
+[node name="ExitConfirm" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="confirm_exit" type="Button" parent="ExitConfirm"]
+layout_mode = 0
+offset_left = 408.0
+offset_top = 336.0
+offset_right = 552.0
+offset_bottom = 376.0
+theme = ExtResource("22_jpy7o")
+theme_override_styles/normal = SubResource("StyleBoxTexture_jpy7o")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_dhsdr")
+theme_override_styles/hover = SubResource("StyleBoxTexture_wpuol")
+
+[node name="cancel_exit" type="Button" parent="ExitConfirm"]
+layout_mode = 0
+offset_left = 592.0
+offset_top = 336.0
+offset_right = 736.0
+offset_bottom = 376.0
+theme = ExtResource("26_fgo16")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g8p0d")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_fgo16")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gb0yf")
+
+[node name="LabelExit" type="Label" parent="ExitConfirm"]
+layout_mode = 0
+offset_left = 394.0
+offset_top = 256.0
+offset_right = 754.0
+offset_bottom = 296.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 16
+text = "Are you sure you want to exit? your
+progress will be saved anyways"
+
 [connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]
 [connection signal="mouse_entered" from="Settings" to="." method="_on_settings_mouse_entered"]
@@ -754,3 +843,7 @@ progress in this level"
 [connection signal="pressed" from="ConfirmOption/YesBtn" to="." method="_on_yes_btn_pressed"]
 [connection signal="mouse_entered" from="ConfirmOption/NoBtn" to="." method="_on_no_btn_mouse_entered"]
 [connection signal="pressed" from="ConfirmOption/NoBtn" to="." method="_on_no_btn_pressed"]
+[connection signal="mouse_entered" from="ExitConfirm/confirm_exit" to="." method="_on_confirm_exit_mouse_entered"]
+[connection signal="pressed" from="ExitConfirm/confirm_exit" to="." method="_on_confirm_exit_pressed"]
+[connection signal="mouse_entered" from="ExitConfirm/cancel_exit" to="." method="_on_cancel_exit_mouse_entered"]
+[connection signal="pressed" from="ExitConfirm/cancel_exit" to="." method="_on_cancel_exit_pressed"]
