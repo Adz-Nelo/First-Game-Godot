@@ -10,9 +10,31 @@ script/source = "extends Node2D
 
 var heart = 1  # How much heart this gives
 
+# Pulsating effect settings
+@export var pulse_enabled = true
+@export var pulse_scale_min = 0.9
+@export var pulse_scale_max = 1.1
+@export var pulse_speed = 5.0
+
+var time = 0.0
+
 func _ready():
 	# Connect the area signal
 	area.body_entered.connect(_on_body_entered)
+
+func _process(delta: float) -> void:
+	time += delta
+	
+	# Pulsating scale effect - beats faster when player has 1 HP
+	if pulse_enabled:
+		var current_pulse_speed = pulse_speed
+		
+		# If player has 1 HP or less, pulse MUCH faster!
+		if Game.playerHP <= 1:
+			current_pulse_speed = pulse_speed * 3.0  # 3x faster when critical!
+		
+		var pulse = lerp(pulse_scale_min, pulse_scale_max, (sin(time * current_pulse_speed) + 1.0) / 2.0)
+		scale = Vector2(pulse, pulse)
 
 func _on_body_entered(body):
 	if body.name == \"Player\":
@@ -23,6 +45,15 @@ func collect_heart(player):
 	
 	# Add HP (no limit!)
 	Game.playerHP += heart
+	
+	# Stop pulsating during collection
+	pulse_enabled = false
+	
+	# Collection animation - zoom in effect
+	var collect_tween = create_tween()
+	collect_tween.set_parallel(true)
+	collect_tween.tween_property(self, \"scale\", Vector2(1.5, 1.5), 0.15)
+	collect_tween.tween_property(self, \"modulate:a\", 0.0, 0.3)
 	
 	# Play animation and sound
 	animated_sprite.play(\"Collect\")
