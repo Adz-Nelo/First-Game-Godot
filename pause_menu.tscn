@@ -418,6 +418,7 @@ func _on_restart_pressed() -> void:
 	# Restart the level
 	show_confirm_menu()
 	AudioController.select_sound()
+	AudioController.stop_heart_beat()
 
 func _on_resume_mouse_entered() -> void:
 	AudioController.hover_button()
@@ -439,6 +440,7 @@ func _on_yes_btn_pressed() -> void:
 	AudioController.select_sound()
 	AudioController.stop_music()
 	AudioController.play_music()
+	AudioController.stop_heart_beat()
 
 func _on_yes_btn_mouse_entered() -> void:
 	AudioController.hover_button()
