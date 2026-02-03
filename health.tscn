@@ -8,9 +8,9 @@ script/source = "extends Node2D
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var area = $Area2D
 
-var heart = 1
+var heart = 1  # How much heart this gives
 
-# Pulsating effect
+# Pulsating effect settings
 @export var pulse_enabled = true
 @export var pulse_scale_min = 0.9
 @export var pulse_scale_max = 1.1
@@ -19,21 +19,24 @@ var heart = 1
 var time = 0.0
 
 func _ready():
+	# Connect the area signal
 	area.body_entered.connect(_on_body_entered)
 
 func _process(delta: float) -> void:
 	time += delta
 	
+	# Only pulsate if the heart is showing \"Heart\" animation (not \"Empty\")
 	if pulse_enabled and animated_sprite.animation == \"Heart\":
 		var current_pulse_speed = pulse_speed
 		
-		# Faster pulse when player has low health (visual only)
+		# If player has 1 HP or less, pulse MUCH faster!
 		if Game.playerHP <= 1:
-			current_pulse_speed = pulse_speed * 3.0
+			current_pulse_speed = pulse_speed * 3.0  # 3x faster when critical!
 		
 		var pulse = lerp(pulse_scale_min, pulse_scale_max, (sin(time * current_pulse_speed) + 1.0) / 2.0)
 		scale = Vector2(pulse, pulse)
 	else:
+		# If showing \"Empty\" animation, reset to normal scale
 		scale = Vector2(1.0, 1.0)
 
 func _on_body_entered(body):
@@ -41,15 +44,25 @@ func _on_body_entered(body):
 		collect_heart(body)
 
 func collect_heart(player):
+	# Disable collision so player can't collect twice
+	area.set_deferred(\"monitoring\", false)
+	
 	print(\"💓 Heart collected!\")
 	Game.playerHP += heart
 	
+	# Stop pulsating
+	pulse_enabled = false
+	
 	# Play collection effect
 	animated_sprite.play(\"Collect\")
-	AudioController.play_coin_collect()
+	AudioController.play_heart_collect()
 	
-	# Save and remove
+	# Save game
 	Utilities.saveGame()
+	
+	# IMPORTANT: Wait for animation to finish!
+	await animated_sprite.animation_finished
+	
 	queue_free()
 "
 
@@ -92,7 +105,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_p4itg")
 }],
-"loop": true,
+"loop": false,
 "name": &"Collect",
 "speed": 5.0
 }, {

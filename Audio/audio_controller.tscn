@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://drlp75ii76yoo"]
+[gd_scene load_steps=13 format=3 uid="uid://drlp75ii76yoo"]
 
 [ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
 [ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://gkwn3yqx1pvk" path="res://Audio/select-sound.wav" id="7_mslhv"]
 [ext_resource type="AudioStream" uid="uid://dy31reabbsnv3" path="res://Audio/hover-button.mp3" id="9_32dgq"]
 [ext_resource type="AudioStream" uid="uid://d127t01ac0070" path="res://Audio/Fast Heart Beat - Sound Effect.wav" id="10_2mam3"]
+[ext_resource type="AudioStream" uid="uid://brhgbb0ja6xjb" path="res://Audio/heart-collected.wav" id="11_srkke"]
 
 [sub_resource type="GDScript" id="GDScript_3rbmd"]
 script/source = "# In your AudioController.gd script:
@@ -26,6 +27,7 @@ extends Node
 @onready var select = $Select
 @onready var hover_btn = $HoverButton
 @onready var heart_beat = $HeartBeat
+@onready var heart_collect = $HeartCollect
 
 func _ready():
 	play_music()  # Start music when game starts
@@ -73,6 +75,9 @@ func play_heart_beat():
 		
 func stop_heart_beat():
 	heart_beat.stop()
+	
+func play_heart_collect():
+	heart_collect.play()
 	
 # Optional: Fade music in/out
 func fade_music_out(duration: float = 1.0):
@@ -128,4 +133,8 @@ bus = &"Sound Effects"
 [node name="HeartBeat" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_2mam3")
 volume_db = 5.0
+bus = &"Sound Effects"
+
+[node name="HeartCollect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_srkke")
 bus = &"Sound Effects"

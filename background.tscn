@@ -1,7 +1,6 @@
 [gd_scene load_steps=17 format=3 uid="uid://mitjtv2iwvhw"]
 
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="1_i7s6n"]
-[ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_xehqc"]
 [ext_resource type="Texture2D" uid="uid://cktrrmgmwbwm7" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/middle.png" id="2_xehqc"]
 [ext_resource type="Texture2D" uid="uid://7xls47kyda76" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/tree-house.png" id="3_splo0"]
 [ext_resource type="Texture2D" uid="uid://dk7qys2ar6rpv" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/palm.png" id="4_gjjrj"]
@@ -14,6 +13,15 @@
 [ext_resource type="Texture2D" uid="uid://bo1qb1mnd7rh" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/pine.png" id="12_v7pi8"]
 [ext_resource type="Texture2D" uid="uid://bmk3yadkg48a0" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/wooden-house.png" id="13_bho85"]
 [ext_resource type="Texture2D" uid="uid://b3bc0at5yhs1i" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/rock.png" id="14_8umsc"]
+
+[sub_resource type="GDScript" id="GDScript_b3bg0"]
+script/source = "extends ParallaxBackground
+
+var scrolling_speed = 100
+
+func _process(delta: float) -> void:
+	scroll_offset.x -= scrolling_speed * delta
+"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bpugw"]
 texture = ExtResource("5_eq6nc")
@@ -154,7 +162,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_bpugw")
 
 [node name="Background" type="ParallaxBackground"]
-script = ExtResource("1_xehqc")
+script = SubResource("GDScript_b3bg0")
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="."]
 motion_mirroring = Vector2(1152, 0)

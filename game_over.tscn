@@ -261,9 +261,9 @@ text = "Game Over"
 
 [node name="Resume" type="Button" parent="."]
 offset_left = 474.0
-offset_top = 264.0
+offset_top = 266.0
 offset_right = 624.0
-offset_bottom = 310.0
+offset_bottom = 312.0
 theme = ExtResource("4_psfuu")
 theme_override_styles/normal = SubResource("StyleBoxTexture_te55c")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_w5dc7")
@@ -271,9 +271,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_38l8k")
 
 [node name="Restart" type="Button" parent="."]
 offset_left = 473.0
-offset_top = 318.0
+offset_top = 322.0
 offset_right = 624.6667
-offset_bottom = 366.0
+offset_bottom = 370.0
 theme = ExtResource("4_dd2jf")
 theme_override_styles/normal = SubResource("StyleBoxTexture_kjrwi")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_olga5")
@@ -281,9 +281,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_13ri0")
 
 [node name="Exit" type="Button" parent="."]
 offset_left = 472.5
-offset_top = 376.0
+offset_top = 378.0
 offset_right = 624.5
-offset_bottom = 424.0
+offset_bottom = 426.0
 theme = ExtResource("4_fkf4o")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_dd2jf")
