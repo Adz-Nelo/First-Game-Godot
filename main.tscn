@@ -379,6 +379,7 @@ func add_label_icon(label: Label, color: Color):
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_ig7tw")
+metadata/_edit_lock_ = true
 
 [node name="Play" type="Button" parent="."]
 z_index = 1
@@ -504,6 +505,7 @@ script = SubResource("GDScript_2cqfq")
 script = SubResource("GDScript_ryguw")
 
 [node name="option_label" type="Label" parent="Option2"]
+visible = false
 offset_left = 464.0
 offset_top = 152.0
 offset_right = 661.0
@@ -513,6 +515,7 @@ theme_override_font_sizes/font_size = 45
 text = "Options"
 
 [node name="option_label2" type="Label" parent="Option2"]
+visible = false
 offset_left = 466.0
 offset_top = 154.0
 offset_right = 663.0
@@ -522,6 +525,7 @@ theme_override_font_sizes/font_size = 45
 text = "Options"
 
 [node name="BackBtn" type="Button" parent="."]
+visible = false
 z_index = 2
 offset_left = 376.0
 offset_top = 232.0
@@ -533,6 +537,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_1u8w0")
 theme_override_styles/hover = SubResource("StyleBoxTexture_0odxb")
 
 [node name="VolumeSlider" type="Control" parent="."]
+visible = false
 z_index = 1
 layout_mode = 3
 anchors_preset = 0
@@ -546,7 +551,6 @@ script = SubResource("GDScript_lswn8")
 position = Vector2(91, 73.999985)
 scale = Vector2(2.5690813, 2.5148811)
 texture = ExtResource("17_82xsv")
-metadata/_edit_lock_ = true
 
 [node name="master_label" type="Label" parent="VolumeSlider"]
 layout_mode = 0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cgavw7cg17s5c"]
+[gd_scene load_steps=50 format=3 uid="uid://cgavw7cg17s5c"]
 
 [ext_resource type="Texture2D" uid="uid://cve6mrvr780d5" path="res://Sunny Land Collection Files/Assets/Environments/Forest of Illusion/Forest of Illusion Expansion Pack/Previews/Illusion-forest-a.png" id="1_8u835"]
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="2_ftari"]
@@ -6,26 +6,62 @@
 [ext_resource type="Theme" uid="uid://lb08hy50gpwy" path="res://restart_theme.tres" id="4_dd2jf"]
 [ext_resource type="Theme" uid="uid://cxqj4gd36eda" path="res://exit_theme.tres" id="4_fkf4o"]
 [ext_resource type="Texture2D" uid="uid://c7fhelewlr1v2" path="res://buttons/exit-btn.png" id="4_k2vha"]
+[ext_resource type="Theme" uid="uid://cnvsc1wesq0rr" path="res://resume_theme.tres" id="4_psfuu"]
 [ext_resource type="Texture2D" uid="uid://ribykjgshnmm" path="res://buttons/exit-btn-active.png" id="5_fkf4o"]
 [ext_resource type="Texture2D" uid="uid://6ekusvccckt8" path="res://buttons/restart-btn.png" id="5_ku74v"]
+[ext_resource type="Texture2D" uid="uid://dqgqieysrg751" path="res://buttons/resume-btn.png" id="5_pi44w"]
 [ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="6_3u7xm"]
 [ext_resource type="Texture2D" uid="uid://df1s074hxyxj8" path="res://buttons/restart-btn-active.png" id="6_745m4"]
+[ext_resource type="Texture2D" uid="uid://brpncabsha464" path="res://buttons/resume-btn-active.png" id="6_x5j47"]
 [ext_resource type="Texture2D" uid="uid://b7gtjviw0yqs1" path="res://buttons/restart-btn-hover.png" id="7_dd2jf"]
+[ext_resource type="Texture2D" uid="uid://jekyox0m62j4" path="res://buttons/resume-btn-hover.png" id="7_lek4k"]
 [ext_resource type="Texture2D" uid="uid://r00oyrctaei7" path="res://Death NPC/grim-death.png" id="12_nm4t2"]
 [ext_resource type="Texture2D" uid="uid://dl50lacq241r7" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Hurt2/hurt-2.png" id="13_745m4"]
 [ext_resource type="Texture2D" uid="uid://dshdpk0g48grd" path="res://Death NPC/skull.png" id="14_745m4"]
+[ext_resource type="Theme" uid="uid://3wkx2utq7po7" path="res://yes_theme.tres" id="15_3xhsb"]
+[ext_resource type="Texture2D" uid="uid://kgmwmjf8o0ei" path="res://buttons/yes-btn.png" id="16_7eg23"]
+[ext_resource type="Texture2D" uid="uid://cmp7dls5vkei2" path="res://buttons/yes-btn-active.png" id="17_0o5rp"]
+[ext_resource type="Texture2D" uid="uid://bq7w7gpx1x52g" path="res://buttons/yes-btn-hover.png" id="18_didoo"]
+[ext_resource type="Theme" uid="uid://c7btqxpkckav0" path="res://no_theme.tres" id="19_psfuu"]
+[ext_resource type="Texture2D" uid="uid://biywm346a7t47" path="res://buttons/no-btn.png" id="20_pi44w"]
+[ext_resource type="Texture2D" uid="uid://b7jw5sl7o41m7" path="res://buttons/no-btn-active.png" id="21_x5j47"]
+[ext_resource type="Texture2D" uid="uid://dhjx0ikn6vb0r" path="res://buttons/no-btn-hover.png" id="22_lek4k"]
 
 [sub_resource type="GDScript" id="GDScript_woa3c"]
 script/source = "extends CanvasLayer
 
+@onready var resume_button = $Resume
+@onready var restart_button = $Restart
+@onready var exit_button = $Exit
+
+# Restart Confirmation Buttons
+@onready var confirm_restart_buttons = $ControlRestart
+
+# Exit Confirmation Buttons
+@onready var confirm_exit_buttons = $ControlExit
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	show_main_buttons()
+	confirm_restart_buttons.visible = false
+	confirm_exit_buttons.visible = false
+	
 	AudioController.play_game_over()
 	AudioController.stop_music()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+	
+func show_main_buttons(): 
+	resume_button.visible = true
+	restart_button.visible = true
+	exit_button.visible = true
+	
+func hide_main_buttons():
+	resume_button.visible = false
+	restart_button.visible = false
+	exit_button.visible = false	
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\"):
@@ -35,19 +71,61 @@ func _input(event: InputEvent) -> void:
 		AudioController.play_music()
 
 func _on_exit_pressed() -> void:
-	get_tree().change_scene_to_file(\"res://main.tscn\")
+	hide_main_buttons()
+	confirm_exit_buttons.visible = true
 	AudioController.select_sound()
-	AudioController.stop_game_over()
 
 func _on_restart_pressed() -> void:
-	get_tree().change_scene_to_file(\"res://world.tscn\")
-	AudioController.stop_game_over()
-	AudioController.play_music()
+	hide_main_buttons()
+	confirm_restart_buttons.visible = true
+	AudioController.select_sound()
 
 func _on_restart_mouse_entered() -> void:
 	AudioController.hover_button()
 
 func _on_exit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_yes_restart_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://world.tscn\")
+	AudioController.select_sound()
+	AudioController.stop_game_over()
+	AudioController.play_music()
+
+func _on_yes_restart_mouse_entered() -> void:
+	AudioController.hover_button()
+	
+func _on_no_restart_pressed() -> void:
+	show_main_buttons()
+	confirm_restart_buttons.visible = false
+	AudioController.select_sound()
+
+func _on_no_restart_mouse_entered() -> void:
+	AudioController.hover_button()
+	
+func _on_confirm_exit_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://main.tscn\")
+	AudioController.select_sound()
+	AudioController.stop_game_over()
+
+func _on_confirm_exit_mouse_entered() -> void:
+	AudioController.hover_button()
+	
+func _on_cancel_exit_pressed() -> void:
+	show_main_buttons()
+	confirm_exit_buttons.visible = false
+	AudioController.select_sound()
+
+func _on_cancel_exit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_resume_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://world.tscn\")
+	AudioController.select_sound()
+	AudioController.stop_game_over()
+	AudioController.play_music()
+
+func _on_resume_mouse_entered() -> void:
 	AudioController.hover_button()
 "
 
@@ -62,6 +140,18 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 "
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_te55c"]
+texture = ExtResource("5_pi44w")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w5dc7"]
+texture = ExtResource("6_x5j47")
+region_rect = Rect2(2.9092522, 2.0945969, 217.05568, 56.60794)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_38l8k"]
+texture = ExtResource("7_lek4k")
+region_rect = Rect2(5, 4, 213, 53)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kjrwi"]
 texture = ExtResource("5_ku74v")
@@ -86,6 +176,54 @@ region_rect = Rect2(3.3286667, 2.1727958, 216.25314, 56.83537)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nm4t2"]
 texture = ExtResource("6_3u7xm")
 region_rect = Rect2(4.431838, 3.3510516, 214.26942, 54.51883)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_28kla"]
+texture = ExtResource("16_7eg23")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vqq83"]
+texture = ExtResource("17_0o5rp")
+region_rect = Rect2(3.1105843, 1.2471542, 217.09502, 57.996834)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hto0y"]
+texture = ExtResource("18_didoo")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_knfem"]
+texture = ExtResource("20_pi44w")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_47g5g"]
+texture = ExtResource("21_x5j47")
+region_rect = Rect2(3.2519226, 2.3540668, 216.6146, 56.53457)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3hfur"]
+texture = ExtResource("22_lek4k")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3xhsb"]
+texture = ExtResource("16_7eg23")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7eg23"]
+texture = ExtResource("17_0o5rp")
+region_rect = Rect2(2.5169373, 1.4496727, 218.09615, 57.986107)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0o5rp"]
+texture = ExtResource("18_didoo")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_didoo"]
+texture = ExtResource("20_pi44w")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_psfuu"]
+texture = ExtResource("21_x5j47")
+region_rect = Rect2(2.757122, 1.921175, 217.65025, 57.274124)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pi44w"]
+texture = ExtResource("22_lek4k")
+region_rect = Rect2(5, 4, 213, 53)
 
 [node name="game-over" type="CanvasLayer"]
 script = SubResource("GDScript_woa3c")
@@ -121,11 +259,21 @@ theme_override_fonts/font = ExtResource("3_28vn7")
 theme_override_font_sizes/font_size = 36
 text = "Game Over"
 
+[node name="Resume" type="Button" parent="."]
+offset_left = 474.0
+offset_top = 264.0
+offset_right = 624.0
+offset_bottom = 310.0
+theme = ExtResource("4_psfuu")
+theme_override_styles/normal = SubResource("StyleBoxTexture_te55c")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_w5dc7")
+theme_override_styles/hover = SubResource("StyleBoxTexture_38l8k")
+
 [node name="Restart" type="Button" parent="."]
-offset_left = 472.5
-offset_top = 296.0
-offset_right = 624.1667
-offset_bottom = 344.0
+offset_left = 473.0
+offset_top = 318.0
+offset_right = 624.6667
+offset_bottom = 366.0
 theme = ExtResource("4_dd2jf")
 theme_override_styles/normal = SubResource("StyleBoxTexture_kjrwi")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_olga5")
@@ -133,9 +281,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_13ri0")
 
 [node name="Exit" type="Button" parent="."]
 offset_left = 472.5
-offset_top = 360.0
+offset_top = 376.0
 offset_right = 624.5
-offset_bottom = 408.0
+offset_bottom = 424.0
 theme = ExtResource("4_fkf4o")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_dd2jf")
@@ -457,7 +605,98 @@ position = Vector2(310, 487)
 scale = Vector2(0.082, 0.082)
 texture = ExtResource("14_745m4")
 
+[node name="ControlRestart" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LabelRestart" type="Label" parent="ControlRestart"]
+layout_mode = 0
+offset_left = 417.0
+offset_top = 272.0
+offset_right = 687.0
+offset_bottom = 347.0
+theme_override_fonts/font = ExtResource("3_28vn7")
+text = "Are you sure you want to 
+restart? You will lose all 
+of your progress from the 
+start of this level"
+
+[node name="YesRestart" type="Button" parent="ControlRestart"]
+layout_mode = 0
+offset_left = 416.0
+offset_top = 376.0
+offset_right = 536.0
+offset_bottom = 413.0
+theme = ExtResource("15_3xhsb")
+theme_override_styles/normal = SubResource("StyleBoxTexture_28kla")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vqq83")
+theme_override_styles/hover = SubResource("StyleBoxTexture_hto0y")
+
+[node name="NoRestart" type="Button" parent="ControlRestart"]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 376.0
+offset_right = 680.0
+offset_bottom = 416.0
+theme = ExtResource("19_psfuu")
+theme_override_styles/normal = SubResource("StyleBoxTexture_knfem")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_47g5g")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3hfur")
+
+[node name="ControlExit" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LabelExit" type="Label" parent="ControlExit"]
+layout_mode = 0
+offset_left = 411.0
+offset_top = 280.0
+offset_right = 691.0
+offset_bottom = 352.0
+theme_override_fonts/font = ExtResource("3_28vn7")
+text = "Are you sure you want to 
+exit? your progress will be 
+saved anyways"
+
+[node name="ConfirmExit" type="Button" parent="ControlExit"]
+layout_mode = 0
+offset_left = 416.0
+offset_top = 376.0
+offset_right = 528.0
+offset_bottom = 416.0
+theme = ExtResource("15_3xhsb")
+theme_override_styles/normal = SubResource("StyleBoxTexture_3xhsb")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7eg23")
+theme_override_styles/hover = SubResource("StyleBoxTexture_0o5rp")
+
+[node name="CancelExit" type="Button" parent="ControlExit"]
+layout_mode = 0
+offset_left = 568.0
+offset_top = 376.0
+offset_right = 680.0
+offset_bottom = 416.0
+theme = ExtResource("19_psfuu")
+theme_override_styles/normal = SubResource("StyleBoxTexture_didoo")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_psfuu")
+theme_override_styles/hover = SubResource("StyleBoxTexture_pi44w")
+
+[connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
+[connection signal="pressed" from="Resume" to="." method="_on_resume_pressed"]
 [connection signal="mouse_entered" from="Restart" to="." method="_on_restart_mouse_entered"]
 [connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
 [connection signal="mouse_entered" from="Exit" to="." method="_on_exit_mouse_entered"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="mouse_entered" from="ControlRestart/YesRestart" to="." method="_on_yes_restart_mouse_entered"]
+[connection signal="pressed" from="ControlRestart/YesRestart" to="." method="_on_yes_restart_pressed"]
+[connection signal="mouse_entered" from="ControlRestart/NoRestart" to="." method="_on_no_restart_mouse_entered"]
+[connection signal="pressed" from="ControlRestart/NoRestart" to="." method="_on_no_restart_pressed"]
+[connection signal="mouse_entered" from="ControlExit/ConfirmExit" to="." method="_on_confirm_exit_mouse_entered"]
+[connection signal="pressed" from="ControlExit/ConfirmExit" to="." method="_on_confirm_exit_pressed"]
+[connection signal="mouse_entered" from="ControlExit/CancelExit" to="." method="_on_cancel_exit_mouse_entered"]
+[connection signal="pressed" from="ControlExit/CancelExit" to="." method="_on_cancel_exit_pressed"]
