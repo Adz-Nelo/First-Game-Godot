@@ -414,6 +414,7 @@ script = ExtResource("1_ig7tw")
 metadata/_edit_lock_ = true
 
 [node name="Play" type="Button" parent="."]
+visible = false
 z_index = 1
 offset_left = 472.0
 offset_top = 289.5
@@ -428,6 +429,7 @@ text = "
 metadata/_edit_use_anchors_ = true
 
 [node name="Option" type="Button" parent="."]
+visible = false
 z_index = 1
 offset_left = 472.0
 offset_top = 361.5
@@ -441,6 +443,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_w48qg")
 metadata/_edit_use_anchors_ = true
 
 [node name="Quit" type="Button" parent="."]
+visible = false
 z_index = 1
 offset_left = 472.0
 offset_top = 433.5
@@ -527,6 +530,7 @@ position = Vector2(384, 488)
 position = Vector2(120, 488)
 
 [node name="PressEnterText" type="Sprite2D" parent="."]
+visible = false
 z_index = 1
 position = Vector2(564, 249.99997)
 scale = Vector2(2.0416646, 2.0416644)
@@ -569,7 +573,6 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_1u8w0")
 theme_override_styles/hover = SubResource("StyleBoxTexture_0odxb")
 
 [node name="VolumeSlider" type="Control" parent="."]
-visible = false
 z_index = 1
 layout_mode = 3
 anchors_preset = 0
@@ -580,11 +583,13 @@ offset_bottom = 296.0
 script = SubResource("GDScript_lswn8")
 
 [node name="Options" type="Sprite2D" parent="VolumeSlider"]
+visible = false
 position = Vector2(91, 73.999985)
 scale = Vector2(2.5690813, 2.5148811)
 texture = ExtResource("17_82xsv")
 
 [node name="master_label" type="Label" parent="VolumeSlider"]
+visible = false
 layout_mode = 0
 offset_top = -16.0
 offset_right = 168.0
@@ -594,6 +599,7 @@ theme_override_font_sizes/font_size = 20
 text = "Master Volume"
 
 [node name="music_label" type="Label" parent="VolumeSlider"]
+visible = false
 layout_mode = 0
 offset_left = 8.0
 offset_top = 48.0
@@ -604,6 +610,7 @@ theme_override_font_sizes/font_size = 20
 text = "Music Volume"
 
 [node name="sound_effect_label" type="Label" parent="VolumeSlider"]
+visible = false
 layout_mode = 0
 offset_left = -32.0
 offset_top = 112.0
@@ -614,6 +621,7 @@ theme_override_font_sizes/font_size = 20
 text = "Sound Effect Volume"
 
 [node name="Master" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+visible = false
 layout_mode = 0
 offset_left = -64.0
 offset_top = 16.0
@@ -622,6 +630,7 @@ offset_bottom = 32.0
 bus_name = "Master"
 
 [node name="Music" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+visible = false
 layout_mode = 0
 offset_left = -64.0
 offset_top = 80.0
@@ -630,6 +639,7 @@ offset_bottom = 96.0
 bus_name = "Music"
 
 [node name="Sound_Effect" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
+visible = false
 layout_mode = 0
 offset_left = -64.0
 offset_top = 144.0
@@ -638,8 +648,6 @@ offset_bottom = 160.0
 bus_name = "Sound Effects"
 
 [node name="ConfirmQuit" type="Control" parent="."]
-visible = false
-z_index = 2
 layout_mode = 3
 anchors_preset = 0
 offset_left = 544.0
@@ -648,7 +656,7 @@ offset_right = 584.0
 offset_bottom = 304.0
 
 [node name="Options" type="Sprite2D" parent="ConfirmQuit"]
-position = Vector2(32, 64)
+position = Vector2(24, 64)
 scale = Vector2(2.5690813, 2.5148811)
 texture = ExtResource("17_82xsv")
 
@@ -678,9 +686,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_b1qrp")
 [node name="cancel_exit" type="Button" parent="ConfirmQuit"]
 z_index = 1
 layout_mode = 0
-offset_left = 40.0
+offset_left = 32.0
 offset_top = 88.0
-offset_right = 192.0
+offset_right = 184.0
 offset_bottom = 136.0
 theme = ExtResource("25_htxhm")
 theme_override_styles/normal = SubResource("StyleBoxTexture_come4")

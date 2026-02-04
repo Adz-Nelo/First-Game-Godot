@@ -44,25 +44,21 @@ func _on_body_entered(body):
 		collect_heart(body)
 
 func collect_heart(player):
-	# Disable collision so player can't collect twice
 	area.set_deferred(\"monitoring\", false)
 	
 	print(\"💓 Heart collected!\")
 	Game.playerHP += heart
 	
-	# Stop pulsating
 	pulse_enabled = false
 	
-	# Play collection effect
+	# Speed up ONLY the animation
+	animated_sprite.speed_scale = 2.0
 	animated_sprite.play(\"Collect\")
-	AudioController.play_heart_collect()
 	
-	# Save game
+	AudioController.play_heart_collect()
 	Utilities.saveGame()
 	
-	# IMPORTANT: Wait for animation to finish!
 	await animated_sprite.animation_finished
-	
 	queue_free()
 "
 

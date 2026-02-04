@@ -65,10 +65,24 @@ func hide_main_buttons():
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\"):
-		get_tree().change_scene_to_file(\"res://world.tscn\")
-		AudioController.select_sound()
-		AudioController.stop_game_over()
-		AudioController.play_music()
+		if confirm_restart_buttons and confirm_restart_buttons.visible:
+			_on_yes_restart_pressed()
+			AudioController.select_sound()
+			AudioController.stop_game_over()
+			AudioController.play_music()
+		elif confirm_restart_buttons and confirm_exit_buttons.visible:
+			_on_confirm_exit_pressed()
+			AudioController.select_sound()
+			AudioController.stop_game_over()
+			AudioController.play_music()
+			
+	elif event.is_action_pressed(\"ui_cancel\"):
+		if confirm_restart_buttons and confirm_restart_buttons.visible:
+			_on_no_restart_pressed()
+			AudioController.select_sound()
+		elif confirm_restart_buttons and confirm_exit_buttons.visible:
+			_on_cancel_exit_pressed()
+			AudioController.select_sound()
 
 func _on_exit_pressed() -> void:
 	hide_main_buttons()

@@ -1,9 +1,8 @@
-[gd_scene load_steps=19 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=18 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
 [ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="2_aqk2v"]
-[ext_resource type="Texture2D" uid="uid://b3vi0lt8tntfs" path="res://sunny-land/assets/environment/middle.png" id="2_k3n1d"]
 [ext_resource type="Texture2D" uid="uid://6bm6gbknfrtd" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/tileset.png" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://dvv0w42p5iqcr" path="res://frog.tscn" id="5_036b0"]
 [ext_resource type="PackedScene" uid="uid://cs04855ow3t40" path="res://coin.tscn" id="6_dwbse"]
@@ -402,16 +401,6 @@ script = ExtResource("1_tlwt5")
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="Background"]
 motion_mirroring = Vector2(1152, 0)
-
-[node name="Middle" type="Sprite2D" parent="Background/ParallaxLayer"]
-z_index = 1
-position = Vector2(102, 391)
-texture = ExtResource("2_k3n1d")
-
-[node name="Middle2" type="Sprite2D" parent="Background/ParallaxLayer"]
-z_index = 1
-position = Vector2(277, 391)
-texture = ExtResource("2_k3n1d")
 
 [node name="Back" type="Sprite2D" parent="Background/ParallaxLayer"]
 position = Vector2(575.99994, 360)
