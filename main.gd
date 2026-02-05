@@ -26,6 +26,7 @@ func _ready() -> void:
 	show_main_menu()
 	option_panel.visible = false
 	quit_panel.visible = false
+	back_button.visible = false
 
 func _input(event: InputEvent) -> void:
 	# Check for Enter/Return key press

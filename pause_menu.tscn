@@ -19,8 +19,8 @@
 [ext_resource type="Texture2D" uid="uid://b7gtjviw0yqs1" path="res://buttons/restart-btn-hover.png" id="12_y0te6"]
 [ext_resource type="Texture2D" uid="uid://d34vxqtv13ynh" path="res://buttons/exit-btn-hover.png" id="13_1meuf"]
 [ext_resource type="Theme" uid="uid://ciafrx7736guy" path="res://back_btn.tres" id="16_oasv2"]
-[ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="16_udgxo"]
 [ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="17_fijrc"]
+[ext_resource type="Texture2D" uid="uid://hgkjailjsobt" path="res://Additions/close.png" id="21_jpy7o"]
 [ext_resource type="Theme" uid="uid://3wkx2utq7po7" path="res://yes_theme.tres" id="22_jpy7o"]
 [ext_resource type="Texture2D" uid="uid://kgmwmjf8o0ei" path="res://buttons/yes-btn.png" id="23_dhsdr"]
 [ext_resource type="Texture2D" uid="uid://cmp7dls5vkei2" path="res://buttons/yes-btn-active.png" id="24_wpuol"]
@@ -46,9 +46,13 @@ script/source = "extends CanvasLayer
 
 # Confirm Buttons
 @onready var confirm_buttons = $ConfirmOption
+@onready var restart1 = $ConfirmOption/Label2
+@onready var restart2 = $ConfirmOption/Label3
 
 # Exit Confirm Buttons
 @onready var confirm_exit_buttons = $ExitConfirm
+@onready var exit1 = $ExitConfirm/Exit
+@onready var exit2 = $ExitConfirm/Exit2
 
 func _ready() -> void:
 	visible = false
@@ -57,6 +61,7 @@ func _ready() -> void:
 	
 	if has_node(\"Label\"):
 		$Label.modulate = Color.BLACK
+		$ConfirmOption/Label2.modulate = Color.BLACK
 	
 	# Hide settings panel initially
 	if settings_panel:
@@ -184,8 +189,10 @@ func show_confirm_menu():
 	settings_button.visible = false
 	restart_button.visible = false
 	exit_button.visible = false
-	label1.visible = true
-	label2.visible = true
+	label1.visible = false
+	label2.visible = false
+	restart1.visible = true
+	restart2.visible = true
 	confirm_buttons.visible = true		
 
 func hide_confirm_menu():
@@ -197,6 +204,8 @@ func hide_confirm_menu():
 func show_exit_confirm():
 	main_buttons.visible = true
 	confirm_exit_buttons.visible = true
+	exit1.visible = true
+	exit2.visible = true
 	
 func hide_exit_confirm():
 	confirm_exit_buttons.visible = false
@@ -206,7 +215,7 @@ func apply_retro_theme():
 	var retro_colors = {
 		\"Master\": Color(\"#FF6B35\"),
 		\"Music\": Color(\"#F7B801\"),
-		\"Sound-Effect\": Color(\"#07A0C3\")
+		\"Sound_Effect\": Color(\"#07A0C3\")  # Changed from \"Sound-Effect\" to \"Sound_Effect\"
 	}
 	
 	for child in settings_panel.get_children():
@@ -224,8 +233,17 @@ func apply_retro_theme():
 				style_retro_label(label, bus_color)
 			
 			# Connect slider signals
-			slider.value_changed.connect(func(value): update_slider_percentage(slider, value))
-
+			slider.value_changed.connect(func(value): 
+				update_slider_percentage(slider, value)
+			)
+			
+			# Play hurt sound when Sound_Effect slider is released (smoother experience)
+			if slider.name == \"Sound_Effect\":  # Changed from \"Sound-Effect\" to \"Sound_Effect\"
+				slider.drag_ended.connect(func(value_changed): 
+					if value_changed:
+						AudioController.play_player_hurt()
+				)
+				
 func create_retro_slider_style(slider: HSlider, color: Color):
 	var bg_style = StyleBoxFlat.new()
 	bg_style.bg_color = Color(\"#1A1A2E\")
@@ -409,6 +427,7 @@ func _on_back_btn_pressed() -> void:
 
 func _on_restart_pressed() -> void:
 	# Reset player HP back to max
+	
 	Game.playerHP = 3
 	
 	# Reset gold to what we had at level start (lose coins collected this level)
@@ -519,16 +538,16 @@ texture = ExtResource("13_1meuf")
 region_rect = Rect2(4.431838, 3.3510516, 214.26942, 54.51883)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fijrc"]
-texture = ExtResource("16_udgxo")
-region_rect = Rect2(154.29504, 180.23502, 190.33301, 141.086)
+texture = ExtResource("21_jpy7o")
+region_rect = Rect2(117, 117, 266, 266)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7qvy3"]
-texture = ExtResource("16_udgxo")
-region_rect = Rect2(166.1088, 185.2651, 168.86801, 126.84378)
+texture = ExtResource("21_jpy7o")
+region_rect = Rect2(108.49349, 107.93615, 283.46524, 284.71228)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gxrhd"]
-texture = ExtResource("16_udgxo")
-region_rect = Rect2(172.55453, 192.57846, 154.98843, 114.50638)
+texture = ExtResource("21_jpy7o")
+region_rect = Rect2(117, 117, 266, 266)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nwqid"]
 texture = ExtResource("23_dhsdr")
@@ -642,6 +661,7 @@ text = "
 "
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_left = 496.0
 offset_top = 160.0
 offset_right = 646.0
@@ -651,6 +671,7 @@ theme_override_font_sizes/font_size = 40
 text = "Paused"
 
 [node name="Label2" type="Label" parent="."]
+visible = false
 offset_left = 498.0
 offset_top = 161.0
 offset_right = 648.0
@@ -723,9 +744,10 @@ bus_name = "Sound Effects"
 
 [node name="BackBtn" type="Button" parent="SettingsPanel"]
 layout_mode = 0
+offset_left = 352.0
 offset_top = 32.0
-offset_right = 40.0
-offset_bottom = 56.0
+offset_right = 368.0
+offset_bottom = 48.0
 theme = ExtResource("16_oasv2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_fijrc")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_7qvy3")
@@ -734,9 +756,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_gxrhd")
 [node name="Label" type="Label" parent="SettingsPanel"]
 layout_mode = 0
 offset_left = 88.0
-offset_top = -80.0
+offset_top = -32.0
 offset_right = 288.0
-offset_bottom = -45.0
+offset_bottom = 3.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
@@ -745,9 +767,9 @@ text = "settings"
 [node name="Label2" type="Label" parent="SettingsPanel"]
 layout_mode = 0
 offset_left = 90.0
-offset_top = -79.0
+offset_top = -31.0
 offset_right = 290.0
-offset_bottom = -44.0
+offset_bottom = 4.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
 text = "Settings"
@@ -793,6 +815,27 @@ text = "Are you sure you want to restart
 the game? You will lose all your 
 progress in this level"
 
+[node name="Label2" type="Label" parent="ConfirmOption"]
+layout_mode = 0
+offset_left = 472.0
+offset_top = 160.0
+offset_right = 672.0
+offset_bottom = 195.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+
+[node name="Label3" type="Label" parent="ConfirmOption"]
+layout_mode = 0
+offset_left = 474.0
+offset_top = 161.0
+offset_right = 674.0
+offset_bottom = 196.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+
 [node name="ExitConfirm" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
@@ -829,8 +872,29 @@ offset_right = 754.0
 offset_bottom = 296.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 16
-text = "Are you sure you want to exit? your
-progress will be saved anyways"
+text = "Are you sure you want to exit? 
+your progress will be saved anyways"
+
+[node name="Exit" type="Label" parent="ExitConfirm"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 160.0
+offset_right = 632.0
+offset_bottom = 195.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 40
+text = "Exit"
+
+[node name="Exit2" type="Label" parent="ExitConfirm"]
+layout_mode = 0
+offset_left = 522.0
+offset_top = 161.0
+offset_right = 632.0
+offset_bottom = 196.0
+theme_override_fonts/font = ExtResource("2_nwcfo")
+theme_override_font_sizes/font_size = 40
+text = "Exit"
 
 [connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
 [connection signal="pressed" from="Resume" to="." method="_on_button_pressed"]

@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://cdujkqh34n5cr" path="res://sunny-land/assets/sprites/press-enter-text.png" id="16_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="17_82xsv"]
 [ext_resource type="Theme" uid="uid://de7qgtf8sy4q3" path="res://back-btn.tres" id="18_getpj"]
-[ext_resource type="Texture2D" uid="uid://bk28x5epyqut4" path="res://buttons/back-btn.png" id="19_ryguw"]
+[ext_resource type="Texture2D" uid="uid://hgkjailjsobt" path="res://Additions/close.png" id="18_xuqvo"]
 [ext_resource type="PackedScene" uid="uid://dcufthl211jbm" path="res://volume_slider.tscn" id="20_d13ii"]
 [ext_resource type="Theme" uid="uid://3wkx2utq7po7" path="res://yes_theme.tres" id="21_xuqvo"]
 [ext_resource type="Texture2D" uid="uid://kgmwmjf8o0ei" path="res://buttons/yes-btn.png" id="22_qsp4k"]
@@ -99,16 +99,16 @@ func _on_back_btn_mouse_entered() -> void:
 "
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d13ii"]
-texture = ExtResource("19_ryguw")
-region_rect = Rect2(169.42001, 188.13046, 160.93002, 118.37955)
+texture = ExtResource("18_xuqvo")
+region_rect = Rect2(117, 117, 266, 266)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1u8w0"]
-texture = ExtResource("19_ryguw")
-region_rect = Rect2(163.42674, 184.74947, 173.45592, 128.92567)
+texture = ExtResource("18_xuqvo")
+region_rect = Rect2(111.92561, 112.26939, 275.80273, 275.53027)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0odxb"]
-texture = ExtResource("19_ryguw")
-region_rect = Rect2(172.64297, 189.2893, 155.85123, 118.67996)
+texture = ExtResource("18_xuqvo")
+region_rect = Rect2(117, 117, 266, 266)
 
 [sub_resource type="GDScript" id="GDScript_lswn8"]
 script/source = "extends Control
@@ -126,7 +126,7 @@ func apply_retro_sunny_theme():
 	var retro_colors = {
 		\"Master\": Color(\"#FF6B35\"),      # Hot orange-red
 		\"Music\": Color(\"#F7B801\"),       # Golden yellow
-		\"Sound-Effect\": Color(\"#07A0C3\") # Cyan blue
+		\"Sound Effects\": Color(\"#07A0C3\") # Changed from \"Sound-Effect\" to \"Sound Effects\"
 	}
 	
 	# Apply to all HSliders
@@ -142,9 +142,16 @@ func apply_retro_sunny_theme():
 			add_volume_percentage(slider, bus_color)
 			
 			# Apply retro label styling (the text above each slider)
-			var label = get_node_or_null(slider.bus_name.replace(\"-\", \"_\") + \"_label\")
+			var label = get_node_or_null(slider.bus_name.replace(\" \", \"_\") + \"_label\")  # Changed \"-\" to \" \"
 			if label is Label:
 				style_retro_label(label, bus_color)
+			
+			# Play hurt sound when Sound Effects slider is adjusted
+			if slider.bus_name == \"Sound Effects\":  # Changed from \"Sound-Effect\" to \"Sound Effects\"
+				slider.drag_ended.connect(func(value_changed): 
+					if value_changed:
+						AudioController.play_player_hurt()
+				)
 
 func create_retro_slider_style(slider: HSlider, color: Color):
 	# 1. Background bar (track)
@@ -559,10 +566,10 @@ text = "Options"
 [node name="BackBtn" type="Button" parent="."]
 visible = false
 z_index = 2
-offset_left = 376.0
+offset_left = 736.0
 offset_top = 232.0
-offset_right = 416.0
-offset_bottom = 256.0
+offset_right = 752.0
+offset_bottom = 248.0
 theme = ExtResource("18_getpj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_d13ii")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1u8w0")
@@ -637,18 +644,38 @@ offset_right = 224.0
 offset_bottom = 160.0
 bus_name = "Sound Effects"
 
+[node name="Label" type="Label" parent="VolumeSlider"]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -88.0
+offset_right = 184.0
+offset_bottom = -53.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 40
+text = "settings"
+
+[node name="Label2" type="Label" parent="VolumeSlider"]
+layout_mode = 0
+offset_left = -14.0
+offset_top = -87.0
+offset_right = 186.0
+offset_bottom = -52.0
+theme_override_fonts/font = ExtResource("4_1bvp3")
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+
 [node name="ConfirmQuit" type="Control" parent="."]
-visible = false
 z_index = 2
 layout_mode = 3
 anchors_preset = 0
 offset_left = 544.0
-offset_top = 264.0
+offset_top = 312.0
 offset_right = 584.0
-offset_bottom = 304.0
+offset_bottom = 352.0
 
 [node name="Options" type="Sprite2D" parent="ConfirmQuit"]
-position = Vector2(32, 64)
+position = Vector2(32, 43.250015)
 scale = Vector2(2.5690813, 2.5148811)
 texture = ExtResource("17_82xsv")
 
@@ -656,8 +683,9 @@ texture = ExtResource("17_82xsv")
 z_index = 1
 layout_mode = 0
 offset_left = -144.0
+offset_top = -20.749985
 offset_right = 196.0
-offset_bottom = 48.0
+offset_bottom = 27.250015
 theme_override_fonts/font = ExtResource("4_1bvp3")
 text = "Are you sure you want to quit the 
 game? Your progress will be saved
@@ -667,9 +695,9 @@ anyways"
 z_index = 1
 layout_mode = 0
 offset_left = -144.0
-offset_top = 88.0
+offset_top = 67.250015
 offset_right = 8.0
-offset_bottom = 136.0
+offset_bottom = 115.250015
 theme = ExtResource("21_xuqvo")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ok6jj")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_facbu")
@@ -679,9 +707,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_b1qrp")
 z_index = 1
 layout_mode = 0
 offset_left = 40.0
-offset_top = 88.0
+offset_top = 67.250015
 offset_right = 192.0
-offset_bottom = 136.0
+offset_bottom = 115.250015
 theme = ExtResource("25_htxhm")
 theme_override_styles/normal = SubResource("StyleBoxTexture_come4")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_h8e4i")
