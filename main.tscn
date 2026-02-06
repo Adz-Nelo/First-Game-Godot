@@ -570,6 +570,7 @@ offset_left = 736.0
 offset_top = 232.0
 offset_right = 752.0
 offset_bottom = 248.0
+tooltip_text = "This is a close button"
 theme = ExtResource("18_getpj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_d13ii")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_1u8w0")
@@ -626,6 +627,7 @@ offset_left = -64.0
 offset_top = 16.0
 offset_right = 224.0
 offset_bottom = 32.0
+tooltip_text = "Master volume adjustment"
 bus_name = "Master"
 
 [node name="Music" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
@@ -634,6 +636,7 @@ offset_left = -64.0
 offset_top = 80.0
 offset_right = 224.0
 offset_bottom = 96.0
+tooltip_text = "Music Volume Adjustment"
 bus_name = "Music"
 
 [node name="Sound_Effect" parent="VolumeSlider" instance=ExtResource("20_d13ii")]
@@ -642,6 +645,7 @@ offset_left = -64.0
 offset_top = 144.0
 offset_right = 224.0
 offset_bottom = 160.0
+tooltip_text = "Sound Effect Volume Adjustment"
 bus_name = "Sound Effects"
 
 [node name="Label" type="Label" parent="VolumeSlider"]
@@ -666,6 +670,7 @@ theme_override_font_sizes/font_size = 40
 text = "Settings"
 
 [node name="ConfirmQuit" type="Control" parent="."]
+visible = false
 z_index = 2
 layout_mode = 3
 anchors_preset = 0
@@ -698,6 +703,7 @@ offset_left = -144.0
 offset_top = 67.250015
 offset_right = 8.0
 offset_bottom = 115.250015
+tooltip_text = "Click yes if you want to quit"
 theme = ExtResource("21_xuqvo")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ok6jj")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_facbu")
@@ -710,6 +716,7 @@ offset_left = 40.0
 offset_top = 67.250015
 offset_right = 192.0
 offset_bottom = 115.250015
+tooltip_text = "Click no if you change your mind"
 theme = ExtResource("25_htxhm")
 theme_override_styles/normal = SubResource("StyleBoxTexture_come4")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_h8e4i")
