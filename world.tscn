@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=20 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -365,7 +365,6 @@ func _ready() -> void:
 [sub_resource type="GDScript" id="GDScript_gbfbk"]
 script/source = "extends Label
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
@@ -375,6 +374,44 @@ func _process(delta: float) -> void:
 	# Convert gold to whole number before displaying
 	var whole_gold = int(Game.gold)  # or ceil(), floor(), round()
 	text = \" \" + str(whole_gold)
+"
+
+[sub_resource type="GDScript" id="GDScript_k3n1d"]
+script/source = "extends Control
+
+func _ready() -> void:
+	# Quick outline - 4 directions
+	var offsets = [
+		Vector2(1, 0),   # Right
+		Vector2(-1, 0),  # Left
+		Vector2(0, 1),   # Down
+		Vector2(0, -1)   # Up
+	]
+	
+	for offset in offsets:
+		var outline = $Label.duplicate()
+		outline.modulate = Color.BLACK
+		outline.position += offset * 1  # 2 pixel outline
+		outline.z_index = $Label.z_index - 1
+		add_child(outline)
+	
+	# Set main label color
+	$Label.modulate = Color.WHITE  # Your text color
+	$Label.z_index = 100  # Bring to front
+"
+
+[sub_resource type="GDScript" id="GDScript_ic0uy"]
+script/source = "extends Label
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	# Convert score to whole number before displaying
+	var whole_score = int(Game.score)  # or ceil(), floor(), round()
+	text = \"Score: \" + str(whole_score)
 "
 
 [sub_resource type="GDScript" id="GDScript_pkg7o"]
@@ -471,8 +508,25 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_ioo17")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 script = SubResource("GDScript_gbfbk")
+
+[node name="Score" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = SubResource("GDScript_k3n1d")
+
+[node name="Label" type="Label" parent="UI/Score"]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 24.0
+offset_right = 274.0
+offset_bottom = 47.0
+theme_override_fonts/font = ExtResource("7_ioo17")
+theme_override_font_sizes/font_size = 16
+script = SubResource("GDScript_ic0uy")
 
 [node name="Collectables" type="Node2D" parent="."]
 script = SubResource("GDScript_pkg7o")

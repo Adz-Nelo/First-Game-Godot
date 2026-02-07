@@ -142,6 +142,15 @@ func _on_settings_pressed() -> void:
 	AudioController.select_sound()
 
 func _on_exit_pressed() -> void:
+	Game.playerHP = 3
+	
+	# Reset gold to what we had at level start (lose coins collected this level)
+	if \"level_start_coins\" in Game:
+		Game.gold = Game.level_start_coins
+		
+	if \"level_start_score\" in Game:
+		Game.score = Game.level_start_score
+	
 	hide_main_menu()
 	show_exit_confirm()
 	AudioController.select_sound()
@@ -433,6 +442,9 @@ func _on_restart_pressed() -> void:
 	# Reset gold to what we had at level start (lose coins collected this level)
 	if \"level_start_coins\" in Game:
 		Game.gold = Game.level_start_coins
+		
+	if \"level_start_score\" in Game:
+		Game.score = Game.level_start_score
 	
 	# Restart the level
 	show_confirm_menu()

@@ -167,7 +167,7 @@ func death():
 		return 
 		
 	is_dead = true
-	Game.gold += 1
+	Game.score += 10
 	Utilities.saveGame()
 	chase = false
 	is_hopping = false
