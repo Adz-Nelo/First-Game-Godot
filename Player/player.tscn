@@ -1,15 +1,20 @@
-[gd_scene load_steps=29 format=3 uid="uid://dpbu3vbnbs3ts"]
+[gd_scene load_steps=34 format=3 uid="uid://dpbu3vbnbs3ts"]
 
 [ext_resource type="Texture2D" uid="uid://wk8obk24210i" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/hurt/player-hurt-1.png" id="1_bwjto"]
 [ext_resource type="Script" uid="uid://cctrnyagngkqv" path="res://Player/player.gd" id="1_dkpta"]
 [ext_resource type="Texture2D" uid="uid://df8vsf55hpd8r" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/hurt/player-hurt-2.png" id="2_606se"]
 [ext_resource type="Texture2D" uid="uid://dl50lacq241r7" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Hurt2/hurt-2.png" id="2_b1ygp"]
+[ext_resource type="Texture2D" uid="uid://ct4y8u16hp7me" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/climb/player-climb-1.png" id="2_gpjlu"]
+[ext_resource type="Texture2D" uid="uid://b5ddo3mj4u41q" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/climb/player-climb-2.png" id="3_8mwp6"]
 [ext_resource type="Texture2D" uid="uid://bkd58myifaxfv" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/idle/player-idle-1.png" id="3_u1c27"]
 [ext_resource type="Texture2D" uid="uid://tvmhjcay1563" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/idle/player-idle-2.png" id="4_op7ga"]
 [ext_resource type="Texture2D" uid="uid://bpannkujev0a4" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/hurt/player-idle-1-saturated.png" id="4_pisgm"]
+[ext_resource type="Texture2D" uid="uid://c04tpkhjoqobp" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/climb/player-climb-3.png" id="4_qemgg"]
+[ext_resource type="Texture2D" uid="uid://ba7aq40cqgt8" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/crouch/player-crouch-1.png" id="5_8viyr"]
 [ext_resource type="Texture2D" uid="uid://b4ixcgq26cf5t" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/hurt/player-idle-2-saturated.png" id="5_b1ygp"]
 [ext_resource type="Texture2D" uid="uid://dyvw1bnjk3vt7" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/idle/player-idle-3.png" id="5_q13i1"]
 [ext_resource type="Texture2D" uid="uid://euigkpbv6rhu" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/idle/player-idle-4.png" id="6_pylmc"]
+[ext_resource type="Texture2D" uid="uid://ee1isn7jhk05" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/crouch/player-crouch-2.png" id="6_sm0op"]
 [ext_resource type="Texture2D" uid="uid://c7i7yluwa6gu5" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/jump/player-jump-1.png" id="7_pbfsw"]
 [ext_resource type="Texture2D" uid="uid://cq08ijbcgrqju" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/jump/player-jump-2.png" id="8_5tmop"]
 [ext_resource type="Texture2D" uid="uid://w441ffhodlbd" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/run/player-run-1.png" id="9_7ahtn"]
@@ -25,6 +30,31 @@ height = 24.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_l8h54"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_gpjlu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8mwp6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_qemgg")
+}],
+"loop": true,
+"name": &"Climb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_8viyr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_sm0op")
+}],
+"loop": true,
+"name": &"Crouch",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_b1ygp")
@@ -269,8 +299,9 @@ process_mode = 4
 position = Vector2(-3.3881318e-21, -21)
 scale = Vector2(1.3124998, 1.3125)
 sprite_frames = SubResource("SpriteFrames_l8h54")
-animation = &"Death"
+animation = &"Crouch"
 autoplay = "Idle"
+frame = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.3, 1.3)

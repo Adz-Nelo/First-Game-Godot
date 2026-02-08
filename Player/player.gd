@@ -1,8 +1,11 @@
 extends CharacterBody2D
+
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
+
 @onready var animation = get_node("AnimationPlayer")
 @onready var animated_sprite = get_node("AnimatedSprite2D")
+
 var jump_count = 0
 var max_jumps = 2
 var is_hurt = false
@@ -13,10 +16,15 @@ var low_health_heartbeat = false
 var heartbeat_cooldown = 0.0
 var was_low_health = false
 
+# Crouching
+var is_crouching = false
+var crouch_time = 0.0  # Track how long we've been crouching
+var is_charged = false  # Is the jump charged?
+
 func _physics_process(delta: float) -> void:
 	# If dead, skip everything
 	if is_dead:
-		velocity = Vector2.ZERO  # Keep stopping velocity
+		velocity = Vector2.ZERO
 		return
 	
 	# If hurt, skip controls but keep physics
@@ -25,25 +33,67 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	
-	# Add the gravity.
+	# Add the gravity - ALWAYS apply gravity!
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	else:
 		jump_count = 0
 	
-	# Handle jump
-	if Input.is_action_just_pressed("ui_accept") and jump_count < max_jumps:
-		jump_count += 1
+	# Handle crouch input - HOLD to crouch
+	if Input.is_action_pressed("ui_down") and is_on_floor():
+		if not is_crouching:
+			is_crouching = true
+			crouch_time = 0.0
+			is_charged = false
+			print("⬇️ Crouching...")
 		
+		# Increase crouch time
+		crouch_time += delta
+		
+		# Check if charged (1 second)
+		if crouch_time >= 1.0 and not is_charged:
+			is_charged = true
+			print("⚡ JUMP CHARGED!")
+			# Optional: play a sound or visual effect
+			AudioController.play_jump()  # Or a special charge sound
+			animated_sprite.modulate = Color(1, 1, 0)  # Yellow flash
+		
+		animation.stop()
+		animated_sprite.play("Crouch")
+	else:
+		if is_crouching and is_on_floor():  # Only stand up if on floor
+			is_crouching = false
+			crouch_time = 0.0
+			print("⬆️ Stopped crouching")
+			# Reset color if it was charged
+			if is_charged:
+				animated_sprite.modulate = Color.WHITE
+
+	# If crouching, stop horizontal movement but keep physics
+	if is_crouching:
+		velocity.x = 0
+		move_and_slide()
+		return
+	
+	# Handle jump - but NOT while crouching!
+	if Input.is_action_just_pressed("ui_accept") and jump_count < max_jumps and not is_crouching:
+		jump_count += 1
 		var jump_power = JUMP_VELOCITY
-		if jump_count > 1:
+		
+		# CHARGED JUMP - much higher!
+		if is_charged:
+			jump_power = JUMP_VELOCITY * 1.5  # 50% more powerful!
+			print("🚀 SUPER JUMP!")
+			is_charged = false
+			animated_sprite.modulate = Color.WHITE
+		elif jump_count > 1:
 			jump_power = JUMP_VELOCITY * 0.85
 		
 		velocity.y = jump_power
 		AudioController.play_jump()
 		animation.play("Jump")
 	
-	# Movement code
+	# Movement code (only runs when NOT crouching)
 	var direction := Input.get_axis("ui_left", "ui_right")
 	
 	if direction == -1:
@@ -53,7 +103,6 @@ func _physics_process(delta: float) -> void:
 	
 	if direction:
 		velocity.x = direction * SPEED
-		
 		if velocity.y == 0:
 			animation.play("Run")
 	else:
