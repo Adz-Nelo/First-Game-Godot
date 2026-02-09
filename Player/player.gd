@@ -20,6 +20,7 @@ var was_low_health = false
 var is_crouching = false
 var crouch_time = 0.0  # Track how long we've been crouching
 var is_charged = false  # Is the jump charged?
+var charge_expire_time = 0.0  # Timer for charge expiration
 
 func _physics_process(delta: float) -> void:
 	# If dead, skip everything
@@ -53,11 +54,15 @@ func _physics_process(delta: float) -> void:
 		# Check if charged (1 second)
 		if crouch_time >= 1.0 and not is_charged:
 			is_charged = true
+			charge_expire_time = 1.0 
 			print("⚡ JUMP CHARGED!")
-			# Optional: play a sound or visual effect
-			AudioController.play_jump()  # Or a special charge sound
-			animated_sprite.modulate = Color(1, 1, 0)  # Yellow flash
-		
+			AudioController.play_power_up()
+			
+			# Electric power-up effect!
+			var tween = create_tween()
+			tween.tween_property(animated_sprite, "modulate", Color(0.358, 1.145, 2.0, 1.0), 0.15)  # Bright blue flash
+			tween.tween_property(animated_sprite, "modulate", Color(2.0, 2.0, 0.5), 0.15)  # Yellow electric
+			tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1), 0.2)  # Fade to normal		
 		animation.stop()
 		animated_sprite.play("Crouch")
 	else:
@@ -68,6 +73,14 @@ func _physics_process(delta: float) -> void:
 			# Reset color if it was charged
 			if is_charged:
 				animated_sprite.modulate = Color.WHITE
+				
+	# Charge expiration countdown
+	if is_charged and not is_crouching:
+		charge_expire_time -= delta
+		if charge_expire_time <= 0:
+			is_charged = false
+			animated_sprite.modulate = Color.WHITE
+			print("⏱️ Charge expired!")
 
 	# If crouching, stop horizontal movement but keep physics
 	if is_crouching:
