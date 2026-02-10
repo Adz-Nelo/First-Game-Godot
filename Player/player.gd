@@ -63,6 +63,7 @@ func _physics_process(delta: float) -> void:
 			tween.tween_property(animated_sprite, "modulate", Color(0.358, 1.145, 2.0, 1.0), 0.15)  # Bright blue flash
 			tween.tween_property(animated_sprite, "modulate", Color(2.0, 2.0, 0.5), 0.15)  # Yellow electric
 			tween.tween_property(animated_sprite, "modulate", Color(1, 1, 1), 0.2)  # Fade to normal		
+		
 		animation.stop()
 		animated_sprite.play("Crouch")
 	else:
