@@ -58,6 +58,7 @@ func _physics_process(delta: float) -> void:
 			print("⚡ JUMP CHARGED!")
 			AudioController.play_power_up()
 			
+			
 			# Electric power-up effect!
 			var tween = create_tween()
 			tween.tween_property(animated_sprite, "modulate", Color(0.358, 1.145, 2.0, 1.0), 0.15)  # Bright blue flash
@@ -100,11 +101,12 @@ func _physics_process(delta: float) -> void:
 			print("🚀 SUPER JUMP!")
 			is_charged = false
 			animated_sprite.modulate = Color.WHITE
-		elif jump_count > 1:
+			AudioController.play_super_jump()
+		elif jump_count > 1 or jump_count == 1:
 			jump_power = JUMP_VELOCITY * 0.85
-		
+			AudioController.play_jump()
+			
 		velocity.y = jump_power
-		AudioController.play_jump()
 		animation.play("Jump")
 	
 	# Movement code (only runs when NOT crouching)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://drlp75ii76yoo"]
+[gd_scene load_steps=15 format=3 uid="uid://drlp75ii76yoo"]
 
 [ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
 [ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://d127t01ac0070" path="res://Audio/Fast Heart Beat - Sound Effect.wav" id="10_2mam3"]
 [ext_resource type="AudioStream" uid="uid://brhgbb0ja6xjb" path="res://Audio/heart-collected.wav" id="11_srkke"]
 [ext_resource type="AudioStream" uid="uid://xva4ki1g8abf" path="res://Audio/power-up.mp3" id="12_nrmxn"]
+[ext_resource type="AudioStream" uid="uid://di13xaw3xqn21" path="res://Audio/super-jump.mp3" id="13_d3vne"]
 
 [sub_resource type="GDScript" id="GDScript_srkke"]
 script/source = "extends Node
@@ -29,6 +30,7 @@ script/source = "extends Node
 @onready var heart_beat = $HeartBeat
 @onready var heart_collect = $HeartCollect
 @onready var power_up = $PowerUp
+@onready var super_jump = $SuperJump
 
 func _ready():
 	play_music()  # Start music when game starts
@@ -82,6 +84,9 @@ func play_heart_collect():
 	
 func play_power_up():
 	power_up.play()
+	
+func play_super_jump():
+	super_jump.play()
 	
 # Optional: Fade music in/out
 func fade_music_out(duration: float = 1.0):
@@ -146,3 +151,6 @@ bus = &"Sound Effects"
 
 [node name="PowerUp" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_nrmxn")
+
+[node name="SuperJump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_d3vne")
