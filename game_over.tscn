@@ -65,7 +65,13 @@ func hide_main_buttons():
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\"):
-		if confirm_restart_buttons and confirm_restart_buttons.visible:
+		if resume_button and resume_button.visible:
+			_on_yes_restart_pressed()
+			AudioController.select_sound()
+			AudioController.stop_game_over()
+			AudioController.play_music()
+		
+		elif confirm_restart_buttons and confirm_restart_buttons.visible:
 			_on_yes_restart_pressed()
 			AudioController.select_sound()
 			AudioController.stop_game_over()
@@ -101,6 +107,16 @@ func _on_exit_mouse_entered() -> void:
 	AudioController.hover_button()
 
 func _on_yes_restart_pressed() -> void:
+	# Reset player HP back to max
+	Game.playerHP = 3
+	
+	# Reset gold to what we had at level start (lose coins collected this level)
+	if \"level_start_coins\" in Game:
+		Game.gold = Game.level_start_coins
+		
+	if \"level_start_score\" in Game:
+		Game.score = Game.level_start_score
+	
 	get_tree().change_scene_to_file(\"res://world.tscn\")
 	AudioController.select_sound()
 	AudioController.stop_game_over()

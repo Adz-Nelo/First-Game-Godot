@@ -54,7 +54,7 @@ func _physics_process(delta: float) -> void:
 		# Check if charged (1 second)
 		if crouch_time >= 1.0 and not is_charged:
 			is_charged = true
-			charge_expire_time = 1.0 
+			charge_expire_time = 0.5 
 			print("⚡ JUMP CHARGED!")
 			AudioController.play_power_up()
 			
@@ -102,7 +102,11 @@ func _physics_process(delta: float) -> void:
 			is_charged = false
 			animated_sprite.modulate = Color.WHITE
 			AudioController.play_super_jump()
-		elif jump_count > 1 or jump_count == 1:
+			
+			# SUPER JUMP SPLASH EFFECT!
+			create_super_jump_splash()
+			
+		elif jump_count >= 1:
 			jump_power = JUMP_VELOCITY * 0.85
 			AudioController.play_jump()
 			
@@ -165,6 +169,43 @@ func take_damage(damage: int):
 	await get_tree().create_timer(0.5).timeout
 	
 	is_hurt = false
+	
+func create_super_jump_splash():
+	# Create sparkling lightning particles
+	for i in range(12):  # More particles for lightning effect
+		var particle = Node2D.new()
+		get_parent().add_child(particle)
+		particle.global_position = global_position
+		
+		# Random direction for lightning burst
+		var angle = randf_range(0, 2 * PI)
+		var speed = randf_range(150, 300)
+		var direction = Vector2(cos(angle), sin(angle))
+		
+		# Create visual (lightning spark)
+		var visual = ColorRect.new()
+		visual.size = Vector2(randf_range(6, 12), randf_range(6, 12))  # Random sizes
+		visual.position = -visual.size / 2
+		# Electric yellow/gold colors ⚡
+		visual.color = Color(randf_range(1.0, 2.0), randf_range(0.8, 1.5), randf_range(0.0, 0.3))
+		particle.add_child(visual)
+		
+		# Lightning sparkle animation
+		var tween = create_tween()
+		# Burst outward
+		tween.tween_property(particle, "position", particle.position + direction * speed * 0.4, 0.4)
+		# Flicker effect
+		tween.parallel().tween_property(visual, "modulate:a", 0.0, 0.4)
+		# Random rotation for extra sparkle
+		tween.parallel().tween_property(visual, "rotation", randf_range(-PI, PI), 0.4)
+		
+		# Clean up
+		tween.tween_callback(particle.queue_free)
+	
+	# Add a lightning flash on the player
+	var flash_tween = create_tween()
+	flash_tween.tween_property(animated_sprite, "modulate", Color(2.0, 2.0, 0.5), 0.1)  # Bright yellow
+	flash_tween.tween_property(animated_sprite, "modulate", Color.WHITE, 0.2)  # Back to normal
 
 func _process(delta: float) -> void:
 	# Handle low health heartbeat
