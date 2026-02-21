@@ -304,7 +304,7 @@ autoplay = "Idle"
 frame = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(1.7, 1.7)
 limit_left = 0
 limit_top = 0
 
