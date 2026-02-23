@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=34 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -19,7 +19,6 @@
 [ext_resource type="Texture2D" uid="uid://bmk3yadkg48a0" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/wooden-house.png" id="11_4h6ng"]
 [ext_resource type="Texture2D" uid="uid://dk7qys2ar6rpv" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/palm.png" id="12_ikiii"]
 [ext_resource type="Texture2D" uid="uid://b3bc0at5yhs1i" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/rock.png" id="12_o3ebs"]
-[ext_resource type="PackedScene" uid="uid://d7smj0hg4h1e" path="res://opossum.tscn" id="16_mc2jv"]
 [ext_resource type="PackedScene" uid="uid://y350op7evxrm" path="res://opossum_mob.tscn" id="17_bo7i5"]
 [ext_resource type="Texture2D" uid="uid://dvondqi0lht37" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/small-platform.png" id="20_wjb0r"]
 [ext_resource type="Texture2D" uid="uid://cflrk24o5dr7a" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/spike-skull.png" id="21_mc2jv"]
@@ -655,9 +654,6 @@ position = Vector2(416, 408)
 
 [node name="Frog9" parent="Mobs" instance=ExtResource("5_036b0")]
 position = Vector2(216, 456)
-
-[node name="Opossum" parent="Mobs" instance=ExtResource("16_mc2jv")]
-position = Vector2(824, 440)
 
 [node name="opossumMob" parent="Mobs" instance=ExtResource("17_bo7i5")]
 position = Vector2(336, 168)
