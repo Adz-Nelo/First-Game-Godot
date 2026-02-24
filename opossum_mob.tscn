@@ -1,6 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://y350op7evxrm"]
+[gd_scene load_steps=18 format=3 uid="uid://y350op7evxrm"]
 
-[sub_resource type="GDScript" id="GDScript_nqyi3"]
+[ext_resource type="Texture2D" uid="uid://dsa6siqhy4sxe" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-1.png" id="1_su347"]
+[ext_resource type="Texture2D" uid="uid://bpqgvyv7ku6m6" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-2.png" id="2_nsonp"]
+[ext_resource type="Texture2D" uid="uid://dqi0fnsksuj1g" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-3.png" id="3_acqqk"]
+[ext_resource type="Texture2D" uid="uid://odgseuoliqpg" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-4.png" id="4_33vr1"]
+[ext_resource type="Texture2D" uid="uid://b2rvetpyxkcfa" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-5.png" id="5_5xljj"]
+[ext_resource type="Texture2D" uid="uid://ckqitcv5688vs" path="res://Sunny Land Collection Files/Assets/Props Items and VFX/Sunnyland FX/Sprites/enemy-death/enemy-death-6.png" id="6_ybag5"]
+[ext_resource type="Texture2D" uid="uid://b7ga0pxea3o0c" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-1.png" id="7_nqyi3"]
+[ext_resource type="Texture2D" uid="uid://dla8rlmfwm0nf" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-2.png" id="8_6wmad"]
+[ext_resource type="Texture2D" uid="uid://7g1ibnfqfpcm" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-3.png" id="9_n0wgw"]
+[ext_resource type="Texture2D" uid="uid://c7byl5vvjj20m" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-4.png" id="10_u0jtf"]
+[ext_resource type="Texture2D" uid="uid://d3nxh7nao4286" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-5.png" id="11_wkh0v"]
+[ext_resource type="Texture2D" uid="uid://bt5bwwsnb7hat" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/Opossum/opossum/opossum-6.png" id="12_a83ra"]
+
+[sub_resource type="GDScript" id="GDScript_su347"]
 script/source = "extends CharacterBody2D
 
 const SPEED = 50.0
@@ -10,70 +23,237 @@ const GRAVITY = 980.0
 
 var direction = -1  # Start moving left
 var is_dead = false
-var just_stomped = false  # Flag to prevent collision damage during stomp
 
-func _ready():
+# Track previous velocity
+var previous_velocity_y = 0.0
+
+# Damage cooldown
+var can_damage_player = true
+var damage_cooldown = 1.0
+
+func _ready() -> void:
 	animated_sprite.play(\"Walk\")
+	print(\"🦝 Opossum ready! Checking setup...\")
+	
+	# Debug: Check if areas exist
+	if has_node(\"PlayerDeath\"):
+		print(\"✅ PlayerDeath exists\")
+		# Connect signal manually if not connected
+		if not $PlayerDeath.body_entered.is_connected(_on_player_death_body_entered):
+			$PlayerDeath.body_entered.connect(_on_player_death_body_entered)
+			print(\"🔗 PlayerDeath signal connected\")
+	else:
+		print(\"❌ PlayerDeath NOT FOUND!\")
+	
+	if has_node(\"PlayerCollision\"):
+		print(\"✅ PlayerCollision exists\")
+		# Connect signal manually if not connected
+		if not $PlayerCollision.body_entered.is_connected(_on_player_collision_body_entered):
+			$PlayerCollision.body_entered.connect(_on_player_collision_body_entered)
+			print(\"🔗 PlayerCollision signal connected\")
+	else:
+		print(\"❌ PlayerCollision NOT FOUND!\")
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
 	
+	# Store velocity before move_and_slide
+	previous_velocity_y = velocity.y
+		
 	# Apply gravity
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
 	
-	# Move in current direction
+	# Walk in current direction
 	velocity.x = direction * SPEED
 	
-	# Flip sprite based on direction (reversed to fix moonwalking)
+	# Flip sprite based on direction
 	if direction == -1:
-		animated_sprite.flip_h = false  # Facing left, no flip
+		animated_sprite.flip_h = false  # Facing left
 	else:
-		animated_sprite.flip_h = true   # Facing right, flip
+		animated_sprite.flip_h = true   # Facing right
 	
 	move_and_slide()
 	
 	# Check if hit a wall - turn around
 	if is_on_wall():
 		direction *= -1
+		print(\"🔄 Opossum turned around\")
 
 # Player stomps opossum from top (kills opossum)
 func _on_player_death_body_entered(body: Node2D) -> void:
+	print(\"⚠️ PlayerDeath triggered by:\", body.name)
+	
 	if body.name == \"Player\" and not is_dead:
-		just_stomped = true  # Set flag first!
-		
-		# DISABLE PlayerCollision immediately to prevent it from triggering
-		$PlayerCollision.monitoring = false
-		
-		print(\"💀 Opossum stomped!\")
+		print(\"💀 STOMP DETECTED! Opossum dies!\")
 		AudioController.play_stomp_enemy()
+		
+		# Disable PlayerCollision immediately
+		if has_node(\"PlayerCollision\"):
+			$PlayerCollision.set_deferred(\"monitoring\", false)
+			print(\"🚫 PlayerCollision disabled\")
+		
 		body.bounce_after_stomp()
 		death()
+	else:
+		print(\"⚠️ Not player or already dead\")
 
-# Player collides with opossum from side/bottom (damages player)
+# Player collides with opossum from side/bottom OR opossum lands on player
 func _on_player_collision_body_entered(body: Node2D) -> void:
-	if body.name == \"Player\" and not is_dead and not just_stomped:
-		print(\"💥 Opossum hit player from side!\")
-		body.take_damage(1)
+	print(\"⚠️ PlayerCollision triggered by:\", body.name)
+	
+	if body.name == \"Player\" and not is_dead and can_damage_player:
+		print(\"💥 COLLISION WITH PLAYER!\")
+		
+		# Check if opossum is ABOVE the player
+		var opossum_is_above = position.y < body.position.y - 20
+		# Use PREVIOUS velocity (before it hit the ground)
+		var opossum_was_falling = previous_velocity_y > 50
+		
+		print(\"🔍 Opossum Y:\", position.y, \" Player Y:\", body.position.y)
+		print(\"🔍 Above?\", opossum_is_above, \" Falling?\", opossum_was_falling, \" Velocity:\", previous_velocity_y)
+		
+		if opossum_is_above and opossum_was_falling:
+			# Opossum landed on player from above
+			print(\"🦝💥 Opossum fell onto player's head! -2 HP\")
+			body.take_damage(2)
+			
+			# Bounce the opossum
+			velocity.y = -450
+			
+			# Push opossum away from player
+			var horizontal_distance = position.x - body.position.x
+			
+			if abs(horizontal_distance) < 5:
+				if body.animated_sprite.flip_h:
+					velocity.x = 200
+				else:
+					velocity.x = -200
+			else:
+				velocity.x = sign(horizontal_distance) * 200
+			
+			# Start cooldown
+			can_damage_player = false
+			
+			# Disable collision briefly so opossum can escape
+			$PlayerCollision.monitoring = false
+			await get_tree().create_timer(0.3).timeout
+			$PlayerCollision.monitoring = true
+			
+			await get_tree().create_timer(damage_cooldown).timeout
+			can_damage_player = true
+			
+		else:
+			# Normal side/bottom collision - player takes damage
+			print(\"💥 Side collision! Player takes 1 damage\")
+			body.take_damage(1)
+	else:
+		print(\"⚠️ Collision ignored - dead:\", is_dead, \" cooldown:\", !can_damage_player)
 
 func death():
-	if is_dead:
-		return
-	
+	if is_dead:	
+		return 
+		
 	is_dead = true
+	print(\"☠️ Opossum death sequence started\")
 	Game.score += 100
+	Utilities.saveGame()
+	velocity = Vector2.ZERO
 	
-	# Play death animation
 	animated_sprite.play(\"Death\")
 	
 	# Disable collision
 	$CollisionShape2D.set_deferred(\"disabled\", true)
 	
-	# Wait for death animation then remove
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.6).timeout
 	queue_free()
 "
 
-[node name="opossumMob" type="CharacterBody2D"]
-script = SubResource("GDScript_nqyi3")
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nsonp"]
+size = Vector2(20, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0c2ib"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_su347")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_nsonp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_acqqk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_33vr1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_5xljj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ybag5")
+}],
+"loop": true,
+"name": &"Death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_nqyi3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_6wmad")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_n0wgw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_u0jtf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_wkh0v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_a83ra")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_acqqk"]
+size = Vector2(23.5, 6.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_33vr1"]
+size = Vector2(23.5, 9)
+
+[node name="OpossumMob" type="CharacterBody2D"]
+collision_layer = 2
+script = SubResource("GDScript_su347")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -7)
+shape = SubResource("RectangleShape2D_nsonp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -11)
+sprite_frames = SubResource("SpriteFrames_0c2ib")
+animation = &"Walk"
+
+[node name="PlayerDeath" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDeath"]
+position = Vector2(-2.75, -12.25)
+shape = SubResource("RectangleShape2D_acqqk")
+
+[node name="PlayerCollision" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollision"]
+position = Vector2(-2.75, -4.5)
+shape = SubResource("RectangleShape2D_33vr1")
+
+[connection signal="body_entered" from="PlayerDeath" to="." method="_on_player_death_body_entered"]
+[connection signal="body_entered" from="PlayerCollision" to="." method="_on_player_collision_body_entered"]

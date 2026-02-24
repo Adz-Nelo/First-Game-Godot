@@ -117,6 +117,7 @@ animation = &"Idle"
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+visible = false
 shape = SubResource("CircleShape2D_23ppf")
 
 [node name="PlayerDeath" type="Area2D" parent="."]
@@ -141,3 +142,4 @@ shape = SubResource("RectangleShape2D_o353j")
 [connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
 [connection signal="body_entered" from="PlayerDeath" to="." method="_on_player_death_body_entered"]
 [connection signal="body_entered" from="PlayerCollision" to="." method="_on_player_collision_body_entered"]
+[connection signal="body_entered" from="FrogBody" to="." method="_on_frog_body_body_entered"]
