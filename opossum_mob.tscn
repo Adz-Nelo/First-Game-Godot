@@ -31,9 +31,19 @@ var previous_velocity_y = 0.0
 var can_damage_player = true
 var damage_cooldown = 1.0
 
+# Movement limits - random patrol
+var start_position = Vector2.ZERO
+var max_distance = 0.0  # How far to walk before turning
+var distance_traveled = 0.0
+
 func _ready() -> void:
 	animated_sprite.play(\"Walk\")
 	print(\"🦝 Opossum ready! Checking setup...\")
+	
+	# Set random patrol distance (between 100 and 300 pixels)
+	start_position = global_position
+	max_distance = randf_range(100, 300)
+	print(\"🎲 Patrol distance set to:\", max_distance, \"pixels\")
 	
 	# Debug: Check if areas exist
 	if has_node(\"PlayerDeath\"):
@@ -68,6 +78,17 @@ func _physics_process(delta: float) -> void:
 	# Walk in current direction
 	velocity.x = direction * SPEED
 	
+	# Track distance traveled
+	distance_traveled += abs(velocity.x * delta)
+	
+	# Check if reached max distance - turn around and reset
+	if distance_traveled >= max_distance:
+		direction *= -1
+		distance_traveled = 0.0
+		# Set new random distance for next patrol
+		max_distance = randf_range(100, 300)
+		print(\"🔄 Reached patrol limit! New distance:\", max_distance)
+	
 	# Flip sprite based on direction
 	if direction == -1:
 		animated_sprite.flip_h = false  # Facing left
@@ -79,7 +100,9 @@ func _physics_process(delta: float) -> void:
 	# Check if hit a wall - turn around
 	if is_on_wall():
 		direction *= -1
-		print(\"🔄 Opossum turned around\")
+		distance_traveled = 0.0
+		max_distance = randf_range(100, 300)
+		print(\"🔄 Hit wall! New distance:\", max_distance)
 
 # Player stomps opossum from top (kills opossum)
 func _on_player_death_body_entered(body: Node2D) -> void:
