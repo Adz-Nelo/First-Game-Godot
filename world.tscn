@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=35 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://bhnrtga2u883m" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/skulls.png" id="22_bo7i5"]
 [ext_resource type="Texture2D" uid="uid://bnhcgyb1ulogx" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/spikes-top.png" id="23_4h6ng"]
 [ext_resource type="Texture2D" uid="uid://b0lb1num0l4na" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/spikes.png" id="24_o3ebs"]
+[ext_resource type="PackedScene" uid="uid://384olmpd3v4r" path="res://bird_npc.tscn" id="26_bo7i5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -986,5 +987,34 @@ texture = ExtResource("10_bo7i5")
 [node name="Skulls3" type="Sprite2D" parent="Props"]
 position = Vector2(1216, 427)
 texture = ExtResource("22_bo7i5")
+
+[node name="NPC" type="Node2D" parent="."]
+
+[node name="BirdNPC" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(120, -104)
+
+[node name="BirdNPC2" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(360, -160)
+
+[node name="BirdNPC3" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(840, -80)
+
+[node name="BirdNPC4" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(1008, 88)
+
+[node name="BirdNPC5" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(1520, -192)
+
+[node name="BirdNPC6" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(2144, 80)
+
+[node name="BirdNPC9" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(1840, -88)
+
+[node name="BirdNPC7" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(1248, -40)
+
+[node name="BirdNPC8" parent="NPC" instance=ExtResource("26_bo7i5")]
+position = Vector2(1248, -40)
 
 [connection signal="timeout" from="Collectables/Timer" to="Collectables" method="_on_timer_timeout"]

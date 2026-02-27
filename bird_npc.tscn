@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=3 uid="uid://384olmpd3v4r"]
+
+[ext_resource type="Texture2D" uid="uid://cohodpmks1rtu" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin1.png" id="1_jwkt5"]
+[ext_resource type="Texture2D" uid="uid://ctvqewnf0yjsy" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin2.png" id="2_l5jot"]
+[ext_resource type="Texture2D" uid="uid://dtlruf3puq5fl" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin3.png" id="3_ngplb"]
+[ext_resource type="Texture2D" uid="uid://35ncjx6vpc5e" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin4.png" id="4_dthdo"]
+[ext_resource type="Texture2D" uid="uid://canfc1fhp0tby" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin5.png" id="5_u6rou"]
+[ext_resource type="Texture2D" uid="uid://chq0xq3bs165h" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin6.png" id="6_k1dyr"]
+[ext_resource type="Texture2D" uid="uid://c6btjns2dhf2" path="res://Sunny Land Collection Files/Assets/Characters/Enemies and NPC/flying-bird/Sprites/flying-creature-cycle-skin7.png" id="7_lnn2v"]
+
+[sub_resource type="GDScript" id="GDScript_i2sx3"]
+script/source = "extends CharacterBody2D
+
+const SPEED = 150.0
+const TRAVEL_DISTANCE = 2000.0  # How far to fly before respawning
+
+@onready var animated_sprite = $AnimatedSprite2D
+
+var start_position = Vector2.ZERO
+var distance_traveled = 0.0
+var direction = 1  # 1 = right, -1 = left
+
+func _ready() -> void:
+	# Save starting position
+	start_position = global_position
+	
+	# Play fly animation
+	animated_sprite.play(\"Fly\")
+	
+	# Randomize direction (fly left or right)
+	if randf() > 0.5:
+		direction = -1
+		animated_sprite.flip_h = true
+	else:
+		direction = 1
+		animated_sprite.flip_h = false
+
+func _physics_process(delta: float) -> void:
+	# Move in the direction
+	velocity.x = direction * SPEED
+	velocity.y = 0
+	
+	# Track distance traveled
+	distance_traveled += abs(velocity.x * delta)
+	
+	# Check if reached the travel distance
+	if distance_traveled >= TRAVEL_DISTANCE:
+		# Respawn at starting position
+		global_position = start_position
+		distance_traveled = 0.0
+		print(\"🐦 Bird respawned!\")
+	
+	move_and_slide()
+"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5c1ky"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jwkt5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_l5jot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ngplb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_dthdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_u6rou")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_k1dyr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_lnn2v")
+}],
+"loop": true,
+"name": &"Fly",
+"speed": 5.0
+}]
+
+[node name="BirdNPC" type="CharacterBody2D"]
+script = SubResource("GDScript_i2sx3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_5c1ky")
+animation = &"Fly"
