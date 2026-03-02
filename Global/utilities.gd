@@ -7,6 +7,7 @@ func saveGame():
 	var data: Dictionary = {
 		"playerHP": Game.playerHP,
 		"gold": Game.gold,
+		"cherry": Game.cherry,
 		"score": Game.score   
 	}
 	
@@ -21,4 +22,5 @@ func loadGame():
 			if current_line:
 				Game.playerHP = current_line["playerHP"]
 				Game.gold = current_line["gold"]
+				Game.cherry = current_line["cherry"]
 				Game.score = current_line["score"]
