@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=39 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -473,25 +473,49 @@ func _process(delta: float) -> void:
 	text = \"Score: \" + str(whole_score)
 "
 
+[sub_resource type="GDScript" id="GDScript_k83mh"]
+script/source = "extends Control
+
+func _ready() -> void:
+	# Quick outline - 4 directions
+	var offsets = [
+		Vector2(1, 0),   # Right
+		Vector2(-1, 0),  # Left
+		Vector2(0, 1),   # Down
+		Vector2(0, -1)   # Up
+	]
+	
+	for offset in offsets:
+		var outline = $Label.duplicate()
+		outline.modulate = Color.BLACK
+		outline.position += offset * 1  # 2 pixel outline
+		outline.z_index = $Label.z_index - 1
+		add_child(outline)
+	
+	# Set main label color
+	$Label.modulate = Color.WHITE  # Your text color
+	$Label.z_index = 100  # Bring to front
+"
+
 [sub_resource type="GDScript" id="GDScript_o3ebs"]
 script/source = "extends Label
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	# Convert cherry to whole number before displaying
+	var whole_cherry = int(Game.cherry)  # or ceil(), floor(), round()
+	text = \" \" + str(whole_cherry)
 "
 
 [sub_resource type="GDScript" id="GDScript_pkg7o"]
 script/source = "extends Node2D
 
 
-var cherry = preload(\"res://Collectables/cherry.tscn\")
+#var cherry = preload(\"res://Collectables/cherry.tscn\")
 
 
 #func _on_timer_timeout() -> void:
@@ -848,6 +872,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = SubResource("GDScript_k83mh")
 
 [node name="TextureRect" type="TextureRect" parent="UI/CherryUI"]
 layout_mode = 0
@@ -861,10 +886,12 @@ stretch_mode = 1
 
 [node name="Label" type="Label" parent="UI/CherryUI"]
 layout_mode = 0
-offset_left = 48.0
+offset_left = 40.0
 offset_top = 72.0
-offset_right = 88.0
-offset_bottom = 95.0
+offset_right = 80.0
+offset_bottom = 98.0
+theme_override_fonts/font = ExtResource("7_ioo17")
+theme_override_font_sizes/font_size = 18
 script = SubResource("GDScript_o3ebs")
 
 [node name="Collectables" type="Node2D" parent="."]

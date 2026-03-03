@@ -27,7 +27,7 @@ func collect_cherry(player):
 	
 	# Add gold
 	animated_sprite.play(\"Collect\")
-	Game.gold += cherry
+	Game.cherry += cherry
 	
 	# Save game
 	Utilities.saveGame()
@@ -44,6 +44,22 @@ func collect_cherry(player):
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ht0rm"]
 radius = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o4fra"]
+atlas = ExtResource("1_ht0rm")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_te2np"]
+atlas = ExtResource("1_ht0rm")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1j4n"]
+atlas = ExtResource("1_ht0rm")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1mwu"]
+atlas = ExtResource("1_ht0rm")
+region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pg3ag"]
 atlas = ExtResource("2_pg3ag")
@@ -65,24 +81,25 @@ region = Rect2(63, 0, 21, 21)
 atlas = ExtResource("2_pg3ag")
 region = Rect2(84, 0, 21, 21)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_o4fra"]
-atlas = ExtResource("1_ht0rm")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_te2np"]
-atlas = ExtResource("1_ht0rm")
-region = Rect2(32, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m1j4n"]
-atlas = ExtResource("1_ht0rm")
-region = Rect2(64, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v1mwu"]
-atlas = ExtResource("1_ht0rm")
-region = Rect2(96, 0, 32, 32)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_ov1wh"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o4fra")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_te2np")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1j4n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1mwu")
+}],
+"loop": true,
+"name": &"Collect",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pg3ag")
@@ -102,23 +119,6 @@ animations = [{
 "loop": true,
 "name": &"Idle",
 "speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_o4fra")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_te2np")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m1j4n")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v1mwu")
-}],
-"loop": true,
-"name": &"Spin",
-"speed": 5.0
 }]
 
 [node name="Cherry" type="Node2D"]
@@ -131,6 +131,6 @@ shape = SubResource("CircleShape2D_ht0rm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ov1wh")
-animation = &"Idle"
+animation = &"Collect"
 autoplay = "Idle"
 metadata/_edit_lock_ = true

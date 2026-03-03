@@ -127,7 +127,7 @@ script = SubResource("GDScript_d5gmh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_o4fra")
-animation = &"Collect"
+animation = &"Spin"
 autoplay = "Spin"
 
 [node name="Area2D" type="Area2D" parent="."]
