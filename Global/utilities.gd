@@ -8,6 +8,7 @@ func saveGame():
 		"playerHP": Game.playerHP,
 		"gold": Game.gold,
 		"cherry": Game.cherry,
+		"gem:": Game.gem,
 		"score": Game.score   
 	}
 	
@@ -22,5 +23,6 @@ func loadGame():
 			if current_line:
 				Game.playerHP = current_line["playerHP"]
 				Game.gold = current_line["gold"]
+				Game.gem = current_line["gem"] 
 				Game.cherry = current_line["cherry"]
 				Game.score = current_line["score"]

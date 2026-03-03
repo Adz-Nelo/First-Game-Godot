@@ -9,7 +9,7 @@ script/source = "extends Node2D
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var area = $Area2D
 
-var cherry = 1  # How much gold this coin gives
+var cherry = 1  # How much fruit this cherry gives
 
 func _ready():
 	# Play coin animation
@@ -33,7 +33,7 @@ func collect_cherry(player):
 	Utilities.saveGame()
 	
 	# Play sound effect
-	AudioController.play_coin_collect()
+	AudioController.play_cherry_collect()
 	
 	# Optional: Play collect animation/effect before disappearing
 	await get_tree().create_timer(0.1).timeout
@@ -131,6 +131,6 @@ shape = SubResource("CircleShape2D_ht0rm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ov1wh")
-animation = &"Collect"
+animation = &"Idle"
 autoplay = "Idle"
 metadata/_edit_lock_ = true

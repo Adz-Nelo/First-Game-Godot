@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://drlp75ii76yoo"]
+[gd_scene load_steps=16 format=3 uid="uid://drlp75ii76yoo"]
 
 [ext_resource type="AudioStream" uid="uid://bpseiwjcgvf6d" path="res://Audio/arcade.ogg" id="1_3rbmd"]
 [ext_resource type="AudioStream" uid="uid://8bp5837k4m3i" path="res://Audio/cartoon-jump.mp3" id="2_yenca"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://c750cubih78g0" path="res://Audio/player-hurt.wav" id="4_5ea0b"]
 [ext_resource type="AudioStream" uid="uid://beokemclkrdfj" path="res://Audio/coin.mp3" id="5_6lkq8"]
 [ext_resource type="AudioStream" uid="uid://cfwkw217dqj3b" path="res://Audio/player-die.mp3" id="6_62og8"]
+[ext_resource type="AudioStream" uid="uid://b8stvietddwpo" path="res://Audio/cherry-item-pick-up.wav" id="6_s8r1n"]
 [ext_resource type="AudioStream" uid="uid://by5jk6g2lfikn" path="res://Audio/game over.wav" id="7_32dgq"]
 [ext_resource type="AudioStream" uid="uid://gkwn3yqx1pvk" path="res://Audio/select-sound.wav" id="7_mslhv"]
 [ext_resource type="AudioStream" uid="uid://dy31reabbsnv3" path="res://Audio/hover-button.mp3" id="9_32dgq"]
@@ -23,6 +24,7 @@ script/source = "extends Node
 @onready var player_hurt = $Hurt
 @onready var end_level_sound = $EndLevel
 @onready var coin_collect = $CoinCollect
+@onready var cherry_collect = $CherryCollect
 @onready var player_death = $Death
 @onready var game_over = $GameOver
 @onready var select = $Select
@@ -59,6 +61,9 @@ func play_end_level():
 	
 func play_coin_collect():
 	coin_collect.play()
+
+func play_cherry_collect():
+	cherry_collect.play()
 	
 func play_player_death():
 	player_death.play()
@@ -120,6 +125,9 @@ bus = &"Sound Effects"
 [node name="CoinCollect" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_6lkq8")
 bus = &"Sound Effects"
+
+[node name="CherryCollect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_s8r1n")
 
 [node name="Death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_62og8")
