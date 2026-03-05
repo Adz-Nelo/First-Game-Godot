@@ -955,9 +955,9 @@ script = SubResource("GDScript_bh8nc")
 
 [node name="Label" type="Label" parent="UI/GemUI"]
 layout_mode = 0
-offset_left = 40.0
+offset_left = 38.0
 offset_top = 96.0
-offset_right = 80.0
+offset_right = 78.0
 offset_bottom = 119.0
 theme_override_fonts/font = ExtResource("7_ioo17")
 theme_override_font_sizes/font_size = 18

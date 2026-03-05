@@ -145,11 +145,17 @@ func _on_exit_pressed() -> void:
 	Game.playerHP = 3
 	
 	# Reset gold to what we had at level start (lose coins collected this level)
-	if \"level_start_coins\" in Game:
-		Game.gold = Game.level_start_coins
+	if \"level_start_coin\" in Game:
+		Game.gold = Game.level_start_coin
 		
 	if \"level_start_score\" in Game:
 		Game.score = Game.level_start_score
+		
+	if \"level_start_cherry\" in Game:
+		Game.cherry = Game.level_start_cherry
+		
+	if \"level_start_gem\" in Game:
+		Game.gem = Game.level_start_gem
 	
 	hide_main_menu()
 	show_exit_confirm()
@@ -440,8 +446,8 @@ func _on_restart_pressed() -> void:
 	Game.playerHP = 3
 	
 	# Reset gold to what we had at level start (lose coins collected this level)
-	if \"level_start_coins\" in Game:
-		Game.gold = Game.level_start_coins
+	if \"level_start_coin\" in Game:
+		Game.gold = Game.level_start_coin
 		
 	if \"level_start_score\" in Game:
 		Game.score = Game.level_start_score
@@ -468,6 +474,19 @@ func _on_back_btn_mouse_entered() -> void:
 
 func _on_yes_btn_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://world.tscn\")
+	
+	if \"level_start_coin\" in Game:
+		Game.gold = Game.level_start_coin
+		
+	if \"level_start_score\" in Game:
+		Game.score = Game.level_start_score
+		
+	if \"level_start_cherry\" in Game:
+		Game.cherry = Game.level_start_cherry
+		
+	if \"level_start_gem\" in Game:
+		Game.gem = Game.level_start_gem
+	
 	AudioController.select_sound()
 	AudioController.stop_music()
 	AudioController.play_music()

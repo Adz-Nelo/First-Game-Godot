@@ -42,7 +42,7 @@ func _physics_process(delta: float) -> void:
 			hop_timer = hop_cooldown
 	
 	if chase == true:
-		player = get_node("../../Player/Player")
+		player = get_node("../../../Player/Player")
 		var direction = (player.position - self.position).normalized()
 		
 		if direction.x > 0:
