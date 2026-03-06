@@ -20,9 +20,9 @@ func _ready():
 
 func _on_body_entered(body):
 	if body.name == \"Player\":
-		collect_cherry(body)
+		collect_gem(body)
 
-func collect_cherry(player):
+func collect_gem(player):
 	print(\"💎 Gem collected! Gem: \", Game.gem, \" → \", Game.gem + gem)
 	
 	# Add gold
@@ -33,7 +33,7 @@ func collect_cherry(player):
 	Utilities.saveGame()
 	
 	# Play sound effect
-	AudioController.play_cherry_collect()
+	AudioController.play_gem_collect()
 	
 	# Optional: Play collect animation/effect before disappearing
 	await get_tree().create_timer(0.1).timeout
