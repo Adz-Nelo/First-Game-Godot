@@ -1,4 +1,4 @@
-First Game Development (Sunnyland)
+First Game Development (Sunnyland theme)
 
 By: Adriel Bigcas
 
