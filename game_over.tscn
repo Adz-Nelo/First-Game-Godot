@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cgavw7cg17s5c"]
+[gd_scene load_steps=57 format=3 uid="uid://cgavw7cg17s5c"]
 
 [ext_resource type="Texture2D" uid="uid://cve6mrvr780d5" path="res://Sunny Land Collection Files/Assets/Environments/Forest of Illusion/Forest of Illusion Expansion Pack/Previews/Illusion-forest-a.png" id="1_8u835"]
 [ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="2_ftari"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://dshdpk0g48grd" path="res://Death NPC/skull.png" id="14_745m4"]
 [ext_resource type="Theme" uid="uid://3wkx2utq7po7" path="res://yes_theme.tres" id="15_3xhsb"]
 [ext_resource type="Texture2D" uid="uid://kgmwmjf8o0ei" path="res://buttons/yes-btn.png" id="16_7eg23"]
+[ext_resource type="Theme" uid="uid://ctpy7nw8csxtu" path="res://default 2.tres" id="16_pi44w"]
 [ext_resource type="Texture2D" uid="uid://cmp7dls5vkei2" path="res://buttons/yes-btn-active.png" id="17_0o5rp"]
 [ext_resource type="Texture2D" uid="uid://bq7w7gpx1x52g" path="res://buttons/yes-btn-hover.png" id="18_didoo"]
 [ext_resource type="Theme" uid="uid://c7btqxpkckav0" path="res://no_theme.tres" id="19_psfuu"]
@@ -33,6 +34,7 @@ script/source = "extends CanvasLayer
 @onready var resume_button = $Resume
 @onready var restart_button = $Restart
 @onready var exit_button = $Exit
+@onready var quit_button = $Quit
 
 # Restart Confirmation Buttons
 @onready var confirm_restart_buttons = $ControlRestart
@@ -40,11 +42,15 @@ script/source = "extends CanvasLayer
 # Exit Confirmation Buttons
 @onready var confirm_exit_buttons = $ControlExit
 
+# Quit Confirmation Buttons
+@onready var confirm_quit_buttons = $ControlQuit
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	show_main_buttons()
 	confirm_restart_buttons.visible = false
 	confirm_exit_buttons.visible = false
+	confirm_quit_buttons.visible = false
 	
 	AudioController.play_game_over()
 	AudioController.stop_music()
@@ -57,11 +63,13 @@ func show_main_buttons():
 	resume_button.visible = true
 	restart_button.visible = true
 	exit_button.visible = true
+	quit_button.visible = true
 	
 func hide_main_buttons():
 	resume_button.visible = false
 	restart_button.visible = false
 	exit_button.visible = false	
+	quit_button.visible = false
 	
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\"):
@@ -163,6 +171,29 @@ func _on_resume_pressed() -> void:
 
 func _on_resume_mouse_entered() -> void:
 	AudioController.hover_button()
+
+func _on_quit_pressed() -> void:
+	hide_main_buttons()
+	confirm_quit_buttons.visible = true
+	AudioController.select_sound()
+
+func _on_quit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_confirm_quit_pressed() -> void:
+	AudioController.select_sound()
+	get_tree().quit()
+
+func _on_confirm_quit_mouse_entered() -> void:
+	AudioController.hover_button()
+
+func _on_cancel_quit_pressed() -> void:
+	show_main_buttons()
+	confirm_quit_buttons.visible = false
+	AudioController.select_sound()
+
+func _on_cancel_quit_mouse_entered() -> void:
+	AudioController.hover_button()
 "
 
 [sub_resource type="GDScript" id="GDScript_3u7xm"]
@@ -261,6 +292,30 @@ region_rect = Rect2(2.757122, 1.921175, 217.65025, 57.274124)
 texture = ExtResource("22_lek4k")
 region_rect = Rect2(5, 4, 213, 53)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x5j47"]
+texture = ExtResource("16_7eg23")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lek4k"]
+texture = ExtResource("17_0o5rp")
+region_rect = Rect2(2.304676, 1.2056732, 218.1294, 58.544712)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5bvnw"]
+texture = ExtResource("18_didoo")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iyovn"]
+texture = ExtResource("20_pi44w")
+region_rect = Rect2(5, 4, 213, 53)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5bp4i"]
+texture = ExtResource("21_x5j47")
+region_rect = Rect2(2.1255722, 1.349266, 218.69208, 58.15322)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ag8sd"]
+texture = ExtResource("22_lek4k")
+region_rect = Rect2(5, 4, 213, 53)
+
 [node name="game-over" type="CanvasLayer"]
 script = SubResource("GDScript_woa3c")
 
@@ -270,8 +325,8 @@ scale = Vector2(2.0191994, 2.3823528)
 texture = ExtResource("1_8u835")
 
 [node name="Options" type="Sprite2D" parent="."]
-position = Vector2(552.5, 344)
-scale = Vector2(2.1021128, 2.3809526)
+position = Vector2(552, 344)
+scale = Vector2(2.1021128, 2.2738097)
 texture = ExtResource("2_ftari")
 
 [node name="Labels" type="Node" parent="."]
@@ -296,10 +351,10 @@ theme_override_font_sizes/font_size = 36
 text = "Game Over"
 
 [node name="Resume" type="Button" parent="."]
-offset_left = 474.0
-offset_top = 266.0
-offset_right = 624.0
-offset_bottom = 312.0
+offset_left = 400.0
+offset_top = 288.0
+offset_right = 542.0
+offset_bottom = 336.0
 tooltip_text = "This is a resume button"
 theme = ExtResource("4_psfuu")
 theme_override_styles/normal = SubResource("StyleBoxTexture_te55c")
@@ -307,10 +362,10 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_w5dc7")
 theme_override_styles/hover = SubResource("StyleBoxTexture_38l8k")
 
 [node name="Restart" type="Button" parent="."]
-offset_left = 473.0
-offset_top = 322.0
-offset_right = 624.6667
-offset_bottom = 370.0
+offset_left = 552.0
+offset_top = 288.0
+offset_right = 695.0
+offset_bottom = 336.0
 tooltip_text = "This is a restart button"
 theme = ExtResource("4_dd2jf")
 theme_override_styles/normal = SubResource("StyleBoxTexture_kjrwi")
@@ -318,10 +373,10 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_olga5")
 theme_override_styles/hover = SubResource("StyleBoxTexture_13ri0")
 
 [node name="Exit" type="Button" parent="."]
-offset_left = 472.5
-offset_top = 378.0
-offset_right = 624.5
-offset_bottom = 426.0
+offset_left = 400.0
+offset_top = 352.0
+offset_right = 543.5
+offset_bottom = 400.0
 tooltip_text = "This is an exit button"
 theme = ExtResource("4_fkf4o")
 theme_override_font_sizes/font_size = 24
@@ -330,6 +385,13 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_ku74v")
 theme_override_styles/hover = SubResource("StyleBoxTexture_nm4t2")
 text = "
 "
+
+[node name="Quit" type="Button" parent="."]
+offset_left = 552.0
+offset_top = 352.0
+offset_right = 696.0
+offset_bottom = 400.0
+theme = ExtResource("16_pi44w")
 
 [node name="GrimDeath" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.7137255)
@@ -653,9 +715,9 @@ offset_bottom = 40.0
 
 [node name="LabelRestart" type="Label" parent="ControlRestart"]
 layout_mode = 0
-offset_left = 417.0
+offset_left = 416.0
 offset_top = 272.0
-offset_right = 687.0
+offset_right = 686.0
 offset_bottom = 347.0
 theme_override_fonts/font = ExtResource("3_28vn7")
 text = "Are you sure you want to 
@@ -665,9 +727,9 @@ start of this level"
 
 [node name="YesRestart" type="Button" parent="ControlRestart"]
 layout_mode = 0
-offset_left = 416.0
-offset_top = 376.0
-offset_right = 536.0
+offset_left = 400.0
+offset_top = 368.0
+offset_right = 544.0
 offset_bottom = 416.0
 tooltip_text = "You will lose your progress in this level if you click this"
 theme = ExtResource("15_3xhsb")
@@ -677,9 +739,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_hto0y")
 
 [node name="NoRestart" type="Button" parent="ControlRestart"]
 layout_mode = 0
-offset_left = 560.0
-offset_top = 376.0
-offset_right = 680.0
+offset_left = 552.0
+offset_top = 368.0
+offset_right = 696.0
 offset_bottom = 416.0
 tooltip_text = "Cancel anytime if you change your mind"
 theme = ExtResource("19_psfuu")
@@ -707,9 +769,9 @@ saved anyways"
 
 [node name="ConfirmExit" type="Button" parent="ControlExit"]
 layout_mode = 0
-offset_left = 416.0
-offset_top = 376.0
-offset_right = 536.0
+offset_left = 400.0
+offset_top = 368.0
+offset_right = 544.0
 offset_bottom = 416.0
 tooltip_text = "You will be navigated to the main menu"
 theme = ExtResource("15_3xhsb")
@@ -719,9 +781,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_0o5rp")
 
 [node name="CancelExit" type="Button" parent="ControlExit"]
 layout_mode = 0
-offset_left = 560.0
-offset_top = 376.0
-offset_right = 680.0
+offset_left = 552.0
+offset_top = 368.0
+offset_right = 696.0
 offset_bottom = 416.0
 tooltip_text = "Tap anytime if you change your mind"
 theme = ExtResource("19_psfuu")
@@ -729,12 +791,55 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_didoo")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_psfuu")
 theme_override_styles/hover = SubResource("StyleBoxTexture_pi44w")
 
+[node name="ControlQuit" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LabelQuit" type="Label" parent="ControlQuit"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 280.0
+offset_right = 690.0
+offset_bottom = 328.0
+theme_override_fonts/font = ExtResource("3_28vn7")
+theme_override_font_sizes/font_size = 16
+text = "Are you sure you want to quit
+to Main menu? this will 
+directly go to your desktop"
+
+[node name="ConfirmQuit" type="Button" parent="ControlQuit"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 368.0
+offset_right = 544.0
+offset_bottom = 416.0
+theme = ExtResource("15_3xhsb")
+theme_override_styles/normal = SubResource("StyleBoxTexture_x5j47")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_lek4k")
+theme_override_styles/hover = SubResource("StyleBoxTexture_5bvnw")
+
+[node name="CancelQuit" type="Button" parent="ControlQuit"]
+layout_mode = 0
+offset_left = 552.0
+offset_top = 368.0
+offset_right = 696.0
+offset_bottom = 416.0
+theme = ExtResource("19_psfuu")
+theme_override_styles/normal = SubResource("StyleBoxTexture_iyovn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5bp4i")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ag8sd")
+
 [connection signal="mouse_entered" from="Resume" to="." method="_on_resume_mouse_entered"]
 [connection signal="pressed" from="Resume" to="." method="_on_resume_pressed"]
 [connection signal="mouse_entered" from="Restart" to="." method="_on_restart_mouse_entered"]
 [connection signal="pressed" from="Restart" to="." method="_on_restart_pressed"]
 [connection signal="mouse_entered" from="Exit" to="." method="_on_exit_mouse_entered"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
+[connection signal="mouse_entered" from="Quit" to="." method="_on_quit_mouse_entered"]
+[connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
 [connection signal="mouse_entered" from="ControlRestart/YesRestart" to="." method="_on_yes_restart_mouse_entered"]
 [connection signal="pressed" from="ControlRestart/YesRestart" to="." method="_on_yes_restart_pressed"]
 [connection signal="mouse_entered" from="ControlRestart/NoRestart" to="." method="_on_no_restart_mouse_entered"]
@@ -743,3 +848,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_pi44w")
 [connection signal="pressed" from="ControlExit/ConfirmExit" to="." method="_on_confirm_exit_pressed"]
 [connection signal="mouse_entered" from="ControlExit/CancelExit" to="." method="_on_cancel_exit_mouse_entered"]
 [connection signal="pressed" from="ControlExit/CancelExit" to="." method="_on_cancel_exit_pressed"]
+[connection signal="mouse_entered" from="ControlQuit/ConfirmQuit" to="." method="_on_confirm_quit_mouse_entered"]
+[connection signal="pressed" from="ControlQuit/ConfirmQuit" to="." method="_on_confirm_quit_pressed"]
+[connection signal="mouse_entered" from="ControlQuit/CancelQuit" to="." method="_on_cancel_quit_mouse_entered"]
+[connection signal="pressed" from="ControlQuit/CancelQuit" to="." method="_on_cancel_quit_pressed"]

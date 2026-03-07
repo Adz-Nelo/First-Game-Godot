@@ -1014,9 +1014,6 @@ position = Vector2(776, -24)
 [node name="Coin57" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
 position = Vector2(792, -24)
 
-[node name="Coin58" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, -200)
-
 [node name="Coin60" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
 position = Vector2(1896, 56)
 
@@ -1040,54 +1037,6 @@ position = Vector2(1992, 56)
 
 [node name="Coin67" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
 position = Vector2(2008, 56)
-
-[node name="Coin59" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, -200)
-
-[node name="Coin6" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, 360)
-
-[node name="Coin7" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1208, 360)
-
-[node name="Coin22" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, 360)
-
-[node name="Coin23" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, 344)
-
-[node name="Coin8" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, 344)
-
-[node name="Coin9" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1208, 344)
-
-[node name="Coin10" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, 328)
-
-[node name="Coin11" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1208, 328)
-
-[node name="Coin24" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, 328)
-
-[node name="Coin25" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, 312)
-
-[node name="Coin26" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1208, 312)
-
-[node name="Coin27" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, 312)
-
-[node name="Coin28" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1176, 296)
-
-[node name="Coin29" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1208, 296)
-
-[node name="Coin30" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
-position = Vector2(1192, 296)
 
 [node name="Coin12" parent="Collectables/Coins" instance=ExtResource("6_dwbse")]
 position = Vector2(912, 328)
@@ -1182,12 +1131,69 @@ position = Vector2(416, 384)
 [node name="Cherries" type="Node2D" parent="Collectables"]
 
 [node name="Cherry" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
-position = Vector2(256, 152)
+position = Vector2(1210, 360)
+
+[node name="Cherry2" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1193, 360)
+
+[node name="Cherry3" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1177, 360)
+
+[node name="Cherry4" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1177, 344)
+
+[node name="Cherry5" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1193, 344)
+
+[node name="Cherry6" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1209, 344)
+
+[node name="Cherry7" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1177, 328)
+
+[node name="Cherry8" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1193, 328)
+
+[node name="Cherry9" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1209, 328)
+
+[node name="Cherry10" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1177, 312)
+
+[node name="Cherry11" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1193, 312)
+
+[node name="Cherry12" parent="Collectables/Cherries" instance=ExtResource("21_o3ebs")]
+position = Vector2(1209, 312)
 
 [node name="Gems" type="Node2D" parent="Collectables"]
 
 [node name="Gems" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
-position = Vector2(192, 152)
+position = Vector2(1168, -184)
+
+[node name="Gems2" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1184, -184)
+
+[node name="Gems3" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1200, -184)
+
+[node name="Gems4" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1168, -200)
+
+[node name="Gems5" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1184, -200)
+
+[node name="Gems6" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1200, -200)
+
+[node name="Gems7" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1200, -216)
+
+[node name="Gems8" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1184, -216)
+
+[node name="Gems9" parent="Collectables/Gems" instance=ExtResource("22_k83mh")]
+position = Vector2(1168, -216)
 
 [node name="pause-menu" parent="." instance=ExtResource("8_gbfbk")]
 visible = false
