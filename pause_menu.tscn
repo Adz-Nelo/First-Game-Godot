@@ -882,9 +882,9 @@ offset_bottom = 40.0
 
 [node name="confirm_exit" type="Button" parent="ExitConfirm"]
 layout_mode = 0
-offset_left = 392.0
+offset_left = 400.0
 offset_top = 336.0
-offset_right = 564.8
+offset_right = 552.0
 offset_bottom = 384.0
 tooltip_text = "Tap yes if you want to exit"
 theme = ExtResource("22_jpy7o")
@@ -894,9 +894,9 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_wpuol")
 
 [node name="cancel_exit" type="Button" parent="ExitConfirm"]
 layout_mode = 0
-offset_left = 576.0
+offset_left = 584.0
 offset_top = 336.0
-offset_right = 748.8
+offset_right = 736.0
 offset_bottom = 384.0
 tooltip_text = "No if you want to play again"
 theme = ExtResource("26_fgo16")
