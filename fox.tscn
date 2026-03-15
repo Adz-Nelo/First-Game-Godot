@@ -45,7 +45,6 @@ func _ready() -> void:
 	if randomize_speed:
 		var speed_multiplier = randf_range(min_speed_multiplier, max_speed_multiplier)
 		actual_speed = walk_speed * speed_multiplier
-		print(\"🦊 Fox spawned with speed:\", actual_speed, \"(\", int(speed_multiplier * 100), \"%)\")
 	else:
 		actual_speed = walk_speed
 	

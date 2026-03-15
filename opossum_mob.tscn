@@ -38,32 +38,11 @@ var distance_traveled = 0.0
 
 func _ready() -> void:
 	animated_sprite.play(\"Walk\")
-	print(\"🦝 Opossum ready! Checking setup...\")
 	
 	# Set random patrol distance (between 100 and 300 pixels)
 	start_position = global_position
 	max_distance = randf_range(100, 300)
-	print(\"🎲 Patrol distance set to:\", max_distance, \"pixels\")
 	
-	# Debug: Check if areas exist
-	if has_node(\"PlayerDeath\"):
-		print(\"✅ PlayerDeath exists\")
-		# Connect signal manually if not connected
-		if not $PlayerDeath.body_entered.is_connected(_on_player_death_body_entered):
-			$PlayerDeath.body_entered.connect(_on_player_death_body_entered)
-			print(\"🔗 PlayerDeath signal connected\")
-	else:
-		print(\"❌ PlayerDeath NOT FOUND!\")
-	
-	if has_node(\"PlayerCollision\"):
-		print(\"✅ PlayerCollision exists\")
-		# Connect signal manually if not connected
-		if not $PlayerCollision.body_entered.is_connected(_on_player_collision_body_entered):
-			$PlayerCollision.body_entered.connect(_on_player_collision_body_entered)
-			print(\"🔗 PlayerCollision signal connected\")
-	else:
-		print(\"❌ PlayerCollision NOT FOUND!\")
-
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
@@ -87,7 +66,6 @@ func _physics_process(delta: float) -> void:
 		distance_traveled = 0.0
 		# Set new random distance for next patrol
 		max_distance = randf_range(100, 300)
-		print(\"🔄 Reached patrol limit! New distance:\", max_distance)
 	
 	# Flip sprite based on direction
 	if direction == -1:
@@ -102,44 +80,30 @@ func _physics_process(delta: float) -> void:
 		direction *= -1
 		distance_traveled = 0.0
 		max_distance = randf_range(100, 300)
-		print(\"🔄 Hit wall! New distance:\", max_distance)
 
 # Player stomps opossum from top (kills opossum)
 func _on_player_death_body_entered(body: Node2D) -> void:
-	print(\"⚠️ PlayerDeath triggered by:\", body.name)
 	
 	if body.name == \"Player\" and not is_dead:
-		print(\"💀 STOMP DETECTED! Opossum dies!\")
 		AudioController.play_stomp_enemy()
 		
 		# Disable PlayerCollision immediately
 		if has_node(\"PlayerCollision\"):
 			$PlayerCollision.set_deferred(\"monitoring\", false)
-			print(\"🚫 PlayerCollision disabled\")
 		
 		body.bounce_after_stomp()
 		death()
-	else:
-		print(\"⚠️ Not player or already dead\")
 
 # Player collides with opossum from side/bottom OR opossum lands on player
 func _on_player_collision_body_entered(body: Node2D) -> void:
-	print(\"⚠️ PlayerCollision triggered by:\", body.name)
-	
 	if body.name == \"Player\" and not is_dead and can_damage_player:
-		print(\"💥 COLLISION WITH PLAYER!\")
-		
 		# Check if opossum is ABOVE the player
 		var opossum_is_above = position.y < body.position.y - 20
 		# Use PREVIOUS velocity (before it hit the ground)
 		var opossum_was_falling = previous_velocity_y > 50
 		
-		print(\"🔍 Opossum Y:\", position.y, \" Player Y:\", body.position.y)
-		print(\"🔍 Above?\", opossum_is_above, \" Falling?\", opossum_was_falling, \" Velocity:\", previous_velocity_y)
-		
 		if opossum_is_above and opossum_was_falling:
 			# Opossum landed on player from above
-			print(\"🦝💥 Opossum fell onto player's head! -2 HP\")
 			body.take_damage(2)
 			
 			# Bounce the opossum
@@ -169,17 +133,13 @@ func _on_player_collision_body_entered(body: Node2D) -> void:
 			
 		else:
 			# Normal side/bottom collision - player takes damage
-			print(\"💥 Side collision! Player takes 1 damage\")
 			body.take_damage(1)
-	else:
-		print(\"⚠️ Collision ignored - dead:\", is_dead, \" cooldown:\", !can_damage_player)
 
 func death():
 	if is_dead:	
 		return 
 		
 	is_dead = true
-	print(\"☠️ Opossum death sequence started\")
 	Game.score += 100
 	Utilities.saveGame()
 	velocity = Vector2.ZERO

@@ -109,8 +109,6 @@ func _on_player_detection_body_exited(body: Node2D) -> void:
 func _on_player_death_body_entered(body: Node2D) -> void:
 	if body.name == "Player" and not is_dead:
 		AudioController.play_stomp_enemy()
-		print("🎯 PlayerDeath area triggered (top stomp)")
-		
 		# Disable PlayerCollision to prevent double trigger
 		if has_node("PlayerCollision"):
 			$PlayerCollision.set_deferred("monitoring", false)
@@ -131,7 +129,6 @@ func _on_player_collision_body_entered(body: Node2D) -> void:
 		
 		if frog_is_above and frog_was_falling:
 			# Frog landed on player from above
-			print("🐸💥 Frog fell onto player's head!")
 			body.take_damage(2)
 			
 			# MUCH stronger bounce
@@ -163,7 +160,6 @@ func _on_player_collision_body_entered(body: Node2D) -> void:
 			
 		else:
 			# Normal side/bottom collision - player takes damage, frog dies
-			print("💥 PlayerCollision triggered (side/bottom hit)")
 			body.take_damage(1)
 			death()
 
@@ -175,12 +171,8 @@ func _on_frog_body_body_entered(body: Node2D) -> void:
 		var player_is_above = body.global_position.y < global_position.y - 15
 		var player_is_falling = body.velocity.y > 0
 		
-		print("🔍 FrogBody collision! Player Y:", body.global_position.y, " Frog Y:", global_position.y)
-		print("🔍 Above?", player_is_above, " Falling?", player_is_falling)
-		
 		if player_is_above and player_is_falling:
 			# Player is stomping on frog's body
-			print("🎯 FrogBody stomp detected!")
 			AudioController.play_stomp_enemy()
 			
 			# Disable PlayerCollision to prevent double damage
@@ -191,7 +183,6 @@ func _on_frog_body_body_entered(body: Node2D) -> void:
 			death()
 		else:
 			# Player hit from side/bottom - player takes damage, frog dies
-			print("💥 Side hit on frog body - player takes damage")
 			body.take_damage(1)
 			death()
 

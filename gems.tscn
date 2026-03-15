@@ -23,8 +23,6 @@ func _on_body_entered(body):
 		collect_gem(body)
 
 func collect_gem(player):
-	print(\"💎 Gem collected! Gem: \", Game.gem, \" → \", Game.gem + gem)
-	
 	# Add gold
 	animated_sprite.play(\"Collect\")
 	Game.gem += gem

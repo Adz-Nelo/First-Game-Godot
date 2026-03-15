@@ -23,8 +23,6 @@ func _on_body_entered(body):
 		collect_cherry(body)
 
 func collect_cherry(player):
-	print(\"🍒 Cherry collected! Cherry: \", Game.gold, \" → \", Game.cherry + cherry)
-	
 	# Add gold
 	animated_sprite.play(\"Collect\")
 	Game.cherry += cherry

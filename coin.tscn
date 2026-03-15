@@ -24,8 +24,6 @@ func _on_body_entered(body):
 		collect_coin(body)
 
 func collect_coin(player):
-	print(\"💰 Coin collected! Gold: \", Game.gold, \" → \", Game.gold + coin)
-	
 	# Add gold
 	animated_sprite.play(\"Collect\")
 	Game.gold += coin

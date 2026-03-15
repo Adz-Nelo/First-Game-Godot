@@ -46,7 +46,6 @@ func _physics_process(delta: float) -> void:
 			is_crouching = true
 			crouch_time = 0.0
 			is_charged = false
-			print("⬇️ Crouching...")
 		
 		# Increase crouch time
 		crouch_time += delta
@@ -55,7 +54,6 @@ func _physics_process(delta: float) -> void:
 		if crouch_time >= 1.0 and not is_charged:
 			is_charged = true
 			charge_expire_time = 0.5 
-			print("⚡ JUMP CHARGED!")
 			AudioController.play_power_up()
 			
 			
@@ -71,7 +69,6 @@ func _physics_process(delta: float) -> void:
 		if is_crouching and is_on_floor():  # Only stand up if on floor
 			is_crouching = false
 			crouch_time = 0.0
-			print("⬆️ Stopped crouching")
 			# Reset color if it was charged
 			if is_charged:
 				animated_sprite.modulate = Color.WHITE
@@ -82,7 +79,6 @@ func _physics_process(delta: float) -> void:
 		if charge_expire_time <= 0:
 			is_charged = false
 			animated_sprite.modulate = Color.WHITE
-			print("⏱️ Charge expired!")
 
 	# If crouching, stop horizontal movement but keep physics
 	if is_crouching:
@@ -98,7 +94,6 @@ func _physics_process(delta: float) -> void:
 		# CHARGED JUMP - much higher!
 		if is_charged:
 			jump_power = JUMP_VELOCITY * 1.5  # 50% more powerful!
-			print("🚀 SUPER JUMP!")
 			is_charged = false
 			animated_sprite.modulate = Color.WHITE
 			AudioController.play_super_jump()
@@ -136,7 +131,6 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func bounce_after_stomp():
-	print("🎯 PLAYER BOUNCED!")
 	velocity.y = -300
 	jump_count = 0
 
@@ -151,7 +145,6 @@ func take_damage(damage: int):
 	AudioController.play_player_hurt()
 	
 	Game.playerHP -= damage
-	print("💔 HP reduced to:", Game.playerHP)
 	
 	# Check if player died
 	if Game.playerHP <= 0:
@@ -229,14 +222,11 @@ func _process(delta: float) -> void:
 func start_heartbeat():
 	low_health_heartbeat = true
 	heartbeat_cooldown = 0.6
-	print("💓 Low health - heartbeat started")
 
 func stop_heartbeat():
 	low_health_heartbeat = false
-	print("💓 Health restored - heartbeat stopped")
 
 func player_die():
-	print("💀 Player died!")
 	is_dead = true
 	
 	# CRITICAL: Stop _process() to prevent heartbeat from triggering

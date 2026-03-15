@@ -46,7 +46,6 @@ func _on_body_entered(body):
 func collect_heart(player):
 	area.set_deferred(\"monitoring\", false)
 	
-	print(\"💓 Heart collected!\")
 	Game.playerHP += heart
 	
 	pulse_enabled = false
