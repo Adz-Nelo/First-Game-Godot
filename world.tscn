@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://d35eslxq5bm7"]
+[gd_scene load_steps=51 format=3 uid="uid://d35eslxq5bm7"]
 
 [ext_resource type="PackedScene" uid="uid://dpbu3vbnbs3ts" path="res://Player/player.tscn" id="1_f3sb7"]
 [ext_resource type="Script" uid="uid://by3nak5eruh67" path="res://background.gd" id="1_tlwt5"]
@@ -35,6 +35,8 @@
 [ext_resource type="Texture2D" uid="uid://dblusedfqqpb4" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/house.png" id="32_w44yn"]
 [ext_resource type="Texture2D" uid="uid://3l6shy2t3351" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/plant-house.png" id="33_6ah6f"]
 [ext_resource type="Texture2D" uid="uid://cdjkihsg0j8ww" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/rock-1.png" id="35_6ah6f"]
+[ext_resource type="Texture2D" uid="uid://dtpn4u1wspiag" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/door-opened.png" id="36_g1i3r"]
+[ext_resource type="PackedScene" uid="uid://82fv7d1ake0w" path="res://checkpoint.tscn" id="37_my276"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -572,6 +574,26 @@ script/source = "extends Node2D
 	
 "
 
+[sub_resource type="GDScript" id="GDScript_yx0jh"]
+script/source = "extends Node2D
+
+var last_location = Vector2.ZERO
+var player
+
+func _ready() -> void:
+	# Wait one frame for scene to be fully loaded
+	await get_tree().process_frame
+	
+	# Get player using groups (safer)
+	player = get_tree().get_first_node_in_group(\"player\")
+	
+	if player:
+		last_location = player.global_position
+		print(\"✅ Player found, last location saved:\", last_location)
+	else:
+		print(\"❌ Player not found! Make sure Player is in 'player' group\")
+"
+
 [node name="World" type="Node2D"]
 position = Vector2(0, 256)
 
@@ -688,10 +710,6 @@ texture = ExtResource("10_bo7i5")
 [node name="Sign" type="Sprite2D" parent="Background/ParallaxLayer3/Props"]
 z_index = 1
 position = Vector2(256, 443)
-texture = ExtResource("8_wjb0r")
-
-[node name="Sign2" type="Sprite2D" parent="Background/ParallaxLayer3/Props"]
-position = Vector2(756, 443)
 texture = ExtResource("8_wjb0r")
 
 [node name="Tree" type="Sprite2D" parent="Background/ParallaxLayer3/Props"]
@@ -1451,6 +1469,42 @@ position = Vector2(2969, 153)
 texture = ExtResource("4_26xuy")
 offset = Vector2(-82, -26)
 
+[node name="Sign5" type="Sprite2D" parent="Props"]
+position = Vector2(2144, 72)
+texture = ExtResource("8_wjb0r")
+
+[node name="Shrooms5" type="Sprite2D" parent="Props"]
+position = Vector2(2240, 72)
+texture = ExtResource("10_bo7i5")
+
+[node name="Shrooms6" type="Sprite2D" parent="Props"]
+position = Vector2(2320, -8)
+texture = ExtResource("10_bo7i5")
+
+[node name="Rock3" type="Sprite2D" parent="Props"]
+position = Vector2(3208, 184)
+texture = ExtResource("12_o3ebs")
+
+[node name="Rock1" type="Sprite2D" parent="Props"]
+position = Vector2(3387, 171)
+texture = ExtResource("35_6ah6f")
+
+[node name="Sign6" type="Sprite2D" parent="Props"]
+position = Vector2(3089, 185)
+texture = ExtResource("8_wjb0r")
+
+[node name="Sign7" type="Sprite2D" parent="Props"]
+position = Vector2(2801, 185)
+texture = ExtResource("8_wjb0r")
+
+[node name="Skulls7" type="Sprite2D" parent="Props"]
+position = Vector2(2953, 188)
+texture = ExtResource("22_bo7i5")
+
+[node name="DoorOpened" type="Sprite2D" parent="Props"]
+position = Vector2(3521, 175)
+texture = ExtResource("36_g1i3r")
+
 [node name="NPC" type="Node2D" parent="."]
 
 [node name="BirdNPC" parent="NPC" instance=ExtResource("26_bo7i5")]
@@ -1480,34 +1534,8 @@ position = Vector2(1248, -40)
 [node name="BirdNPC8" parent="NPC" instance=ExtResource("26_bo7i5")]
 position = Vector2(1248, -40)
 
-[node name="Sign" type="Sprite2D" parent="."]
-position = Vector2(2144, 72)
-texture = ExtResource("8_wjb0r")
+[node name="CheckpointManager" type="Node2D" parent="."]
+script = SubResource("GDScript_yx0jh")
 
-[node name="Shrooms" type="Sprite2D" parent="."]
-position = Vector2(2240, 72)
-texture = ExtResource("10_bo7i5")
-
-[node name="Shrooms2" type="Sprite2D" parent="."]
-position = Vector2(2320, -8)
-texture = ExtResource("10_bo7i5")
-
-[node name="Rock" type="Sprite2D" parent="."]
-position = Vector2(3208, 184)
-texture = ExtResource("12_o3ebs")
-
-[node name="Rock1" type="Sprite2D" parent="."]
-position = Vector2(3387, 171)
-texture = ExtResource("35_6ah6f")
-
-[node name="Sign2" type="Sprite2D" parent="."]
-position = Vector2(3089, 185)
-texture = ExtResource("8_wjb0r")
-
-[node name="Sign3" type="Sprite2D" parent="."]
-position = Vector2(2801, 185)
-texture = ExtResource("8_wjb0r")
-
-[node name="Skulls" type="Sprite2D" parent="."]
-position = Vector2(2953, 188)
-texture = ExtResource("22_bo7i5")
+[node name="Checkpoint" parent="CheckpointManager" instance=ExtResource("37_my276")]
+position = Vector2(763, 195)

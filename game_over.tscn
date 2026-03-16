@@ -45,6 +45,10 @@ script/source = "extends CanvasLayer
 # Quit Confirmation Buttons
 @onready var confirm_quit_buttons = $ControlQuit
 
+# Checkpoint
+var checkpoint_manager
+var player
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	show_main_buttons()
@@ -165,6 +169,7 @@ func _on_cancel_exit_mouse_entered() -> void:
 
 func _on_resume_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://world.tscn\")
+	
 	AudioController.select_sound()
 	AudioController.stop_game_over()
 	AudioController.play_music()
