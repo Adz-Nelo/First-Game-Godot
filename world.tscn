@@ -577,21 +577,20 @@ script/source = "extends Node2D
 [sub_resource type="GDScript" id="GDScript_yx0jh"]
 script/source = "extends Node2D
 
-var last_location = Vector2.ZERO
 var player
 
 func _ready() -> void:
-	# Wait one frame for scene to be fully loaded
 	await get_tree().process_frame
 	
-	# Get player using groups (safer)
 	player = get_tree().get_first_node_in_group(\"player\")
 	
 	if player:
-		last_location = player.global_position
-		print(\"✅ Player found, last location saved:\", last_location)
-	else:
-		print(\"❌ Player not found! Make sure Player is in 'player' group\")
+		# Check if there's a saved checkpoint in Game
+		if Game.checkpoint_position != Vector2.ZERO:
+			player.global_position = Game.checkpoint_position
+			print(\"🔄 Respawned at checkpoint:\", Game.checkpoint_position)
+		else:
+			print(\"✅ No checkpoint, starting at default position\")
 "
 
 [node name="World" type="Node2D"]
@@ -1537,5 +1536,5 @@ position = Vector2(1248, -40)
 [node name="CheckpointManager" type="Node2D" parent="."]
 script = SubResource("GDScript_yx0jh")
 
-[node name="Checkpoint" parent="CheckpointManager" instance=ExtResource("37_my276")]
+[node name="Checkpoint" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
 position = Vector2(763, 195)

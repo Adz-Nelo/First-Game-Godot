@@ -9,6 +9,7 @@ var cherry = 0
 var level_start_cherry = 0
 var gem = 0
 var level_start_gem = 0
+var checkpoint_position = Vector2.ZERO
 
 func _ready():
 	# Save how many coins we had when entering this level

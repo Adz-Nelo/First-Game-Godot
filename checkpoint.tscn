@@ -5,19 +5,23 @@
 [sub_resource type="GDScript" id="GDScript_r6hke"]
 script/source = "extends Area2D
 
-var checkpoint_manager
+var activated = false
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	checkpoint_manager = get_parent().get_parent().get_node(\"CheckpointManager\")
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body: Node2D) -> void:
-	if body.is_in_group(\"$Player/Player\"):
-		checkpoint_manager.last_location = $RespawnPoint.global_position
+	if body.is_in_group(\"player\") and not activated:
+		activated = true
+		
+		# Save to Game autoload (persists between scenes)
+		Game.checkpoint_position = global_position
+		print(\"💾 Checkpoint activated! Saved position:\", global_position)
+		
+		AudioController.play_power_up()
+		
+		if has_node(\"Sign\"):
+			$Sign.modulate = Color(0, 1, 0)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_njsvn"]
