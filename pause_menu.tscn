@@ -474,6 +474,7 @@ func _on_back_btn_mouse_entered() -> void:
 
 func _on_yes_btn_pressed() -> void:
 	get_tree().change_scene_to_file(\"res://world.tscn\")
+	Game.checkpoint_position = Vector2.ZERO
 	
 	if \"level_start_coin\" in Game:
 		Game.gold = Game.level_start_coin

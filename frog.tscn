@@ -96,7 +96,7 @@ radius = 184.0
 size = Vector2(14, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_71pkg"]
-size = Vector2(25, 11)
+size = Vector2(25, 12)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o353j"]
 size = Vector2(23, 5)
@@ -117,7 +117,6 @@ animation = &"Idle"
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
-visible = false
 shape = SubResource("CircleShape2D_23ppf")
 
 [node name="PlayerDeath" type="Area2D" parent="."]
@@ -125,11 +124,12 @@ shape = SubResource("CircleShape2D_23ppf")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDeath"]
 position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_yakrr")
+metadata/_edit_lock_ = true
 
 [node name="PlayerCollision" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollision"]
-position = Vector2(0.5, -5.5)
+position = Vector2(0.5, -5)
 shape = SubResource("RectangleShape2D_71pkg")
 
 [node name="FrogBody" type="Area2D" parent="."]
@@ -137,6 +137,7 @@ shape = SubResource("RectangleShape2D_71pkg")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FrogBody"]
 position = Vector2(-0.5, -2.5)
 shape = SubResource("RectangleShape2D_o353j")
+metadata/_edit_lock_ = true
 
 [connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
 [connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]

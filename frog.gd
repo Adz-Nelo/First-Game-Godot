@@ -129,7 +129,7 @@ func _on_player_collision_body_entered(body: Node2D) -> void:
 		
 		if frog_is_above and frog_was_falling:
 			# Frog landed on player from above
-			body.take_damage(2)
+			body.take_damage(1)
 			
 			# MUCH stronger bounce
 			velocity.y = -450

@@ -4,7 +4,6 @@
 
 [sub_resource type="GDScript" id="GDScript_r6hke"]
 script/source = "extends Area2D
-
 var activated = false
 
 func _ready() -> void:
@@ -18,20 +17,58 @@ func _on_body_entered(body: Node2D) -> void:
 		Game.checkpoint_position = global_position
 		print(\"💾 Checkpoint activated! Saved position:\", global_position)
 		
-		AudioController.play_power_up()
+		AudioController.play_check_point()
 		
+		# Shiny glow effect on the sign
 		if has_node(\"Sign\"):
-			$Sign.modulate = Color(0, 1, 0)
+			create_shiny_effect()
+		
+		# Show \"Checkpoint!\" text above player
+		show_checkpoint_text(body)
+
+func create_shiny_effect():
+	var sign = $Sign
+	
+	# Create a pulsing glow effect
+	var glow_tween = create_tween()
+	glow_tween.set_loops()  # Loop forever
+	
+	# Pulse between white and golden glow
+	glow_tween.tween_property(sign, \"modulate\", Color(2.0, 2.0, 1.0), 0.8)  # Bright glow
+	glow_tween.tween_property(sign, \"modulate\", Color(1.5, 1.5, 0.8), 0.8)  # Dim glow
+
+func show_checkpoint_text(player: Node2D):
+	# Create a label for the floating text
+	var label = Label.new()
+	label.text = \"Checkpoint!\"
+	label.add_theme_font_size_override(\"font_size\", 12)
+	label.modulate = Color(1.0, 0.839, 0.427, 1.0)  # Gold color
+	
+	# Add outline for better visibility
+	label.add_theme_color_override(\"font_outline_color\", Color.BLACK)
+	label.add_theme_constant_override(\"outline_size\", 2)
+	
+	# Position above player
+	player.add_child(label)
+	label.position = Vector2(-30, -40)  # Adjust to center above player
+	
+	# Animate: float up and fade out
+	var tween = create_tween()
+	tween.tween_property(label, \"position:y\", label.position.y - 40, 1.5)
+	tween.parallel().tween_property(label, \"modulate:a\", 0.0, 1.5)
+	
+	# Remove after animation
+	tween.tween_callback(label.queue_free)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_njsvn"]
-size = Vector2(74, 318.5)
+size = Vector2(74, 175.25)
 
 [node name="Checkpoint" type="Area2D"]
 script = SubResource("GDScript_r6hke")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(24, -160)
+position = Vector2(24, -88.375)
 shape = SubResource("RectangleShape2D_njsvn")
 
 [node name="RespawnPoint" type="Marker2D" parent="."]
