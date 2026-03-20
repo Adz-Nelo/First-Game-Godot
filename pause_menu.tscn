@@ -115,7 +115,7 @@ func _input(event: InputEvent) -> void:
 			# PRIORITY 1: Check if confirm buttons are visible (restart confirmation)
 			if confirm_buttons and confirm_buttons.visible:
 				_on_yes_btn_pressed()
-			# PRIORITY 1: Check if exit confirm buttons are visible (exit confirmation)
+			# PRIORITY 2: Check if exit confirm buttons are visible (exit confirmation)
 			elif confirm_exit_buttons and confirm_exit_buttons.visible:
 				_on_confirm_exit_pressed()
 			# PRIORITY 3: Check if settings panel is NOT open, then resume
@@ -123,6 +123,11 @@ func _input(event: InputEvent) -> void:
 				AudioController.select_sound()
 				visible = false
 				get_tree().paused = false
+	
+	if Input.is_action_just_pressed(\"ui_restart\"):
+		if get_tree().paused:
+			if restart_button and restart_button.visible:
+				_on_restart_pressed()
 
 # === MAIN MENU BUTTONS ===
 func _on_button_pressed() -> void:
@@ -812,7 +817,6 @@ theme_override_font_sizes/font_size = 40
 text = "Settings"
 
 [node name="ConfirmOption" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -856,26 +860,27 @@ progress in this level"
 
 [node name="Label2" type="Label" parent="ConfirmOption"]
 layout_mode = 0
-offset_left = 472.0
+offset_left = 480.0
 offset_top = 160.0
-offset_right = 672.0
+offset_right = 680.0
 offset_bottom = 195.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
-text = "Settings"
+text = "Restart"
 
 [node name="Label3" type="Label" parent="ConfirmOption"]
 layout_mode = 0
-offset_left = 474.0
+offset_left = 482.0
 offset_top = 161.0
-offset_right = 674.0
+offset_right = 682.0
 offset_bottom = 196.0
 theme_override_fonts/font = ExtResource("2_nwcfo")
 theme_override_font_sizes/font_size = 40
-text = "Settings"
+text = "Restart"
 
 [node name="ExitConfirm" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

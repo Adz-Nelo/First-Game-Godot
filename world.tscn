@@ -706,11 +706,6 @@ position = Vector2(966, 440.25)
 scale = Vector2(1.0333333, 1.0333333)
 texture = ExtResource("10_bo7i5")
 
-[node name="Sign" type="Sprite2D" parent="Background/ParallaxLayer3/Props"]
-z_index = 1
-position = Vector2(256, 443)
-texture = ExtResource("8_wjb0r")
-
 [node name="Tree" type="Sprite2D" parent="Background/ParallaxLayer3/Props"]
 position = Vector2(1018, 399)
 texture = ExtResource("8_2u3nc")
@@ -972,10 +967,10 @@ script = SubResource("GDScript_bh8nc")
 
 [node name="Label" type="Label" parent="UI/GemUI"]
 layout_mode = 0
-offset_left = 38.0
-offset_top = 96.0
-offset_right = 78.0
-offset_bottom = 119.0
+offset_left = 37.0
+offset_top = 98.0
+offset_right = 77.0
+offset_bottom = 121.0
 theme_override_fonts/font = ExtResource("7_ioo17")
 theme_override_font_sizes/font_size = 18
 script = SubResource("GDScript_qktwf")
@@ -1468,10 +1463,6 @@ position = Vector2(2969, 153)
 texture = ExtResource("4_26xuy")
 offset = Vector2(-82, -26)
 
-[node name="Sign5" type="Sprite2D" parent="Props"]
-position = Vector2(2144, 72)
-texture = ExtResource("8_wjb0r")
-
 [node name="Shrooms5" type="Sprite2D" parent="Props"]
 position = Vector2(2240, 72)
 texture = ExtResource("10_bo7i5")
@@ -1490,10 +1481,6 @@ texture = ExtResource("35_6ah6f")
 
 [node name="Sign6" type="Sprite2D" parent="Props"]
 position = Vector2(3089, 185)
-texture = ExtResource("8_wjb0r")
-
-[node name="Sign7" type="Sprite2D" parent="Props"]
-position = Vector2(2801, 185)
 texture = ExtResource("8_wjb0r")
 
 [node name="Skulls7" type="Sprite2D" parent="Props"]
@@ -1534,7 +1521,17 @@ position = Vector2(1248, -40)
 position = Vector2(1248, -40)
 
 [node name="CheckpointManager" type="Node2D" parent="."]
+z_index = 1
 script = SubResource("GDScript_yx0jh")
 
 [node name="Checkpoint" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
-position = Vector2(763, 195)
+position = Vector2(761, 190)
+
+[node name="Checkpoint2" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
+position = Vector2(800, 446)
+
+[node name="Checkpoint3" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
+position = Vector2(2145, 78)
+
+[node name="Checkpoint4" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
+position = Vector2(2301, 415)

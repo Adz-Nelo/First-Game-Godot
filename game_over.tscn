@@ -78,7 +78,7 @@ func hide_main_buttons():
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\"):
 		if resume_button and resume_button.visible:
-			_on_yes_restart_pressed()
+			_on_resume_pressed()
 			AudioController.select_sound()
 			AudioController.stop_game_over()
 			AudioController.play_music()
@@ -101,6 +101,10 @@ func _input(event: InputEvent) -> void:
 		elif confirm_restart_buttons and confirm_exit_buttons.visible:
 			_on_cancel_exit_pressed()
 			AudioController.select_sound()
+			
+	if event.is_action_pressed(\"ui_restart\"):
+		if restart_button and restart_button.visible:
+			_on_restart_pressed()
 
 func _on_exit_pressed() -> void:
 	hide_main_buttons()
@@ -119,7 +123,8 @@ func _on_exit_mouse_entered() -> void:
 	AudioController.hover_button()
 
 func _on_yes_restart_pressed() -> void:
-	# Reset player HP back to max
+	# Reset player HP back to max and from the start
+	Game.checkpoint_position = Vector2.ZERO
 	Game.playerHP = 3
 	
 	# Reset gold to what we had at level start (lose coins collected this level)
