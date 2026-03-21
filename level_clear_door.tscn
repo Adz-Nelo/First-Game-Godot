@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://dttkmslv83y0n"]
+
+[ext_resource type="Texture2D" uid="uid://dtpn4u1wspiag" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/door-opened.png" id="1_eoggu"]
+
+[sub_resource type="GDScript" id="GDScript_idl2r"]
+script/source = "extends Area2D
+
+var player_in_area = false
+var level_completed = false
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.is_in_group(\"player\") and not level_completed:
+		player_in_area = true
+		show_prompt()
+
+func _on_body_exited(body: Node2D) -> void:
+	if body.is_in_group(\"player\"):
+		player_in_area = false
+		hide_prompt()
+
+func _process(delta: float) -> void:
+	# Press UP key to enter door
+	if player_in_area and Input.is_action_just_pressed(\"ui_up\") and not level_completed:
+		complete_level()
+
+func show_prompt():
+	# Create floating prompt
+	var label = Label.new()
+	label.name = \"EnterPrompt\"
+	label.text = \"Press ↑ to enter\"
+	label.add_theme_font_size_override(\"font_size\", 20)
+	label.modulate = Color(1, 1, 1)
+	
+	# Add outline for visibility
+	label.add_theme_color_override(\"font_outline_color\", Color.BLACK)
+	label.add_theme_constant_override(\"outline_size\", 2)
+	
+	add_child(label)
+	label.position = Vector2(-60, -80)
+	
+	# Pulse animation
+	var tween = create_tween()
+	tween.set_loops()
+	tween.tween_property(label, \"position:y\", label.position.y - 5, 0.5)
+	tween.tween_property(label, \"position:y\", label.position.y, 0.5)
+
+func hide_prompt():
+	if has_node(\"EnterPrompt\"):
+		$EnterPrompt.queue_free()
+
+func complete_level():
+	level_completed = true
+	hide_prompt()
+	
+	print(\"🎉 Level Complete!\")
+	
+	# Play sound
+	AudioController.play_power_up()
+	
+	# Optional: Door opening animation
+	if has_node(\"AnimatedSprite2D\"):
+		$AnimatedSprite2D.play(\"open\")
+	
+	# Wait briefly
+	await get_tree().create_timer(0.5).timeout
+	
+	# Go to level clear results screen
+	get_tree().change_scene_to_file(\"res://level_clear_results.tscn\")
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0n72l"]
+size = Vector2(20, 32)
+
+[node name="LevelClearDoor" type="Area2D"]
+script = SubResource("GDScript_idl2r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_0n72l")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("1_eoggu")

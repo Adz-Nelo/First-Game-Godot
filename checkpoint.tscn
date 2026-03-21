@@ -62,13 +62,13 @@ func show_checkpoint_text(player: Node2D):
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_njsvn"]
-size = Vector2(74, 175.25)
+size = Vector2(24, 175.25)
 
 [node name="Checkpoint" type="Area2D"]
 script = SubResource("GDScript_r6hke")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(24, -88.375)
+position = Vector2(0, -88.375)
 shape = SubResource("RectangleShape2D_njsvn")
 
 [node name="RespawnPoint" type="Marker2D" parent="."]

@@ -35,8 +35,8 @@
 [ext_resource type="Texture2D" uid="uid://dblusedfqqpb4" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/house.png" id="32_w44yn"]
 [ext_resource type="Texture2D" uid="uid://3l6shy2t3351" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/plant-house.png" id="33_6ah6f"]
 [ext_resource type="Texture2D" uid="uid://cdjkihsg0j8ww" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/rock-1.png" id="35_6ah6f"]
-[ext_resource type="Texture2D" uid="uid://dtpn4u1wspiag" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Props/door-opened.png" id="36_g1i3r"]
 [ext_resource type="PackedScene" uid="uid://82fv7d1ake0w" path="res://checkpoint.tscn" id="37_my276"]
+[ext_resource type="PackedScene" uid="uid://dttkmslv83y0n" path="res://level_clear_door.tscn" id="37_yx0jh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
 texture = ExtResource("4_aqk2v")
@@ -1479,17 +1479,9 @@ texture = ExtResource("12_o3ebs")
 position = Vector2(3387, 171)
 texture = ExtResource("35_6ah6f")
 
-[node name="Sign6" type="Sprite2D" parent="Props"]
-position = Vector2(3089, 185)
-texture = ExtResource("8_wjb0r")
-
 [node name="Skulls7" type="Sprite2D" parent="Props"]
 position = Vector2(2953, 188)
 texture = ExtResource("22_bo7i5")
-
-[node name="DoorOpened" type="Sprite2D" parent="Props"]
-position = Vector2(3521, 175)
-texture = ExtResource("36_g1i3r")
 
 [node name="NPC" type="Node2D" parent="."]
 
@@ -1535,3 +1527,8 @@ position = Vector2(2145, 78)
 
 [node name="Checkpoint4" parent="CheckpointManager" groups=["player"] instance=ExtResource("37_my276")]
 position = Vector2(2301, 415)
+
+[node name="LevelClear" type="Node2D" parent="."]
+
+[node name="LevelClearDoor" parent="LevelClear" instance=ExtResource("37_yx0jh")]
+position = Vector2(3552, 192)
