@@ -31,8 +31,8 @@ func show_prompt():
 	# Create floating prompt
 	var label = Label.new()
 	label.name = \"EnterPrompt\"
-	label.text = \"Press ↑ to enter\"
-	label.add_theme_font_size_override(\"font_size\", 20)
+	label.text = \"Press W to enter\"
+	label.add_theme_font_size_override(\"font_size\", 11)
 	label.modulate = Color(1, 1, 1)
 	
 	# Add outline for visibility
@@ -40,7 +40,7 @@ func show_prompt():
 	label.add_theme_constant_override(\"outline_size\", 2)
 	
 	add_child(label)
-	label.position = Vector2(-60, -80)
+	label.position = Vector2(-45, -50)
 	
 	# Pulse animation
 	var tween = create_tween()

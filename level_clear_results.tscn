@@ -1,0 +1,225 @@
+[gd_scene load_steps=4 format=3 uid="uid://cljcdvcqd1rct"]
+
+[ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="1_58dbk"]
+
+[sub_resource type="GDScript" id="GDScript_k6ns5"]
+script/source = "extends CanvasLayer
+
+@onready var coins_label = $Panel/CoinLabel
+@onready var cherries_label = $Panel/CherriesLabel
+@onready var gems_label = $Panel/GemsLabel
+@onready var score_label = $Panel/ScoreLabel
+@onready var total_label = $Panel/TotalLabel
+@onready var continue_button = $Panel/ContinueButton
+
+var coins_collected = 0
+var cherries_collected = 0
+var gems_collected = 0
+var current_score = 0
+var bonus_score = 0
+
+var next_level_scene = \"\"
+
+func _ready() -> void:
+	# Get the stats from Game
+	coins_collected = Game.gold
+	cherries_collected = Game.cherry
+	gems_collected = Game.gem
+	current_score = Game.score
+	
+	# Hide continue button initially
+	continue_button.visible = false
+	
+	# Start the tally animation
+	start_tally()
+
+func start_tally():
+	# Play level clear sound
+	AudioController.play_level_complete()
+	
+	# Fade out music smoothly
+	var music_player = AudioController.get_node(\"Music\")  # Adjust node name if different
+	if music_player:
+		var fade_tween = create_tween()
+		fade_tween.tween_property(music_player, \"volume_db\", -80, 1.5)  # Fade to silence over 1.5 seconds
+		await fade_tween.finished
+		AudioController.stop_music()
+		music_player.volume_db = 0  # Reset volume for next time
+	else:
+		AudioController.stop_music()
+	
+	# Set initial values to 0
+	coins_label.text = \"Coins: 0\"
+	cherries_label.text = \"Cherries: 0\"
+	gems_label.text = \"Gems: 0\"
+	score_label.text = \"Score: 0\"
+	total_label.text = \"TOTAL: 0\"
+	
+	await get_tree().create_timer(0.5).timeout
+	
+	# Count up coins
+	await count_up(coins_label, \"Coins: \", coins_collected, 0)
+	bonus_score += coins_collected * 100
+	
+	await get_tree().create_timer(0.3).timeout
+	
+	# Count up cherries
+	await count_up(cherries_label, \"Cherries: \", cherries_collected, 0)
+	bonus_score += cherries_collected * 500
+	
+	await get_tree().create_timer(0.3).timeout
+	
+	# Count up gems
+	await count_up(gems_label, \"Gems: \", gems_collected, 0)
+	bonus_score += gems_collected * 1000
+	
+	await get_tree().create_timer(0.3).timeout
+	
+	# Count up score
+	await count_up(score_label, \"Score: \", current_score, 0)
+	
+	await get_tree().create_timer(0.5).timeout
+	
+	# Show total with fanfare
+	var final_total = current_score + bonus_score
+	Game.score = final_total
+	Utilities.saveGame()
+	
+	total_label.modulate = Color(1, 0.84, 0)  # Gold
+	await count_up(total_label, \"TOTAL: \", final_total, 0)
+	
+	# Flash the total
+	var flash_tween = create_tween()
+	flash_tween.set_loops(3)
+	flash_tween.tween_property(total_label, \"scale\", Vector2(1.2, 1.2), 0.2)
+	flash_tween.tween_property(total_label, \"scale\", Vector2(1.0, 1.0), 0.2)
+	
+	await flash_tween.finished
+	
+	# Show continue button
+	continue_button.visible = true
+	AudioController.play_success()
+
+func count_up(label: Label, prefix: String, target: int, start: int = 0):
+	var duration = 1.0
+	var steps = 30
+	var increment = float(target - start) / steps
+	
+	for i in range(steps + 1):
+		var current_value = int(start + increment * i)
+		label.text = prefix + str(current_value)
+		
+		# Play tick sound (optional)
+		if i % 3 == 0:
+			pass
+			
+		await get_tree().create_timer(duration / steps).timeout
+
+func set_next_level(scene_path: String):
+	next_level_scene = scene_path
+
+func _on_continue_button_pressed() -> void:
+	AudioController.select_sound()
+	
+	# Clear checkpoint for new level
+	Game.checkpoint_position = Vector2.ZERO
+	
+	if next_level_scene != \"\":
+		get_tree().change_scene_to_file(next_level_scene)
+	else:
+		get_tree().change_scene_to_file(\"res://main.tscn\")
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"ui_accept\") and continue_button.visible:
+		_on_continue_button_pressed()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qtgh6"]
+bg_color = Color(0.11489672, 0.11489684, 0.11489674, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="LevelClear" type="CanvasLayer"]
+script = SubResource("GDScript_k6ns5")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(600, 500)
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qtgh6")
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 72.0
+offset_right = 846.0
+offset_bottom = 125.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 48
+text = "🎉 LEVEL CLEAR! 🎉"
+
+[node name="CoinLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 232.0
+offset_right = 439.0
+offset_bottom = 255.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Coins: 0"
+
+[node name="CherriesLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 272.0
+offset_right = 484.0
+offset_bottom = 295.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Cherries: 0"
+
+[node name="GemsLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 312.0
+offset_right = 424.0
+offset_bottom = 335.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Gems: 0"
+
+[node name="ScoreLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 352.0
+offset_right = 439.0
+offset_bottom = 375.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Score: 0"
+
+[node name="TotalLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 408.0
+offset_right = 476.0
+offset_bottom = 436.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 32
+text = "Total: 0"
+
+[node name="ContinueButton" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 464.0
+offset_top = 496.0
+offset_right = 672.0
+offset_bottom = 527.0
+text = "Continue to the next level"
+
+[connection signal="pressed" from="Panel/ContinueButton" to="." method="_on_continue_button_pressed"]
