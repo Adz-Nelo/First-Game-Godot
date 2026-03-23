@@ -1,5 +1,11 @@
 extends Node
 
+# Total Items collected
+var total_coins_in_level = 0
+var total_cherries_in_level = 0
+var total_gems_in_level = 0
+
+# Reset/Default style
 var playerHP = 3
 var gold = 0
 var level_start_coin = 0

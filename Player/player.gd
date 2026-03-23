@@ -104,6 +104,7 @@ func _physics_process(delta: float) -> void:
 		elif jump_count >= 1:
 			jump_power = JUMP_VELOCITY * 0.85
 			AudioController.play_jump()
+			create_small_jump_splash()
 			
 		velocity.y = jump_power
 		animation.play("Jump")
@@ -162,6 +163,36 @@ func take_damage(damage: int):
 	await get_tree().create_timer(0.5).timeout
 	
 	is_hurt = false
+	
+func create_small_jump_splash():
+	# Create small dust particles for normal jump
+	for i in range(5):  # Fewer particles than super jump
+		var particle = Node2D.new()
+		get_parent().add_child(particle)
+		particle.global_position = global_position
+		
+		# Random direction (mostly horizontal)
+		var angle = randf_range(-PI * 0.3, -PI * 0.7)  # Upward arc
+		var speed = randf_range(50, 100)  # Slower than super jump
+		var direction = Vector2(cos(angle), sin(angle))
+		
+		# Create visual (small dust particle)
+		var visual = ColorRect.new()
+		visual.size = Vector2(randf_range(3, 6), randf_range(3, 6))  # Smaller
+		visual.position = -visual.size / 2
+		# White/light gray dust color
+		visual.color = Color(randf_range(0.7, 1.0), randf_range(0.7, 1.0), randf_range(0.7, 1.0))
+		particle.add_child(visual)
+		
+		# Dust animation
+		var tween = create_tween()
+		# Float outward
+		tween.tween_property(particle, "position", particle.position + direction * speed * 0.3, 0.3)
+		# Fade out
+		tween.parallel().tween_property(visual, "modulate:a", 0.0, 0.3)
+		
+		# Clean up
+		tween.tween_callback(particle.queue_free)
 	
 func create_super_jump_splash():
 	# Create sparkling lightning particles

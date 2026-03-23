@@ -4,7 +4,6 @@
 
 [sub_resource type="GDScript" id="GDScript_k6ns5"]
 script/source = "extends CanvasLayer
-
 @onready var coins_label = $Panel/CoinLabel
 @onready var cherries_label = $Panel/CherriesLabel
 @onready var gems_label = $Panel/GemsLabel
@@ -18,6 +17,11 @@ var gems_collected = 0
 var current_score = 0
 var bonus_score = 0
 
+# Total collectibles in the level
+var total_coins = 0
+var total_cherries = 0
+var total_gems = 0
+
 var next_level_scene = \"\"
 
 func _ready() -> void:
@@ -26,6 +30,11 @@ func _ready() -> void:
 	cherries_collected = Game.cherry
 	gems_collected = Game.gem
 	current_score = Game.score
+	
+	# Get totals from Game (these should be set when level loads)
+	total_coins = Game.total_coins_in_level
+	total_cherries = Game.total_cherries_in_level
+	total_gems = Game.total_gems_in_level
 	
 	# Hide continue button initially
 	continue_button.visible = false
@@ -38,45 +47,58 @@ func start_tally():
 	AudioController.play_level_complete()
 	
 	# Fade out music smoothly
-	var music_player = AudioController.get_node(\"Music\")  # Adjust node name if different
+	var music_player = AudioController.get_node(\"Music\")
 	if music_player:
 		var fade_tween = create_tween()
-		fade_tween.tween_property(music_player, \"volume_db\", -80, 1.5)  # Fade to silence over 1.5 seconds
+		fade_tween.tween_property(music_player, \"volume_db\", -80, 1.5)
 		await fade_tween.finished
 		AudioController.stop_music()
-		music_player.volume_db = 0  # Reset volume for next time
+		music_player.volume_db = 0
 	else:
 		AudioController.stop_music()
 	
-	# Set initial values to 0
-	coins_label.text = \"Coins: 0\"
-	cherries_label.text = \"Cherries: 0\"
-	gems_label.text = \"Gems: 0\"
+	# Set initial values to 0 with totals
+	coins_label.text = \"Coins: 0 / \" + str(total_coins)
+	cherries_label.text = \"Cherries: 0 / \" + str(total_cherries)
+	gems_label.text = \"Gems: 0 / \" + str(total_gems)
 	score_label.text = \"Score: 0\"
 	total_label.text = \"TOTAL: 0\"
 	
 	await get_tree().create_timer(0.5).timeout
 	
 	# Count up coins
-	await count_up(coins_label, \"Coins: \", coins_collected, 0)
+	await count_up(coins_label, \"Coins: \", coins_collected, 0, total_coins)
 	bonus_score += coins_collected * 100
 	
 	await get_tree().create_timer(0.3).timeout
 	
 	# Count up cherries
-	await count_up(cherries_label, \"Cherries: \", cherries_collected, 0)
+	await count_up(cherries_label, \"Cherries: \", cherries_collected, 0, total_cherries)
 	bonus_score += cherries_collected * 500
 	
 	await get_tree().create_timer(0.3).timeout
 	
 	# Count up gems
-	await count_up(gems_label, \"Gems: \", gems_collected, 0)
+	await count_up(gems_label, \"Gems: \", gems_collected, 0, total_gems)
 	bonus_score += gems_collected * 1000
 	
 	await get_tree().create_timer(0.3).timeout
 	
+	# Calculate completion percentage
+	var total_collectibles = total_coins + total_cherries + total_gems
+	var collected_items = coins_collected + cherries_collected + gems_collected
+	var completion_percentage = 0
+	
+	if total_collectibles > 0:
+		completion_percentage = int((float(collected_items) / float(total_collectibles)) * 100)
+	
+	# Show completion percentage
+	score_label.text = \"Completion: \" + str(completion_percentage) + \"%\"
+	
+	await get_tree().create_timer(0.3).timeout
+	
 	# Count up score
-	await count_up(score_label, \"Score: \", current_score, 0)
+	await count_up_score(score_label, \"Score: \", current_score, 0)
 	
 	await get_tree().create_timer(0.5).timeout
 	
@@ -85,7 +107,7 @@ func start_tally():
 	Game.score = final_total
 	Utilities.saveGame()
 	
-	total_label.modulate = Color(1, 0.84, 0)  # Gold
+	total_label.modulate = Color(1, 0.84, 0)
 	await count_up(total_label, \"TOTAL: \", final_total, 0)
 	
 	# Flash the total
@@ -100,7 +122,23 @@ func start_tally():
 	continue_button.visible = true
 	AudioController.play_success()
 
-func count_up(label: Label, prefix: String, target: int, start: int = 0):
+func count_up(label: Label, prefix: String, target: int, start: int = 0, total: int = 0):
+	var duration = 1.0
+	var steps = 30
+	var increment = float(target - start) / steps
+	
+	for i in range(steps + 1):
+		var current_value = int(start + increment * i)
+		
+		# Show with total if provided
+		if total > 0:
+			label.text = prefix + str(current_value) + \" / \" + str(total)
+		else:
+			label.text = prefix + str(current_value)
+		
+		await get_tree().create_timer(duration / steps).timeout
+
+func count_up_score(label: Label, prefix: String, target: int, start: int = 0):
 	var duration = 1.0
 	var steps = 30
 	var increment = float(target - start) / steps
@@ -109,10 +147,6 @@ func count_up(label: Label, prefix: String, target: int, start: int = 0):
 		var current_value = int(start + increment * i)
 		label.text = prefix + str(current_value)
 		
-		# Play tick sound (optional)
-		if i % 3 == 0:
-			pass
-			
 		await get_tree().create_timer(duration / steps).timeout
 
 func set_next_level(scene_path: String):

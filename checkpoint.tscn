@@ -41,7 +41,11 @@ func show_checkpoint_text(player: Node2D):
 	# Create a label for the floating text
 	var label = Label.new()
 	label.text = \"Checkpoint!\"
-	label.add_theme_font_size_override(\"font_size\", 12)
+	
+	# Load and apply custom font
+	var custom_font = load(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\") 
+	label.add_theme_font_override(\"font\", custom_font)
+	label.add_theme_font_size_override(\"font_size\", 13)
 	label.modulate = Color(1.0, 0.839, 0.427, 1.0)  # Gold color
 	
 	# Add outline for better visibility
