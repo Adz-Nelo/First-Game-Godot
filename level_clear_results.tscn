@@ -1,6 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cljcdvcqd1rct"]
+[gd_scene load_steps=11 format=3 uid="uid://cljcdvcqd1rct"]
 
 [ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="1_58dbk"]
+[ext_resource type="Theme" uid="uid://btv3x8ljq22gx" path="res://next_level.tres" id="2_k6ns5"]
+[ext_resource type="Texture2D" uid="uid://b1it15i8q83s4" path="res://buttons/next-level.png" id="3_rv1u1"]
+[ext_resource type="Texture2D" uid="uid://d0k6r2hmduefa" path="res://buttons/next-level-active.png" id="4_xytoc"]
+[ext_resource type="Texture2D" uid="uid://npn8t182k2i5" path="res://buttons/next-level-hover.png" id="5_wakgy"]
 
 [sub_resource type="GDScript" id="GDScript_k6ns5"]
 script/source = "extends CanvasLayer
@@ -8,6 +12,7 @@ script/source = "extends CanvasLayer
 @onready var cherries_label = $Panel/CherriesLabel
 @onready var gems_label = $Panel/GemsLabel
 @onready var score_label = $Panel/ScoreLabel
+@onready var completion_label = $Panel/CompletionLabel
 @onready var total_label = $Panel/TotalLabel
 @onready var continue_button = $Panel/ContinueButton
 
@@ -62,6 +67,7 @@ func start_tally():
 	cherries_label.text = \"Cherries: 0 / \" + str(total_cherries)
 	gems_label.text = \"Gems: 0 / \" + str(total_gems)
 	score_label.text = \"Score: 0\"
+	completion_label.text = \"Completion: 0%\"
 	total_label.text = \"TOTAL: 0\"
 	
 	await get_tree().create_timer(0.5).timeout
@@ -83,25 +89,31 @@ func start_tally():
 	bonus_score += gems_collected * 1000
 	
 	await get_tree().create_timer(0.3).timeout
-	
-	# Calculate completion percentage
-	var total_collectibles = total_coins + total_cherries + total_gems
-	var collected_items = coins_collected + cherries_collected + gems_collected
+
+	# Count up score FIRST
+	await count_up_score(score_label, \"Score: \", current_score, 0)
+
+	await get_tree().create_timer(0.3).timeout
+
+	# THEN calculate and show completion percentage
+	var total_collectibles = total_coins + total_cherries + total_gems + Game.total_enemies_in_level
+	var collected_items = coins_collected + cherries_collected + gems_collected + Game.enemies_killed
 	var completion_percentage = 0
-	
+
 	if total_collectibles > 0:
 		completion_percentage = int((float(collected_items) / float(total_collectibles)) * 100)
+		# Cap at 100% maximum
+		completion_percentage = min(completion_percentage, 100)
+
+	# Animate completion percentage on the COMPLETION label
+	await count_up_percentage(completion_label, \"Completion: \", completion_percentage, 0)
 	
-	# Show completion percentage
-	score_label.text = \"Completion: \" + str(completion_percentage) + \"%\"
-	
-	await get_tree().create_timer(0.3).timeout
-	
-	# Count up score
-	await count_up_score(score_label, \"Score: \", current_score, 0)
-	
+	# Check if PERFECT and show text
+	if completion_percentage >= 100:
+		show_perfect_text()
+
 	await get_tree().create_timer(0.5).timeout
-	
+
 	# Show total with fanfare
 	var final_total = current_score + bonus_score
 	Game.score = final_total
@@ -121,6 +133,47 @@ func start_tally():
 	# Show continue button
 	continue_button.visible = true
 	AudioController.play_success()
+
+func show_perfect_text():
+	# Create a label for the floating \"PERFECT!\" text
+	var label = Label.new()
+	label.text = \"PERFECT!\"
+	
+	# Load custom font
+	var custom_font = load(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\")
+	label.add_theme_font_override(\"font\", custom_font)
+	label.add_theme_font_size_override(\"font_size\", 24)
+	label.modulate = Color(1.0, 0.843, 0.0, 1.0)  # Gold color
+	
+	# Add outline for better visibility
+	label.add_theme_color_override(\"font_outline_color\", Color.BLACK)
+	label.add_theme_constant_override(\"outline_size\", 3)
+	
+	# Add to scene and position near completion label
+	add_child(label)
+	label.position = completion_label.position + Vector2(150, 0)  # Adjust as needed
+	
+	# Play special sound
+	AudioController.play_perfect_sound()  # Or use a special \"perfect\" sound
+	
+	# Animate: float up and fade out
+	var tween = create_tween()
+	tween.tween_property(label, \"position:y\", label.position.y - 40, 2.0)
+	tween.parallel().tween_property(label, \"modulate:a\", 0.0, 2.0)
+	
+	# Remove after animation
+	tween.tween_callback(label.queue_free)
+	
+func count_up_percentage(label: Label, prefix: String, target: int, start: int = 0):
+	var duration = 1.0
+	var steps = 30
+	var increment = float(target - start) / steps
+	
+	for i in range(steps + 1):
+		var current_value = int(start + increment * i)
+		label.text = prefix + str(current_value) + \"%\"
+		
+		await get_tree().create_timer(duration / steps).timeout
 
 func count_up(label: Label, prefix: String, target: int, start: int = 0, total: int = 0):
 	var duration = 1.0
@@ -162,6 +215,9 @@ func _on_continue_button_pressed() -> void:
 		get_tree().change_scene_to_file(next_level_scene)
 	else:
 		get_tree().change_scene_to_file(\"res://main.tscn\")
+		
+func _on_continue_button_mouse_entered() -> void:
+	AudioController.hover_button()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"ui_accept\") and continue_button.visible:
@@ -178,6 +234,18 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qtgh6"]
+texture = ExtResource("3_rv1u1")
+region_rect = Rect2(14, 16, 368, 58)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hx48n"]
+texture = ExtResource("4_xytoc")
+region_rect = Rect2(6.093796, 9.812117, 382.64618, 71.68526)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qk87t"]
+texture = ExtResource("5_wakgy")
+region_rect = Rect2(14, 16, 368, 58)
 
 [node name="LevelClear" type="CanvasLayer"]
 script = SubResource("GDScript_k6ns5")
@@ -201,9 +269,9 @@ text = "🎉 LEVEL CLEAR! 🎉"
 [node name="CoinLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 232.0
+offset_top = 192.0
 offset_right = 439.0
-offset_bottom = 255.0
+offset_bottom = 215.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Coins: 0"
@@ -211,9 +279,9 @@ text = "Coins: 0"
 [node name="CherriesLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 272.0
+offset_top = 232.0
 offset_right = 484.0
-offset_bottom = 295.0
+offset_bottom = 255.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Cherries: 0"
@@ -221,9 +289,9 @@ text = "Cherries: 0"
 [node name="GemsLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 312.0
+offset_top = 272.0
 offset_right = 424.0
-offset_bottom = 335.0
+offset_bottom = 295.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Gems: 0"
@@ -231,9 +299,9 @@ text = "Gems: 0"
 [node name="ScoreLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 352.0
+offset_top = 312.0
 offset_right = 439.0
-offset_bottom = 375.0
+offset_bottom = 335.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
@@ -248,12 +316,26 @@ theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 32
 text = "Total: 0"
 
+[node name="CompletionLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 352.0
+offset_right = 529.0
+offset_bottom = 375.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Completion: 0%"
+
 [node name="ContinueButton" type="Button" parent="Panel"]
 layout_mode = 0
-offset_left = 464.0
-offset_top = 496.0
-offset_right = 672.0
-offset_bottom = 527.0
-text = "Continue to the next level"
+offset_left = 368.0
+offset_top = 488.0
+offset_right = 789.7511
+offset_bottom = 576.0
+theme = ExtResource("2_k6ns5")
+theme_override_styles/normal = SubResource("StyleBoxTexture_qtgh6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_hx48n")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qk87t")
 
+[connection signal="mouse_entered" from="Panel/ContinueButton" to="." method="_on_continue_button_mouse_entered"]
 [connection signal="pressed" from="Panel/ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -192,6 +192,7 @@ func death():
 		
 	is_dead = true
 	Game.score += 50
+	Game.enemies_killed += 1
 	Utilities.saveGame()
 	chase = false
 	is_hopping = false

@@ -141,6 +141,7 @@ func death():
 		
 	is_dead = true
 	Game.score += 100
+	Game.enemies_killed += 1
 	Utilities.saveGame()
 	velocity = Vector2.ZERO
 	

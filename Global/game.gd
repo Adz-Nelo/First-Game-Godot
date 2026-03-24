@@ -4,6 +4,8 @@ extends Node
 var total_coins_in_level = 0
 var total_cherries_in_level = 0
 var total_gems_in_level = 0
+var total_enemies_in_level = 0
+var enemies_killed = 0
 
 # Reset/Default style
 var playerHP = 3
