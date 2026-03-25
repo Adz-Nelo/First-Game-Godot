@@ -42,6 +42,9 @@
 script/source = "extends Node2D
 
 func _ready():
+	# Start the timer when level loads
+	Game.level_start_time = Time.get_ticks_msec() / 1000.0
+	
 	# Count all collectibles in the level when it loads
 	Game.total_coins_in_level = get_tree().get_nodes_in_group(\"coins\").size()
 	Game.total_cherries_in_level = get_tree().get_nodes_in_group(\"cherries\").size()

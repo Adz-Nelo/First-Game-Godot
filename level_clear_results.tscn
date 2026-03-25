@@ -13,6 +13,7 @@ script/source = "extends CanvasLayer
 @onready var gems_label = $Panel/GemsLabel
 @onready var score_label = $Panel/ScoreLabel
 @onready var completion_label = $Panel/CompletionLabel
+@onready var time_label = $Panel/TimeLabel
 @onready var total_label = $Panel/TotalLabel
 @onready var continue_button = $Panel/ContinueButton
 
@@ -68,6 +69,7 @@ func start_tally():
 	gems_label.text = \"Gems: 0 / \" + str(total_gems)
 	score_label.text = \"Score: 0\"
 	completion_label.text = \"Completion: 0%\"
+	time_label.text = \"Time: 0:00\"  # ← Add this!
 	total_label.text = \"TOTAL: 0\"
 	
 	await get_tree().create_timer(0.5).timeout
@@ -108,6 +110,11 @@ func start_tally():
 	# Animate completion percentage on the COMPLETION label
 	await count_up_percentage(completion_label, \"Completion: \", completion_percentage, 0)
 	
+	await get_tree().create_timer(0.3).timeout
+	
+	# Show time taken
+	show_time_taken()
+	
 	# Check if PERFECT and show text
 	if completion_percentage >= 100:
 		show_perfect_text()
@@ -133,6 +140,13 @@ func start_tally():
 	# Show continue button
 	continue_button.visible = true
 	AudioController.play_success()
+
+func show_time_taken():
+	var total_seconds = int(Game.level_completion_time)
+	var minutes = total_seconds / 60
+	var seconds = total_seconds % 60
+	
+	time_label.text = \"Time: %d:%02d\" % [minutes, seconds]
 
 func show_perfect_text():
 	# Create a label for the floating \"PERFECT!\" text
@@ -269,9 +283,9 @@ text = "🎉 LEVEL CLEAR! 🎉"
 [node name="CoinLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 192.0
+offset_top = 160.0
 offset_right = 439.0
-offset_bottom = 215.0
+offset_bottom = 183.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Coins: 0"
@@ -279,9 +293,9 @@ text = "Coins: 0"
 [node name="CherriesLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 232.0
+offset_top = 200.0
 offset_right = 484.0
-offset_bottom = 255.0
+offset_bottom = 223.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Cherries: 0"
@@ -289,9 +303,9 @@ text = "Cherries: 0"
 [node name="GemsLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 272.0
+offset_top = 240.0
 offset_right = 424.0
-offset_bottom = 295.0
+offset_bottom = 263.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Gems: 0"
@@ -299,19 +313,29 @@ text = "Gems: 0"
 [node name="ScoreLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 312.0
+offset_top = 280.0
 offset_right = 439.0
-offset_bottom = 335.0
+offset_bottom = 303.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 
+[node name="TimeLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 360.0
+offset_right = 445.0
+offset_bottom = 383.0
+theme_override_fonts/font = ExtResource("1_58dbk")
+theme_override_font_sizes/font_size = 24
+text = "Time: 0.0"
+
 [node name="TotalLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 408.0
+offset_top = 416.0
 offset_right = 476.0
-offset_bottom = 436.0
+offset_bottom = 444.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 32
 text = "Total: 0"
@@ -319,9 +343,9 @@ text = "Total: 0"
 [node name="CompletionLabel" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 328.0
-offset_top = 352.0
+offset_top = 320.0
 offset_right = 529.0
-offset_bottom = 375.0
+offset_bottom = 343.0
 theme_override_fonts/font = ExtResource("1_58dbk")
 theme_override_font_sizes/font_size = 24
 text = "Completion: 0%"

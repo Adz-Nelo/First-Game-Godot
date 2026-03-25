@@ -4,7 +4,6 @@
 
 [sub_resource type="GDScript" id="GDScript_idl2r"]
 script/source = "extends Area2D
-
 var player_in_area = false
 var level_completed = false
 
@@ -60,7 +59,15 @@ func complete_level():
 	level_completed = true
 	hide_prompt()
 	
+	# Calculate completion time
+	var end_time = Time.get_ticks_msec() / 1000.0
+	Game.level_completion_time = end_time - Game.level_start_time
+	
 	print(\"🎉 Level Complete!\")
+	print(\"⏱️ Time taken:\", Game.level_completion_time, \"seconds\")
+	
+	# Calculate completion to check for perfect
+	check_for_perfect()
 	
 	# Play sound
 	AudioController.play_power_up()
@@ -74,6 +81,57 @@ func complete_level():
 	
 	# Go to level clear results screen
 	get_tree().change_scene_to_file(\"res://level_clear_results.tscn\")
+
+func check_for_perfect():
+	# Calculate if player got 100% completion
+	var total_collectibles = Game.total_coins_in_level + Game.total_cherries_in_level + Game.total_gems_in_level + Game.total_enemies_in_level
+	var coins_collected = Game.gold - Game.level_start_coin
+	var cherries_collected = Game.cherry - Game.level_start_cherry
+	var gems_collected = Game.gem - Game.level_start_gem
+	var collected_items = coins_collected + cherries_collected + gems_collected + Game.enemies_killed
+	
+	var completion_percentage = 0
+	if total_collectibles > 0:
+		completion_percentage = int((float(collected_items) / float(total_collectibles)) * 100)
+	
+	# If 100%, show PERFECT!
+	if completion_percentage >= 100:
+		show_perfect_text()
+
+func show_perfect_text():
+	# Get the player
+	var player = get_tree().get_first_node_in_group(\"player\")
+	if not player:
+		return
+	
+	# Create a label for the floating text
+	var label = Label.new()
+	label.text = \"PERFECT!\"
+	
+	# Load custom font
+	var custom_font = load(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\")
+	label.add_theme_font_override(\"font\", custom_font)
+	label.add_theme_font_size_override(\"font_size\", 20)
+	label.modulate = Color(1.0, 0.843, 0.0, 1.0)  # Gold color
+	
+	# Add outline for better visibility
+	label.add_theme_color_override(\"font_outline_color\", Color.BLACK)
+	label.add_theme_constant_override(\"outline_size\", 3)
+	
+	# Position above player
+	player.add_child(label)
+	label.position = Vector2(-40, -60)
+	
+	# Play special sound
+	AudioController.play_power_up()
+	
+	# Animate: float up and fade out
+	var tween = create_tween()
+	tween.tween_property(label, \"position:y\", label.position.y - 50, 2.0)
+	tween.parallel().tween_property(label, \"modulate:a\", 0.0, 2.0)
+	
+	# Remove after animation
+	tween.tween_callback(label.queue_free)
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0n72l"]
