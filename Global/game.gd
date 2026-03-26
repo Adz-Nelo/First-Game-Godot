@@ -12,7 +12,7 @@ var level_start_time = 0.0
 var level_completion_time = 0.0
 
 # Reset/Default style
-var playerHP = 99
+var playerHP = 3
 var gold = 0
 var level_start_coin = 0
 var score = 0

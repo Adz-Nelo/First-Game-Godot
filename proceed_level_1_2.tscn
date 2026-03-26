@@ -1,0 +1,139 @@
+[gd_scene load_steps=11 format=3 uid="uid://vjrivb0wo6dd"]
+
+[ext_resource type="Texture2D" uid="uid://h5objb2hfy36" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/back.png" id="1_mtrya"]
+[ext_resource type="Texture2D" uid="uid://cktrrmgmwbwm7" path="res://Sunny Land Collection Files/Assets/Environments/SunnyLand/Layers/middle.png" id="2_smfog"]
+[ext_resource type="Texture2D" uid="uid://bn41qg4a0kwtg" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Dizzy/Dizzy1.png" id="3_kdpmn"]
+[ext_resource type="Texture2D" uid="uid://dise766nqts3d" path="res://sunny-land/assets/sprites/options.png" id="3_yuvks"]
+[ext_resource type="FontFile" uid="uid://bfgbx46b3ptly" path="res://RETRO_SPACE/RETRO_SPACE_INV.ttf" id="4_6g1jw"]
+[ext_resource type="Texture2D" uid="uid://ckhumtitca1gp" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Dizzy/Dizzy4.png" id="4_y2v34"]
+[ext_resource type="Texture2D" uid="uid://co103gs1k88g8" path="res://sunny-land/assets/sprites/title-screen.png" id="5_smfog"]
+[ext_resource type="Texture2D" uid="uid://cgsbcxdnohh0" path="res://Sunny Land Collection Files/Assets/Characters/Players/Foxy/Sprites/Dizzy/Dizzy6.png" id="8_8b52t"]
+
+[sub_resource type="GDScript" id="GDScript_kdpmn"]
+script/source = "extends CanvasLayer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	await get_tree().create_timer(3.0).timeout
+	get_tree().change_scene_to_file(\"res://level_1_2.tscn\")
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_yuvks"]
+script/source = "extends Node
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Label.modulate = Color.BLACK
+"
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = SubResource("GDScript_kdpmn")
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="Back" type="Sprite2D" parent="Background"]
+position = Vector2(575.99994, 359.99997)
+scale = Vector2(2.9999998, 3)
+texture = ExtResource("1_mtrya")
+
+[node name="Middle" type="Sprite2D" parent="Background"]
+position = Vector2(88, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle2" type="Sprite2D" parent="Background"]
+position = Vector2(264, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle3" type="Sprite2D" parent="Background"]
+position = Vector2(440, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle4" type="Sprite2D" parent="Background"]
+position = Vector2(616, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle5" type="Sprite2D" parent="Background"]
+position = Vector2(792, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle6" type="Sprite2D" parent="Background"]
+position = Vector2(968, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Middle7" type="Sprite2D" parent="Background"]
+position = Vector2(1144, 464)
+texture = ExtResource("2_smfog")
+
+[node name="Dizzy1" type="Sprite2D" parent="."]
+position = Vector2(336, 272)
+scale = Vector2(7.3125005, 7.3125005)
+texture = ExtResource("3_kdpmn")
+
+[node name="Dizzy4" type="Sprite2D" parent="."]
+position = Vector2(776, 240)
+scale = Vector2(7.3749995, 7.3750005)
+texture = ExtResource("4_y2v34")
+
+[node name="Options" type="Sprite2D" parent="."]
+position = Vector2(568, 401)
+scale = Vector2(2.964286, 2.9642856)
+texture = ExtResource("3_yuvks")
+
+[node name="Label" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 56.0
+
+[node name="Label" type="Label" parent="Label"]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 345.0
+offset_right = 641.0
+offset_bottom = 414.0
+theme_override_fonts/font = ExtResource("4_6g1jw")
+theme_override_font_sizes/font_size = 24
+text = "Proceeding to:
+
+Level 1-2..."
+horizontal_alignment = 1
+
+[node name="TitleScreen" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(560, 144)
+scale = Vector2(1.763158, 1.7631578)
+texture = ExtResource("5_smfog")
+
+[node name="Labels" type="Node" parent="."]
+script = SubResource("GDScript_yuvks")
+
+[node name="Label" type="Label" parent="Labels"]
+offset_left = 456.0
+offset_top = 208.0
+offset_right = 660.0
+offset_bottom = 231.0
+theme_override_fonts/font = ExtResource("4_6g1jw")
+text = "Created By: Nelo Code"
+metadata/_edit_use_anchors_ = true
+
+[node name="Label2" type="Label" parent="Labels"]
+z_index = 1
+offset_left = 457.0
+offset_top = 209.0
+offset_right = 661.0
+offset_bottom = 232.0
+theme_override_fonts/font = ExtResource("4_6g1jw")
+text = "Created By: Nelo Code"
+metadata/_edit_use_anchors_ = true
+
+[node name="Dizzy6" type="Sprite2D" parent="."]
+position = Vector2(559.99994, 512)
+scale = Vector2(6.4374986, 6.4374986)
+texture = ExtResource("8_8b52t")

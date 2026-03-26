@@ -53,7 +53,7 @@ func _ready():
 	print(\"📊 Level has:\", Game.total_coins_in_level, \"coins,\", Game.total_cherries_in_level, \"cherries,\", Game.total_gems_in_level, \"gems\")
 "
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_my276"]
 texture = ExtResource("4_aqk2v")
 1:1/0 = 0
 1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
@@ -238,7 +238,7 @@ texture = ExtResource("4_aqk2v")
 
 [sub_resource type="TileSet" id="TileSet_dwbse"]
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_036b0")
+sources/0 = SubResource("TileSetAtlasSource_my276")
 
 [sub_resource type="GDScript" id="GDScript_036b0"]
 script/source = "extends Control
