@@ -344,7 +344,7 @@ offset_right = 1712.0
 offset_bottom = 116.0
 theme_override_fonts/font = ExtResource("4_wutdj")
 theme_override_font_sizes/font_size = 32
-text = "Please wait any furture 😛"
+text = "Please wait any further 😛"
 
 [node name="Label3" type="Label" parent="Background/ParallaxLayer3/Maintenance"]
 layout_mode = 0

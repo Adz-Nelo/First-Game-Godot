@@ -4,6 +4,10 @@
 
 [sub_resource type="GDScript" id="GDScript_idl2r"]
 script/source = "extends Area2D
+
+var custom_font = preload(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\")
+var prompt_tween = null 
+
 var player_in_area = false
 var level_completed = false
 
@@ -27,31 +31,28 @@ func _process(delta: float) -> void:
 		complete_level()
 
 func show_prompt():
-	# Create floating prompt
 	var label = Label.new()
 	label.name = \"EnterPrompt\"
 	label.text = \"Press W to enter\"
 	
-	# Load and apply your custom font
-	var custom_font = load(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\") 
 	label.add_theme_font_override(\"font\", custom_font)
 	label.add_theme_font_size_override(\"font_size\", 12)
 	label.modulate = Color(1, 1, 1)
-	
-	# Add outline for visibility
 	label.add_theme_color_override(\"font_outline_color\", Color.BLACK)
 	label.add_theme_constant_override(\"outline_size\", 3)
 	
 	add_child(label)
 	label.position = Vector2(-55, -50)
 	
-	# Pulse animation
-	var tween = create_tween()
-	tween.set_loops()
-	tween.tween_property(label, \"position:y\", label.position.y - 5, 0.5)
-	tween.tween_property(label, \"position:y\", label.position.y, 0.5)
+	prompt_tween = create_tween()
+	prompt_tween.set_loops()
+	prompt_tween.tween_property(label, \"position:y\", label.position.y - 5, 0.5)
+	prompt_tween.tween_property(label, \"position:y\", label.position.y, 0.5)
 
 func hide_prompt():
+	if prompt_tween:
+		prompt_tween.kill()
+		prompt_tween = null
 	if has_node(\"EnterPrompt\"):
 		$EnterPrompt.queue_free()
 
@@ -109,7 +110,6 @@ func show_perfect_text():
 	label.text = \"PERFECT!\"
 	
 	# Load custom font
-	var custom_font = load(\"res://RETRO_SPACE/RETRO_SPACE_INV.ttf\")
 	label.add_theme_font_override(\"font\", custom_font)
 	label.add_theme_font_size_override(\"font_size\", 20)
 	label.modulate = Color(1.0, 0.843, 0.0, 1.0)  # Gold color

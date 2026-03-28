@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="First Game"
+config/name="Sunnyland"
 run/main_scene="uid://bb3u7mm35n1ae"
 config/features=PackedStringArray("4.5", "Mobile")
-config/icon="res://icon.svg"
+config/icon="uid://v3x23cb4wnme"
 
 [audio]
 
@@ -75,5 +75,5 @@ ui_restart={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method="mobile"
+renderer/rendering_method="gl_compatibility"
 textures/vram_compression/import_s3tc_bptc=true
